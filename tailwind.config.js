@@ -12,7 +12,6 @@ export default {
       text: {
         light: "#FCD9B8",
         white: "#F0F0F0",
-        gradient: ""
       },
       content: {
         music: "#D0E957",
@@ -64,5 +63,4 @@ export default {
     extend: {},
   },
   plugins: [],
-}
-
+};
