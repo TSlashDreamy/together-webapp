@@ -6,12 +6,15 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
-const LandingWrapper: FC<IProps> = ({ children, ...other }) => {
+const CardWrapper: FC<IProps> = ({ children, ...other }) => {
   const classes = twMerge(
-    classNames(other.className, "flex items-center content-start w-[100vw] h-[100vh] p-[50px]")
+    classNames(
+      "flex flex-col items-center content-center px-10 py-[60px] gap-[30px] bg-semitransparent-dark border-[1px] border-border-color rounded-[20px]",
+      other.className,
+    )
   );
 
   return <div className={classes}>{children}</div>;
 };
 
-export default LandingWrapper;
+export default CardWrapper;

@@ -8,10 +8,12 @@ export default {
       "semitransparent-dark": "#11121580",
       background: "#17181D",
       foreground: "#292C35",
+      "border-color": "#53535380",
       primary: "#E09145",
       text: {
         light: "#FCD9B8",
         white: "#F0F0F0",
+        "white-transparent": "#F0F0F0AF",
       },
       content: {
         music: "#D0E957",

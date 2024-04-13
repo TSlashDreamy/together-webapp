@@ -1,8 +1,8 @@
 import { FC } from "react";
 
-import LandingWrapper from "~/components/landing-wrapper";
 import LandingWelcoming from "~/containers/landing-welcoming";
-import TransitionLoader from "~/components/transition-loader/TransitionLoader";
+import LandingWrapper from "~/components/landing-wrapper";
+import TransitionLoader from "~/components/transition-loader";
 import Cubes from "~/components/cubes";
 
 const LandingPage: FC = () => {
