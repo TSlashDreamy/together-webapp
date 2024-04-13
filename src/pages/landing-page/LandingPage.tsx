@@ -1,19 +1,19 @@
-import { FC, Fragment } from "react";
+import { FC } from "react";
 
-import LandingHeader from "~/components/landing-header";
 import Blobs from "~/components/blobs";
 import LandingWrapper from "~/components/landing-wrapper";
 import LandingWelcoming from "~/containers/landing-welcoming";
+import TransitionLoader from "~/components/transition-loader/TransitionLoader";
 
 const LandingPage: FC = () => {
   return (
-    <Fragment>
-      <LandingHeader />
+    <div>
+      <TransitionLoader />
       <Blobs />
       <LandingWrapper>
         <LandingWelcoming />
       </LandingWrapper>
-    </Fragment>
+    </div>
   );
 };
 

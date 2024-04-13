@@ -60,7 +60,18 @@ export default {
         950: "#450A0A",
       },
     },
-    extend: {},
+    extend: {
+      keyframes: {
+        load: {
+          "0%": { transform: "scale(1) rotate(0deg)", borderRadius: '5px', borderWidth: '2px' },
+          "50%": { transform: "scale(1.5) rotate(180deg)", borderRadius: '80px',  borderWidth: '100px' },
+          "100%": { transform: "scale(1) rotate(360deg)", borderRadius: '5px', borderWidth: '2px' },
+        },
+      },
+      animation: {
+        'loading': 'load 2s ease-in-out infinite',
+      },
+    },
   },
   plugins: [],
 };
