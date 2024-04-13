@@ -1,12 +1,10 @@
 import { FC } from "react";
 
-import Blobs from "~/components/blobs";
 import TransitionLoader from "~/components/transition-loader/TransitionLoader";
 
 const LoginPage: FC = () => {
   return (
-    <div>
-      <Blobs />
+    <div className="bg-landing-gradient bg-cover bg-center">
       <TransitionLoader />
       Login page
     </div>
