@@ -7,16 +7,17 @@ import Button from "~/components/button";
 import Logo from "~/components/logo";
 import { routes } from "~/router/constants";
 
+import { landingHeaderOnLoginStyles, landingHeaderStyles } from "./styles";
+
 const LandingHeader: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const isLoginPage = useMemo(() => location.pathname === `/${routes.Login}`, [location.pathname]);
 
-  const classes =
-  twMerge(
-    classNames("fixed top-3.5 inset-x-0 z-50 flex justify-between items-center mx-6 py-5 px-[100px] rounded-[20px] bg-semitransparent-dark backdrop-blur-[150px]", {
-      'flex-row-reverse px-0 bg-transparent backdrop-blur-0': isLoginPage,
+  const classes = twMerge(
+    classNames(landingHeaderStyles, {
+      [landingHeaderOnLoginStyles]: isLoginPage,
     })
   );
 
@@ -25,11 +26,9 @@ const LandingHeader: FC = () => {
       <Logo hidden={isLoginPage} />
       <div className="flex gap-5 items-center">
         {isLoginPage ? (
-          <>
-            <Button secondary outline onClick={() => navigate(-1)}>
-              Go Back
-            </Button>
-          </>
+          <Button primary outline onClick={() => navigate(-1)}>
+            Go Back
+          </Button>
         ) : (
           <>
             <Button primary outline onClick={() => navigate(routes.Login)}>

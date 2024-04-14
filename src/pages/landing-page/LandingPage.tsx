@@ -5,9 +5,11 @@ import LandingWrapper from "~/components/landing-wrapper";
 import TransitionLoader from "~/components/transition-loader";
 import Cubes from "~/components/cubes";
 
+import { landingStyle } from "./styles";
+
 const LandingPage: FC = () => {
   return (
-    <div className="bg-landing-gradient bg-cover bg-center">
+    <div className={landingStyle}>
       <TransitionLoader />
       <LandingWrapper>
         <LandingWelcoming />

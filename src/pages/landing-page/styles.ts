@@ -1,0 +1,1 @@
+export const landingStyle = "bg-landing-gradient bg-cover bg-center";
