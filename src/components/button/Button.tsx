@@ -8,6 +8,7 @@ import {
   buttonIconStyles,
   buttonStyles,
   dangerButtonStyle,
+  dangerIconStyle,
   dangerOutlineStyle,
   disabledStyle,
   extraLargeStyle,
@@ -21,6 +22,7 @@ import {
   secondaryOutlineStyle,
   smallStyle,
   successButtonStyle,
+  successIconStyle,
   successOutlineStyle,
 } from "./styles";
 import { optionalPropsError } from "./constants";
@@ -54,8 +56,7 @@ const Button: FC<IProps> = ({
   Icon,
   ...other
 }) => {
-  const optionalTypeCount =
-    Number(!!primary) + Number(!!secondary) + Number(!!success) + Number(!!danger);
+  const optionalTypeCount = Number(!!primary) + Number(!!secondary);
   const optionalSizeCount =
     Number(!!extraLarge) + Number(!!large) + Number(!!medium) + Number(!!small);
 
@@ -81,7 +82,12 @@ const Button: FC<IProps> = ({
     })
   );
 
-  const iconClasses = twMerge(...buttonIconStyles);
+  const iconClasses = twMerge(
+    classNames(...buttonIconStyles, {
+      [successIconStyle]: success,
+      [dangerIconStyle]: danger,
+    })
+  );
 
   return (
     <button {...other} disabled={isLoading} className={classes}>

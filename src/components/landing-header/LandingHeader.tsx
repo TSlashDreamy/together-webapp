@@ -12,20 +12,24 @@ import { landingHeaderOnLoginStyles, landingHeaderStyles } from "./styles";
 const LandingHeader: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const authRoutes = useMemo(() => [String(routes.Login), String(routes.Signup)], []);
 
-  const isLoginPage = useMemo(() => location.pathname === `/${routes.Login}`, [location.pathname]);
+  const isAuthPage = useMemo(
+    () => authRoutes.includes(location.pathname.split("/").at(-1) ?? "/"),
+    [authRoutes, location.pathname]
+  );
 
   const classes = twMerge(
     classNames(landingHeaderStyles, {
-      [landingHeaderOnLoginStyles]: isLoginPage,
+      [landingHeaderOnLoginStyles]: isAuthPage,
     })
   );
 
   return (
     <div className={classes}>
-      <Logo hidden={isLoginPage} />
+      <Logo hidden={isAuthPage} />
       <div className="flex gap-5 items-center">
-        {isLoginPage ? (
+        {isAuthPage ? (
           <Button primary outline onClick={() => navigate(-1)}>
             Go Back
           </Button>
@@ -34,7 +38,9 @@ const LandingHeader: FC = () => {
             <Button primary outline onClick={() => navigate(routes.Login)}>
               Log In
             </Button>
-            <Button primary>Sign Up</Button>
+            <Button primary onClick={() => navigate(routes.Signup)}>
+              Sign Up
+            </Button>
           </>
         )}
       </div>

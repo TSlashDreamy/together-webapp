@@ -3,12 +3,23 @@ import { FC } from "react";
 import CardWrapper from "~/components/card-wrapper";
 import Link from "~/components/link";
 import { optionalBlockStyle } from "./styles";
+import { routes } from "~/router/constants";
 
-const OptionalLoginBlock: FC = () => {
+interface IProps {
+  creatingUser?: boolean;
+}
+
+const OptionalLoginBlock: FC<IProps> = ({ creatingUser }) => {
   return (
     <CardWrapper className={optionalBlockStyle}>
-      <Link to="/signup">Don't have an account? Sign Up</Link>
-      <Link to="/reset_password">Forgot password?</Link>
+      {creatingUser ? (
+        <Link to={routes.Login} replace>Already have an account? Log In</Link>
+      ) : (
+        <>
+          <Link to={routes.Signup} replace>Don't have an account? Sign Up</Link>
+          <Link to={routes.ResetPassword} replace>Forgot password?</Link>
+        </>
+      )}
     </CardWrapper>
   );
 };

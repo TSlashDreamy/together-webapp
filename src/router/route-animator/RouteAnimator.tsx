@@ -7,6 +7,8 @@ import LandingPage from "~/pages/landing-page";
 import LoginPage from "~/pages/login-page";
 import PrivateLayout from "~/pages/private-layout";
 import PublicLayout from "~/pages/public-layout";
+import SignupPage from "~/pages/signup-page";
+
 import { routes } from "~/router/constants";
 
 const RouteAnimator: FC = () => {
@@ -17,6 +19,7 @@ const RouteAnimator: FC = () => {
         <Route path={routes.Landing} element={<PublicLayout />} errorElement={<ErrorPage />}>
           <Route index element={<LandingPage />} />
           <Route path={routes.Login} element={<LoginPage />} />
+          <Route path={routes.Signup} element={<SignupPage />} />
         </Route>
         <Route path={routes.Home} element={<PrivateLayout />} errorElement={<ErrorPage />}>
           <Route index element={<div>Home</div>} />

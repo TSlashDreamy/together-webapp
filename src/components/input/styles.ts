@@ -6,3 +6,5 @@ export const inputStyles = [
   "active:border-4",
   "focus:font-normal focus:text-text-light focus:placeholder:text-text-light focus:border-primary",
 ];
+
+export const wrapperStyle = "flex flex-col gap-2"

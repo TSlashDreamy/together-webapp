@@ -9,20 +9,20 @@ import Input from "~/components/input";
 import Form from "~/components/form";
 
 import useForm from "~/hooks/useForm";
-import { validate as loginValidate } from "~/validators/loginValidators";
+import { validate as signupValidate } from "~/validators/signupValidators";
 import { InputTypes } from "~/types";
-import { ILoginFormState } from "./types";
+import { ISignUpFormState } from "./types";
 import { Inputs } from "./constants";
 
-const LoginPage: FC = () => {
-  const handleLoginSubmit = (values: ILoginFormState) => {
+const SignupPage: FC = () => {
+  const handleSignUpSubmit = (values: ISignUpFormState) => {
     console.log("Form data:", values);
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm<ILoginFormState>(
-    { email: "", password: "" },
-    handleLoginSubmit,
-    loginValidate
+  const { values, errors, handleChange, handleSubmit } = useForm<ISignUpFormState>(
+    { name: "", email: "", password: "", confirmPassword: "" },
+    handleSignUpSubmit,
+    signupValidate
   );
 
   return (
@@ -30,6 +30,14 @@ const LoginPage: FC = () => {
       <CardWrapper>
         <Form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-5">
+            <Input
+              name={Inputs.Name}
+              placeholder="Name"
+              type={InputTypes.Text}
+              value={values.name}
+              error={errors.name}
+              onChange={handleChange}
+            />
             <Input
               name={Inputs.Email}
               placeholder="Email"
@@ -46,15 +54,23 @@ const LoginPage: FC = () => {
               error={errors.password}
               onChange={handleChange}
             />
+            <Input
+              name={Inputs.ConfirmPassword}
+              placeholder="Repeat password"
+              type={InputTypes.Password}
+              value={values.confirmPassword}
+              error={errors.confirmPassword}
+              onChange={handleChange}
+            />
           </div>
           <Button primary danger={Boolean(Object.values(errors).length)} outline Icon={ArrowIcon}>
-            Log In
+            Sign Up
           </Button>
         </Form>
       </CardWrapper>
-      <OptionalLoginBlock />
+      <OptionalLoginBlock creatingUser />
     </AuthorizationWrapper>
   );
 };
 
-export default LoginPage;
+export default SignupPage;
