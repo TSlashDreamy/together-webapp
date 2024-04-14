@@ -1,5 +1,8 @@
 import { FC, ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+
+import { linkStyles } from "./styles";
+import { twMerge } from "tailwind-merge";
 
 interface IProps {
   children: ReactNode;
@@ -7,7 +10,13 @@ interface IProps {
 }
 
 const Link: FC<IProps> = ({ children, to }) => {
-  return <NavLink to={to}>{children}</NavLink>;
+  const classes = twMerge(...linkStyles);
+
+  return (
+    <RouterLink className={classes} to={to}>
+      {children}
+    </RouterLink>
+  );
 };
 
 export default Link;
