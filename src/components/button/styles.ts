@@ -1,12 +1,13 @@
 export const buttonStyles = [
-  "flex items-center justify-center gap-[10px] relative",
+  "xl:text-[1.1vw]",
+  "flex items-center justify-center gap-[10px] relative group",
   "px-9 py-3 rounded-[10px]",
   "font-light text-[20px] transition-all",
   "after:content-[''] after:absolute after:left-1/2 after:bottom-[20%] after:translate-x-[-50%] after:w-0 after:h-[1px]",
   "after:bg-text-white after:transition-all",
   "hover:tracking-wider hover:after:w-1/2 hover:px-[2.05rem]",
   "active:scale-90",
-  "active:after:w-1/6"
+  "active:after:w-1/6",
 ];
 
 export const primaryButtonStyle = "bg-primary text-text-white";
@@ -24,3 +25,13 @@ export const extraLargeStyle = "px-9 py-3 hover:px-[2.05rem]";
 export const largeStyle = "px-[1.30rem] py-2.5 hover:px-[1.10rem]";
 export const mediumStyle = "px-[1.05rem] py-[0.30rem] after:bottom-[10%] hover:px-[0.84rem]";
 export const smallStyle = "px-2.5 py-0.5 after:bottom-[10%] hover:px-[0.40rem]";
+
+export const hasIconStyle = "leading-[29px]";
+
+export const buttonIconStyles = [
+  "size-auto px-[3px] bg-primary text-text-white border-primary rounded-xl transition-all",
+  "group-active:p-0 group-active:bg-transparent group-active:border-[1px]",
+];
+
+export const disabledStyle =
+  "opacity-50 hover:tracking-normal hover:after:w-0 hover:px-[2.05rem] active:scale-100 active:after:w-0";

@@ -1,7 +1,8 @@
 export const inputStyles = [
-  "min-w-[500px] p-[15px] bg-transparent font-extralight text-[20px] text-text-white-transparent border-[1px] border-text-white rounded-[15px] outline-0",
+  "xl:w-[26vw] xl:p-[0.75vw] xl:text-[1.06vw] xl:rounded-[0.8vw] lg:w-[500px] sm:w-[85vw]",
+  "w-[500px] p-[15px] text-[20px] rounded-[15px] bg-transparent font-extralight text-text-white-transparent border-text-white border-[1px] outline-0",
   "transition-all",
   "hover:font-normal",
   "active:border-4",
-  "focus:font-normal focus:text-primary focus:placeholder:text-primary focus:border-primary",
+  "focus:font-normal focus:text-text-light focus:placeholder:text-text-light focus:border-primary",
 ];

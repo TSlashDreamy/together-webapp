@@ -1,12 +1,17 @@
 import { FC, HTMLAttributes } from "react";
 import classNames from "classnames";
 import { twMerge } from "tailwind-merge";
+import { IconType } from "react-icons";
+import { ImSpinner9 as Spinner } from "react-icons/im";
 
 import {
+  buttonIconStyles,
   buttonStyles,
   dangerButtonStyle,
   dangerOutlineStyle,
+  disabledStyle,
   extraLargeStyle,
+  hasIconStyle,
   largeStyle,
   mediumStyle,
   outlineButtonStyle,
@@ -31,6 +36,7 @@ interface IProps extends HTMLAttributes<HTMLButtonElement> {
   large?: boolean;
   medium?: boolean;
   small?: boolean;
+  Icon?: IconType;
 }
 
 const Button: FC<IProps> = ({
@@ -45,6 +51,7 @@ const Button: FC<IProps> = ({
   large,
   medium,
   small,
+  Icon,
   ...other
 }) => {
   const optionalTypeCount =
@@ -60,7 +67,7 @@ const Button: FC<IProps> = ({
       [secondaryButtonStyle]: secondary,
       [successButtonStyle]: success,
       [dangerButtonStyle]: danger,
-      "opacity-50": isLoading,
+      [disabledStyle]: isLoading,
       [outlineButtonStyle]: outline,
       [primaryOutlineStyle]: outline && primary,
       [secondaryOutlineStyle]: outline && secondary,
@@ -70,14 +77,21 @@ const Button: FC<IProps> = ({
       [largeStyle]: large,
       [mediumStyle]: medium,
       [smallStyle]: small,
+      [hasIconStyle]: Boolean(Icon),
     })
   );
+
+  const iconClasses = twMerge(...buttonIconStyles);
 
   return (
     <button {...other} disabled={isLoading} className={classes}>
       {children}
-      {/* //!TEMP LOADER */}
-      {isLoading && <div className="rounded-full border-2 border-text-white size-3" />}
+      {isLoading && <Spinner className="animate-spin" />}
+      {Icon && !isLoading && (
+        <div className={iconClasses}>
+          <Icon />
+        </div>
+      )}
     </button>
   );
 };
