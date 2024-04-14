@@ -11,6 +11,7 @@ import Link from "~/components/link";
 
 import { loginTitleStyles, loginWrapperStyle, optionalBlockStyle } from "./styles";
 import { InputTypes } from "~/types";
+import Cubes from "~/components/cubes";
 
 const LoginPage: FC = () => {
   const titleClasses = twMerge(...loginTitleStyles);
@@ -18,7 +19,8 @@ const LoginPage: FC = () => {
   return (
     <div className={loginWrapperStyle}>
       <TransitionLoader />
-      <LandingWrapper className="flex-col justify-center gap-[30px]">
+      <Cubes randomize />
+      <LandingWrapper className="flex-col justify-center gap-[30px] relative z-20">
         <h3 className={titleClasses}>together</h3>
         <CardWrapper>
           <form className="flex flex-col items-center gap-[30px]">

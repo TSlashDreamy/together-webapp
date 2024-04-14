@@ -8,8 +8,8 @@ const TransitionLoader: FC = () => {
     <motion.div
       className={`${loaderTransitionContainerStyle}`}
       initial={{
-        width: "100%",
-        height: "100%",
+        width: "105%",
+        height: "105%",
       }}
       animate={{
         width: "0%",
@@ -17,8 +17,8 @@ const TransitionLoader: FC = () => {
         transition: { delay: 0.7, duration: 1, ease: "circInOut" },
       }}
       exit={{
-        width: "100%",
-        height: "100%",
+        width: "105%",
+        height: "105%",
         transition: { duration: 1, ease: "circInOut" },
       }}
     >
