@@ -1,3 +1,3 @@
-import Cubes from "./Cubes";
+import MemoizedCubes from "./Cubes";
 
-export default Cubes;
+export default MemoizedCubes;

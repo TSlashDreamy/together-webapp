@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { generateRandomCubes } from "./utils";
 import { cubesGeneratorConfig } from "./constants";
 
@@ -30,4 +30,6 @@ const Cubes: FC<IProps> = ({ randomize }) => {
   );
 };
 
-export default Cubes;
+const MemoizedCubes = memo(Cubes);
+
+export default MemoizedCubes;

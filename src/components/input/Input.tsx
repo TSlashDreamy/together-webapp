@@ -4,14 +4,22 @@ import { twMerge } from "tailwind-merge";
 import { inputStyles } from "./styles";
 
 interface IProps extends HTMLAttributes<HTMLInputElement> {
+  name: string;
   placeholder: string;
+  value: string;
+  error?: string;
   type: HTMLInputTypeAttribute;
 }
 
-const Input: FC<IProps> = ({ ...other }) => {
+const Input: FC<IProps> = ({ error, ...other }) => {
   const classes = twMerge(classNames(other.className, ...inputStyles));
 
-  return <input className={classes} {...other} />;
+  return (
+    <>
+      <input className={classes} {...other} />
+      {error && <span>{error}</span>}
+    </>
+  );
 };
 
 export default Input;

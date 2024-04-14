@@ -59,6 +59,7 @@ export const generateRandomCubes = (generatorConfig: ICubeGenerator, texture: st
 
     return (
       <div
+        key={currentConfig.animation}
         className={`${texture} animate-[${currentConfig.animation}]`}
         style={{
           width: `${currentConfig.size}vw`,

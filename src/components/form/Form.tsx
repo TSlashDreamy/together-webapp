@@ -6,8 +6,12 @@ interface IProps extends HTMLAttributes<HTMLFormElement> {
   children: ReactNode;
 }
 
-const Form: FC<IProps> = ({ children }) => {
-  return <form className={formStyle}>{children}</form>;
+const Form: FC<IProps> = ({ children, ...other }) => {
+  return (
+    <form className={formStyle} {...other}>
+      {children}
+    </form>
+  );
 };
 
 export default Form;
