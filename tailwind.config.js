@@ -49,6 +49,7 @@ export default {
         950: "#052E16",
       },
       danger: {
+        transparent: "#450A0A80",
         50: "#FEF2F2",
         100: "#FEE2E2",
         200: "#FECACA",
@@ -88,12 +89,17 @@ export default {
           "50%": { transform: "translateY(20px) rotate(130deg)" },
           "100%": { transform: "translateY(0px) rotate(130deg)" },
         },
+        expand: {
+          "from": { transform: "translateY(50px)", opacity: 0 },
+          "to": { transform: "translateY(0px)", opacity: 1 },
+        }
       },
       animation: {
         loading: "load 2s ease-in-out infinite",
         floating65: "float65 6s ease-in-out infinite",
         floating115: "float115 4s ease-in-out infinite",
         floating130: "float130 2s ease-in-out infinite",
+        notificationExpand: "expand 1s ease-in-out"
       },
       backgroundImage: {
         "landing-gradient": "url('~/assets/gradient.png')",

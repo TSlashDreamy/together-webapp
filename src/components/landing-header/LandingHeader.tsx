@@ -15,7 +15,7 @@ const LandingHeader: FC = () => {
   const authRoutes = useMemo(() => [String(routes.Login), String(routes.Signup)], []);
 
   const isAuthPage = useMemo(
-    () => authRoutes.includes(location.pathname.split("/").at(-1) ?? "/"),
+    () => authRoutes.includes(location.pathname),
     [authRoutes, location.pathname]
   );
 

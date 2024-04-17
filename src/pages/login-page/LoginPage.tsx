@@ -1,27 +1,57 @@
 import { FC } from "react";
-import { MdOutlineKeyboardArrowRight as ArrowIcon } from "react-icons/md";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
+import LoginFields from "~/containers/login-fields";
 import AuthorizationWrapper from "~/containers/authorization-wrapper";
 import OptionalLoginBlock from "~/containers/optional-login-block";
-import Button from "~/components/button";
 import CardWrapper from "~/components/card-wrapper";
-import Input from "~/components/input";
 import Form from "~/components/form";
 
+import { setUser } from "~/redux/slices/userSlice";
+import { showNotification } from "~/redux/slices/notificationSlice";
+import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
+import { useAppDispatch } from "~/hooks/useRedux";
+
+import { auth } from "~/firebase";
 import useForm from "~/hooks/useForm";
 import { validate as loginValidate } from "~/validators/loginValidators";
-import { InputTypes } from "~/types";
+import { NotificationType } from "~/components/notification/types";
 import { ILoginFormState } from "./types";
-import { Inputs } from "./constants";
 
 const LoginPage: FC = () => {
-  const handleLoginSubmit = (values: ILoginFormState) => {
-    console.log("Form data:", values);
+  const dispatch = useAppDispatch();
+
+  const handleLogin = async (values: ILoginFormState) => {
+    const { email, password } = values;
+
+    try {
+      dispatch(setLoggingIn());
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+
+      dispatch(
+        setUser({
+          email: user.email,
+          id: user.uid,
+          token: user.refreshToken,
+        })
+      );
+      dispatch(resetLoggingIn());
+    } catch (error: unknown) {
+      console.log(error);
+      dispatch(resetLoggingIn());
+      dispatch(
+        showNotification({
+          type: NotificationType.Error,
+          content: error instanceof FirebaseError ? error.message : "Something went wrong",
+        })
+      );
+    }
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm<ILoginFormState>(
     { email: "", password: "" },
-    handleLoginSubmit,
+    handleLogin,
     loginValidate
   );
 
@@ -29,27 +59,7 @@ const LoginPage: FC = () => {
     <AuthorizationWrapper>
       <CardWrapper>
         <Form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-5">
-            <Input
-              name={Inputs.Email}
-              placeholder="Email"
-              type={InputTypes.Email}
-              value={values.email}
-              error={errors.email}
-              onChange={handleChange}
-            />
-            <Input
-              name={Inputs.Password}
-              placeholder="Password"
-              type={InputTypes.Password}
-              value={values.password}
-              error={errors.password}
-              onChange={handleChange}
-            />
-          </div>
-          <Button primary danger={Boolean(Object.values(errors).length)} outline Icon={ArrowIcon}>
-            Log In
-          </Button>
+          <LoginFields values={values} errors={errors} handleChange={handleChange} />
         </Form>
       </CardWrapper>
       <OptionalLoginBlock />

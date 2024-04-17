@@ -13,11 +13,11 @@ const OptionalLoginBlock: FC<IProps> = ({ creatingUser }) => {
   return (
     <CardWrapper className={optionalBlockStyle}>
       {creatingUser ? (
-        <Link to={routes.Login} replace>Already have an account? Log In</Link>
+        <Link to={routes.Login}>Already have an account? Log In</Link>
       ) : (
         <>
-          <Link to={routes.Signup} replace>Don't have an account? Sign Up</Link>
-          <Link to={routes.ResetPassword} replace>Forgot password?</Link>
+          <Link to={routes.Signup}>Don't have an account? Sign Up</Link>
+          <Link to={routes.ResetPassword}>Forgot password?</Link>
         </>
       )}
     </CardWrapper>

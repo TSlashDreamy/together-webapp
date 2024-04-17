@@ -1,39 +1,33 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from 'firebase/auth';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState {
-  currentUser: User | null;
-  userLoggedIn: boolean;
-  isEmailUser: boolean;
-  isGoogleUser: boolean;
-  loading: boolean;
+  email: string | null;
+  token: string | null;
+  id: string | null;
 }
 
 const initialState: UserState = {
-  currentUser: null,
-  userLoggedIn: false,
-  isEmailUser: false,
-  isGoogleUser: false,
-  loading: true,
+  email: null,
+  token: null,
+  id: null,
 };
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User | null>) => {
-      state.currentUser = action.payload;
-      state.userLoggedIn = !!action.payload;
-      state.isEmailUser = !!action.payload?.providerData.some(p => p.providerId === 'password');
-      // TODO: configure google login
-      // state.isGoogleUser = !!action.payload?.providerData.some(p => p.providerId === 'google.com');
-      state.loading = false;
+    setUser: (state, action: PayloadAction<UserState>) => {
+      state.email = action.payload.email;
+      state.token = action.payload.token;
+      state.id = action.payload.id;
     },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    }
+    removeUser: (state) => {
+      state.email = null;
+      state.token = null;
+      state.id = null;
+    },
   },
 });
 
-export const { setUser, setLoading } = userSlice.actions;
+export const { setUser, removeUser } = userSlice.actions;
 export default userSlice.reducer;
