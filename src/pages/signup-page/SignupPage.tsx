@@ -17,7 +17,7 @@ import { auth } from "~/firebase";
 import useForm from "~/hooks/useForm";
 import { validate as signupValidate } from "~/validators/signupValidators";
 import { ISignUpFormState } from "./types";
-import { NotificationType } from "~/components/notification/types";
+import { NotificationType } from "~/types";
 
 const SignupPage: FC = () => {
   const dispatch = useAppDispatch();

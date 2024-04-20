@@ -1,7 +1,8 @@
 import { FC, HTMLAttributes, HTMLInputTypeAttribute } from "react";
 import classNames from "classnames";
 import { twMerge } from "tailwind-merge";
-import { inputStyles, wrapperStyle } from "./styles";
+
+import * as S from "./styles";
 
 interface IProps extends HTMLAttributes<HTMLInputElement> {
   name: string;
@@ -13,15 +14,15 @@ interface IProps extends HTMLAttributes<HTMLInputElement> {
 
 const Input: FC<IProps> = ({ error, ...other }) => {
   const classes = twMerge(
-    classNames(other.className, ...inputStyles, {
-      "border-danger-600": Boolean(error),
+    classNames(other.className, ...S.inputStyles, {
+      [S.inputErrorStyle]: Boolean(error),
     })
   );
 
   return (
-    <div className={wrapperStyle}>
+    <div className={S.wrapperStyle}>
       <input className={classes} {...other} />
-      {error && <span className="text-danger-600 px-0 font-light">{error}</span>}
+      {error && <span className={S.errorTextStyle}>{error}</span>}
     </div>
   );
 };

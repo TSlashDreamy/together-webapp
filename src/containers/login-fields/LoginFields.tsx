@@ -1,14 +1,15 @@
 import { ChangeEvent, FC, Fragment } from "react";
 import { MdOutlineKeyboardArrowRight as ArrowIcon } from "react-icons/md";
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 import Button from "~/components/button";
 import Input from "~/components/input";
 
-import { useAppSelector } from "~/hooks/useRedux";
-
 import { Inputs } from "~/pages/login-page/constants";
 import { ILoginFormState } from "~/pages/login-page/types";
 import { InputTypes } from "~/types";
+import * as S from "./styles";
+import { auth } from "~/firebase";
 
 interface IProps<T> {
   values: T;
@@ -17,11 +18,11 @@ interface IProps<T> {
 }
 
 const LoginFields: FC<IProps<ILoginFormState>> = ({ values, errors, handleChange }) => {
-  const { isLoggingIn } = useAppSelector((state) => state.authentication);
+  const [, loading] = useAuthState(auth);
 
   return (
     <Fragment>
-      <div className="flex flex-col gap-5">
+      <div className={S.inputsWrapperStyle}>
         <Input
           name={Inputs.Email}
           placeholder="Email"
@@ -41,7 +42,7 @@ const LoginFields: FC<IProps<ILoginFormState>> = ({ values, errors, handleChange
       </div>
       <Button
         primary
-        isLoading={isLoggingIn}
+        isLoading={loading}
         danger={Boolean(Object.values(errors).length)}
         outline
         Icon={ArrowIcon}

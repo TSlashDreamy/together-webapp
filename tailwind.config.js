@@ -36,6 +36,7 @@ export default {
         950: "#431407",
       },
       success: {
+        transparent: "#052E1680",
         50: "#F0FDF4",
         100: "#DCFCE7",
         200: "#BBF7D0",

@@ -16,7 +16,7 @@ import { useAppDispatch } from "~/hooks/useRedux";
 import { auth } from "~/firebase";
 import useForm from "~/hooks/useForm";
 import { validate as loginValidate } from "~/validators/loginValidators";
-import { NotificationType } from "~/components/notification/types";
+import { NotificationType } from "~/types";
 import { ILoginFormState } from "./types";
 
 const LoginPage: FC = () => {
@@ -37,8 +37,7 @@ const LoginPage: FC = () => {
         })
       );
       dispatch(resetLoggingIn());
-    } catch (error: unknown) {
-      console.log(error);
+    } catch (error) {
       dispatch(resetLoggingIn());
       dispatch(
         showNotification({

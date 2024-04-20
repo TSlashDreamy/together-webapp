@@ -9,6 +9,7 @@ import { useAppSelector } from "~/hooks/useRedux";
 import { Inputs } from "~/pages/signup-page/constants";
 import { ISignUpFormState } from "~/pages/signup-page/types";
 import { InputTypes } from "~/types";
+import * as S from "./styles";
 
 interface IProps<T> {
   values: T;
@@ -21,7 +22,7 @@ const SignupFields: FC<IProps<ISignUpFormState>> = ({ values, errors, handleChan
 
   return (
     <Fragment>
-      <div className="flex flex-col gap-5">
+      <div className={S.inputsWrapperStyle}>
         <Input
           name={Inputs.Name}
           placeholder="Name"

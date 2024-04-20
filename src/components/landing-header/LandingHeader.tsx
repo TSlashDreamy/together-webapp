@@ -5,9 +5,9 @@ import { twMerge } from "tailwind-merge";
 
 import Button from "~/components/button";
 import Logo from "~/components/logo";
-import { routes } from "~/router/constants";
 
-import { landingHeaderOnLoginStyles, landingHeaderStyles } from "./styles";
+import { routes } from "~/router/constants";
+import * as S from "./styles";
 
 const LandingHeader: FC = () => {
   const navigate = useNavigate();
@@ -20,15 +20,15 @@ const LandingHeader: FC = () => {
   );
 
   const classes = twMerge(
-    classNames(landingHeaderStyles, {
-      [landingHeaderOnLoginStyles]: isAuthPage,
+    classNames(S.landingHeaderStyle, {
+      [S.landingHeaderOnLoginStyle]: isAuthPage,
     })
   );
 
   return (
     <div className={classes}>
       <Logo hidden={isAuthPage} />
-      <div className="flex gap-5 items-center">
+      <div className={S.buttonWrapperStyle}>
         {isAuthPage ? (
           <Button primary outline onClick={() => navigate(-1)}>
             Go Back

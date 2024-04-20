@@ -1,0 +1,1 @@
+export const inputsWrapperStyle = "flex flex-col gap-5";
