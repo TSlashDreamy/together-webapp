@@ -10,7 +10,7 @@ const PublicLayout: FC = () => {
   const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    isLoggedIn && navigate(routes.Home, { replace: true });
+    isLoggedIn && navigate(routes.app.home, { replace: true });
   }, [isLoggedIn, navigate]);
 
   return (

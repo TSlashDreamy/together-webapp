@@ -5,12 +5,13 @@ import { twMerge } from "tailwind-merge";
 import { logoStyle } from "./styles";
 
 interface IProps extends HTMLAttributes<HTMLDivElement> {
-  hidden: boolean;
+  hidden?: boolean;
+  onlyLogo?: boolean;
 }
 
-const Logo: FC<IProps> = ({ hidden, ...other }) => {
+const Logo: FC<IProps> = ({ hidden, onlyLogo, ...other }) => {
   const classes = twMerge(
-    classNames(other.className, logoStyle, {
+    classNames(logoStyle, other.className, {
       "opacity-0": hidden,
     })
   );
@@ -19,7 +20,7 @@ const Logo: FC<IProps> = ({ hidden, ...other }) => {
     <div className={classes}>
       {/* //! TEMP LOGO */}
       <div className="size-10 border-2 rounded-[10px]" />
-      together
+      {!onlyLogo && "together"}
     </div>
   );
 };

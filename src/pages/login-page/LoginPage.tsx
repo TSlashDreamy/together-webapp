@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
+import { browserSessionPersistence, setPersistence } from "firebase/auth";
 
 import LoginFields from "~/containers/login-fields";
 import AuthorizationWrapper from "~/containers/authorization-wrapper";
@@ -27,6 +28,7 @@ const LoginPage: FC = () => {
 
     try {
       dispatch(setLoggingIn());
+      await setPersistence(auth, browserSessionPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
 
       dispatch(
@@ -36,15 +38,15 @@ const LoginPage: FC = () => {
           token: user.refreshToken,
         })
       );
-      dispatch(resetLoggingIn());
     } catch (error) {
-      dispatch(resetLoggingIn());
       dispatch(
         showNotification({
           type: NotificationType.Error,
           content: error instanceof FirebaseError ? error.message : "Something went wrong",
         })
       );
+    } finally {
+      dispatch(resetLoggingIn());
     }
   };
 

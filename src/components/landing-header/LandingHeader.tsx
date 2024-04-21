@@ -12,7 +12,14 @@ import * as S from "./styles";
 const LandingHeader: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const authRoutes = useMemo(() => [String(routes.Login), String(routes.Signup)], []);
+  const authRoutes = useMemo(
+    () => [
+      String(routes.landing.login),
+      String(routes.landing.signup),
+      String(routes.landing.resetPass),
+    ],
+    []
+  );
 
   const isAuthPage = useMemo(
     () => authRoutes.includes(location.pathname),
@@ -30,15 +37,15 @@ const LandingHeader: FC = () => {
       <Logo hidden={isAuthPage} />
       <div className={S.buttonWrapperStyle}>
         {isAuthPage ? (
-          <Button primary outline onClick={() => navigate(-1)}>
+          <Button primary outline onClick={() => navigate(routes.landing.main)}>
             Go Back
           </Button>
         ) : (
           <>
-            <Button primary outline onClick={() => navigate(routes.Login)}>
+            <Button primary outline onClick={() => navigate(routes.landing.login)}>
               Log In
             </Button>
-            <Button primary onClick={() => navigate(routes.Signup)}>
+            <Button primary onClick={() => navigate(routes.landing.signup)}>
               Sign Up
             </Button>
           </>

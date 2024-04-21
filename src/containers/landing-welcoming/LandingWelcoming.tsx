@@ -20,7 +20,7 @@ const LandingWelcoming: FC = () => {
             anything!
           </span>
         </div>
-        <Button primary outline onClick={() => navigate(routes.Signup)}>
+        <Button primary outline onClick={() => navigate(routes.landing.signup)}>
           Let's go
         </Button>
       </div>

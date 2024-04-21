@@ -10,6 +10,8 @@ export default {
       foreground: "#292C35",
       "border-color": "#53535380",
       primary: "#E09145",
+      "primary-transparent": "rgba(224,145,69,0.05)",
+      "light-transparent": "rgba(252,217,184,0.05)",
       text: {
         light: "#FCD9B8",
         white: "#F0F0F0",
@@ -91,16 +93,16 @@ export default {
           "100%": { transform: "translateY(0px) rotate(130deg)" },
         },
         expand: {
-          "from": { transform: "translateY(50px)", opacity: 0 },
-          "to": { transform: "translateY(0px)", opacity: 1 },
-        }
+          from: { transform: "translateY(50px)", opacity: 0 },
+          to: { transform: "translateY(0px)", opacity: 1 },
+        },
       },
       animation: {
         loading: "load 2s ease-in-out infinite",
         floating65: "float65 6s ease-in-out infinite",
         floating115: "float115 4s ease-in-out infinite",
         floating130: "float130 2s ease-in-out infinite",
-        notificationExpand: "expand 1s ease-in-out"
+        notificationExpand: "expand 1s ease-in-out",
       },
       backgroundImage: {
         "landing-gradient": "url('~/assets/gradient.png')",

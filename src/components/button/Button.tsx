@@ -43,7 +43,7 @@ const Button: FC<IProps> = ({
   if (optionalTypeCount > 1 || optionalSizeCount > 1) throw new Error(optionalPropsError);
 
   const classes = twMerge(
-    classNames(other.className, ...S.buttonStyles, {
+    classNames(...S.buttonStyles, other.className, {
       [S.primaryButtonStyle]: primary,
       [S.secondaryButtonStyle]: secondary,
       [S.successButtonStyle]: success,
