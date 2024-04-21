@@ -1,6 +1,5 @@
 import { ChangeEvent, FC, Fragment } from "react";
 import { MdOutlineKeyboardArrowRight as ArrowIcon } from "react-icons/md";
-import { useAuthState } from 'react-firebase-hooks/auth';
 
 import Button from "~/components/button";
 import Input from "~/components/input";
@@ -9,7 +8,7 @@ import { Inputs } from "~/pages/login-page/constants";
 import { ILoginFormState } from "~/pages/login-page/types";
 import { InputTypes } from "~/types";
 import * as S from "./styles";
-import { auth } from "~/firebase";
+import { useAuth } from "~/hooks/useAuth";
 
 interface IProps<T> {
   values: T;
@@ -18,7 +17,7 @@ interface IProps<T> {
 }
 
 const LoginFields: FC<IProps<ILoginFormState>> = ({ values, errors, handleChange }) => {
-  const [, loading] = useAuthState(auth);
+  const { isLoggingIn } = useAuth();
 
   return (
     <Fragment>
@@ -40,13 +39,7 @@ const LoginFields: FC<IProps<ILoginFormState>> = ({ values, errors, handleChange
           onChange={handleChange}
         />
       </div>
-      <Button
-        primary
-        isLoading={loading}
-        danger={Boolean(Object.values(errors).length)}
-        outline
-        Icon={ArrowIcon}
-      >
+      <Button primary isLoading={isLoggingIn} danger={Boolean(Object.values(errors).length)} outline Icon={ArrowIcon}>
         Log In
       </Button>
     </Fragment>

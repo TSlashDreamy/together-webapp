@@ -1,6 +1,6 @@
 export const buttonStyles = [
   "xl:text-[1.1vw]",
-  "flex items-center justify-center gap-[10px] relative group",
+  "flex items-center justify-center gap-[10px] relative group cursor-pointer",
   "px-9 py-3 rounded-[10px]",
   "font-light text-[20px] transition-all",
   "after:content-[''] after:absolute after:left-1/2 after:bottom-[20%] after:translate-x-[-50%] after:w-0 after:h-[1px]",
@@ -37,4 +37,4 @@ export const buttonIconStyles = [
 ];
 
 export const disabledStyle =
-  "opacity-50 hover:tracking-normal hover:after:w-0 hover:px-[2.05rem] active:scale-100 active:after:w-0";
+  "opacity-50 hover:tracking-normal hover:after:w-0 hover:px-[2.05rem] active:scale-100 active:after:w-0 cursor-not-allowed";

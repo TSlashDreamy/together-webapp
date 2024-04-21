@@ -4,8 +4,7 @@ import { MdOutlineKeyboardArrowRight as ArrowIcon } from "react-icons/md";
 import Button from "~/components/button";
 import Input from "~/components/input";
 
-import { useAppSelector } from "~/hooks/useRedux";
-
+import { useAuth } from "~/hooks/useAuth";
 import { Inputs } from "~/pages/signup-page/constants";
 import { ISignUpFormState } from "~/pages/signup-page/types";
 import { InputTypes } from "~/types";
@@ -18,7 +17,7 @@ interface IProps<T> {
 }
 
 const SignupFields: FC<IProps<ISignUpFormState>> = ({ values, errors, handleChange }) => {
-  const { isLoggingIn } = useAppSelector((state) => state.authentication);
+  const { isLoggingIn } = useAuth();
 
   return (
     <Fragment>

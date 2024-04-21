@@ -93,7 +93,7 @@ export default {
           "100%": { transform: "translateY(0px) rotate(130deg)" },
         },
         expand: {
-          from: { transform: "translateY(50px)", opacity: 0 },
+          from: { transform: "translateY(20px)", opacity: 0 },
           to: { transform: "translateY(0px)", opacity: 1 },
         },
       },

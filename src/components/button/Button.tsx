@@ -14,6 +14,7 @@ interface IProps extends HTMLAttributes<HTMLButtonElement> {
   danger?: boolean;
   outline?: boolean;
   isLoading?: boolean;
+  disabled?: boolean;
   extraLarge?: boolean;
   large?: boolean;
   medium?: boolean;
@@ -29,6 +30,7 @@ const Button: FC<IProps> = ({
   danger,
   outline,
   isLoading,
+  disabled,
   extraLarge,
   large,
   medium,
@@ -48,7 +50,7 @@ const Button: FC<IProps> = ({
       [S.secondaryButtonStyle]: secondary,
       [S.successButtonStyle]: success,
       [S.dangerButtonStyle]: danger,
-      [S.disabledStyle]: isLoading,
+      [S.disabledStyle]: isLoading || disabled,
       [S.outlineButtonStyle]: outline,
       [S.primaryOutlineStyle]: outline && primary,
       [S.secondaryOutlineStyle]: outline && secondary,

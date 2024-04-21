@@ -1,6 +1,8 @@
 import { FC, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+
 import LandingHeader from "~/components/landing-header";
+import TransitionLoader from "~/components/transition-loader";
 
 import { useAuth } from "~/hooks/useAuth";
 import { routes } from "~/router/constants";
@@ -15,6 +17,7 @@ const PublicLayout: FC = () => {
 
   return (
     <main>
+      <TransitionLoader />
       <LandingHeader />
       <Outlet />
     </main>
