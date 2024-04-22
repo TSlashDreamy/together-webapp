@@ -27,7 +27,7 @@ const ContextMenu: FC<IProps> = ({ posX, posY, isToggled, buttons, title, contex
       style={{ top: `${posY + 2}px`, left: `${posX + 2}px` }}
       className={S.menuStyle.concat(" ", isToggled ? S.menuEnabled : S.menuDisabled)}
     >
-      <CardWrapper>
+      <CardWrapper className="bg-transparent-dark">
         <div className={S.headerStyle}>
           <span className={S.greetingsStyle}>Hello 👋</span>
           <span className={S.userNameStyle}>{title}</span>

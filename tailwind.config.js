@@ -6,6 +6,7 @@ export default {
       transparent: "transparent",
       black: "#0F0F0F",
       "semitransparent-dark": "#11121580",
+      "transparent-dark": "#111215f0",
       background: "#17181D",
       foreground: "#292C35",
       "border-color": "#53535380",

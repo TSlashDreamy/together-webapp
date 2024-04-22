@@ -1,4 +1,5 @@
 import { FC, ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
 
 import Cubes from "~/components/cubes";
@@ -15,7 +16,7 @@ const AuthorizationWrapper: FC<IProps> = ({ children }) => {
 
   return (
     <div className={S.authWrapperStyle}>
-      <Cubes randomize />
+      {createPortal(<Cubes randomize />, document.getElementById("portal") as HTMLElement)}
       <LandingWrapper className={S.landingWrapperOverride}>
         <h3 className={titleClasses}>together</h3>
         {children}

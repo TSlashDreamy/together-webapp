@@ -1,6 +1,7 @@
 import { FC, HTMLAttributes, ReactNode } from "react";
 import classNames from "classnames";
 import { twMerge } from "tailwind-merge";
+
 import { cardDefaultStyle } from "./styles";
 
 interface IProps extends HTMLAttributes<HTMLDivElement> {
@@ -10,7 +11,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
 const CardWrapper: FC<IProps> = ({ children, ...other }) => {
   const classes = twMerge(classNames(cardDefaultStyle, other.className));
 
-  return <div className={classes}>{children}</div>;
+  return <div {...other} className={classes}>{children}</div>;
 };
 
 export default CardWrapper;

@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { createPortal } from "react-dom";
 
 import LandingWelcoming from "~/containers/landing-welcoming";
 import LandingWrapper from "~/components/landing-wrapper";
@@ -11,7 +12,7 @@ const LandingPage: FC = () => {
     <div className={landingStyle}>
       <LandingWrapper>
         <LandingWelcoming />
-        <Cubes />
+        {createPortal(<Cubes />, document.getElementById("portal") as HTMLElement)}
       </LandingWrapper>
     </div>
   );

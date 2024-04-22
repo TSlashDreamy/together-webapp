@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import AppNavbar from "~/components/app-navbar";
+import Cubes from "~/components/cubes";
 
 import { useAuth } from "~/hooks/useAuth";
 import { routes } from "~/router/constants";
@@ -19,6 +21,7 @@ const PrivateLayout = () => {
     <main>
       <TransitionLoader />
       <AppNavbar />
+      {createPortal(<Cubes randomize />, document.getElementById("portal") as HTMLElement)}
       <Outlet />
     </main>
   );

@@ -2,8 +2,8 @@ import { FC, MouseEvent, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import ContextMenu from "~/components/context-menu";
-import RoomIcon from "~/assets/icons/roomIcon.svg?react";
-import ProfileIcon from "~/assets/icons/profileIcon.svg?react";
+import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
+import ProfileIcon from "~/assets/icons/navbar-icons/profileIcon.svg?react";
 
 import { useAuth } from "~/hooks/useAuth";
 

@@ -1,0 +1,1 @@
+export const typographyStyle = "text-text-white font-medium cursor-default";

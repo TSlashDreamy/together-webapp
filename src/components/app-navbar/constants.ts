@@ -1,9 +1,9 @@
 import { routes } from "~/router/constants";
-import SearchIcon from "~/assets/icons/searchIcon.svg?react";
-import FriendsIcon from "~/assets/icons/friendsIcon.svg?react";
-import HomeIcon from "~/assets/icons/homeIcon.svg?react";
-import CollectionIcon from "~/assets/icons/collectionIcon.svg?react";
-import LikeIcon from "~/assets/icons/likeIcon.svg?react";
+import SearchIcon from "~/assets/icons/navbar-icons/searchIcon.svg?react";
+import FriendsIcon from "~/assets/icons/navbar-icons/friendsIcon.svg?react";
+import HomeIcon from "~/assets/icons/navbar-icons/homeIcon.svg?react";
+import CollectionIcon from "~/assets/icons/navbar-icons/collectionIcon.svg?react";
+import LikeIcon from "~/assets/icons/navbar-icons/likeIcon.svg?react";
 
 export const alignmentOffset = 50
 
