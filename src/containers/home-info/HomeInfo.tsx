@@ -1,26 +1,15 @@
 import { FC } from "react";
 
-import Typography from "~/components/typography";
-import Button from "~/components/button";
-import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
+import CreatedRoomInfo from "~/containers/home-info/created-room-info";
+import NoRoomInfo from "~/containers/home-info/no-room-info";
 
+import { useAppSelector } from "~/hooks/useRedux";
 import * as S from "./styles";
 
 const HomeInfo: FC = () => {
-  return (
-    <div className={S.infoWrapperStyle}>
-      <Typography.H2 className={S.headerStyle}>Create a room</Typography.H2>
-      <div className={S.contentWrapper}>
-        <div className={S.descriptionWrapper}>
-          <RoomIcon />
-          <Typography.H4>Don't have a room yet?</Typography.H4>
-        </div>
-        <Button primary outline>
-          Let's create one!
-        </Button>
-      </div>
-    </div>
-  );
+  const { roomId } = useAppSelector((state) => state.room);
+
+  return <div className={S.infoWrapperStyle}>{roomId ? <CreatedRoomInfo /> : <NoRoomInfo />}</div>;
 };
 
 export default HomeInfo;

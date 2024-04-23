@@ -11,7 +11,7 @@ import * as S from "./styles";
 const HomePage: FC = () => {
   return (
     <div className={S.wrapperStyle}>
-      <div className={S.headerStyle}>
+      <div>
         <Typography.H1>User's homepage</Typography.H1>
       </div>
       <HomeInfo />
