@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { FC, HTMLAttributes, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { dividerStyle, lineStyle } from "./styles";
+import Typography from "../typography";
 
 interface IProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
@@ -16,7 +17,7 @@ const Divider: FC<IProps> = ({ children, ...other }) => {
   return (
     <div className={classes}>
       <hr className={lineStyle} />
-      {children}
+      <Typography.SPAN>{children}</Typography.SPAN>
       <hr className={lineStyle} />
     </div>
   );

@@ -18,6 +18,12 @@ export enum NotificationType {
   Information = "information",
 }
 
-export type RequestFunction<Response, Params = undefined> = (
-  params?: Params
-) => Promise<AxiosResponse<Response>>;
+export enum ContentType {
+  Music = "music",
+  Video = "video",
+  Film = "film",
+  Picture = "picture",
+  Document = "document",
+}
+
+export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;
