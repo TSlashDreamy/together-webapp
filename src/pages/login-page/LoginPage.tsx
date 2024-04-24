@@ -9,7 +9,6 @@ import OptionalLoginBlock from "~/containers/optional-login-block";
 import CardWrapper from "~/components/card-wrapper";
 import Form from "~/components/form";
 
-import { setUser } from "~/redux/slices/userSlice";
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
 import { useAppDispatch } from "~/hooks/useRedux";
@@ -29,15 +28,7 @@ const LoginPage: FC = () => {
     try {
       dispatch(setLoggingIn());
       await setPersistence(auth, browserSessionPersistence);
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-
-      dispatch(
-        setUser({
-          email: user.email,
-          id: user.uid,
-          token: user.refreshToken,
-        })
-      );
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       dispatch(
         showNotification({

@@ -4,6 +4,8 @@ export const validate = (values: ISignUpFormState): { [key: string]: string } =>
   const errors: { [key: string]: string } = {};
   if (!values.name) {
     errors.name = "Name is required";
+  } else if (!(values.name.length <= 15)) {
+    errors.name = "Name must be less or equal 15 symbols"
   }
   if (!values.email) {
     errors.email = "Email is required";

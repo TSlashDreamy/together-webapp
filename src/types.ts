@@ -26,4 +26,12 @@ export enum ContentType {
   Document = "document",
 }
 
+export interface User {
+  email: string | null;
+  token: string | null;
+  id: string | null;
+  userName: string | null;
+  lastLogin: number | null;
+}
+
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;

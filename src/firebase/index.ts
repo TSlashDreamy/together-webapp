@@ -1,4 +1,4 @@
-import { app, auth } from "~/firebase/firebase";
+import { app, auth, database } from "~/firebase/firebase";
 
 export default app;
-export { app, auth };
+export { app, auth, database };

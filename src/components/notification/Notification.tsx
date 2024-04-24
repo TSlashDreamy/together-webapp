@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { MdError as ErrorIcon } from "react-icons/md";
 import { CiCircleCheck as SuccessIcon } from "react-icons/ci";
 import { RxCross1 as CloseIcon } from "react-icons/rx";
+import { IoIosWarning as WarningIcon } from "react-icons/io";
 
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
 import { hideNotification } from "~/redux/slices/notificationSlice";
@@ -21,7 +22,8 @@ const Notification: FC<IProps> = ({ ...other }) => {
   const classes = twMerge(
     classNames(other.className, S.notificationStyle, {
       [S.errorStyle]: type === NotificationType.Error,
-      [S.successStyles]: type === NotificationType.Success,
+      [S.successStyle]: type === NotificationType.Success,
+      [S.warningStyle]: type === NotificationType.Warning,
     })
   );
 
@@ -32,6 +34,9 @@ const Notification: FC<IProps> = ({ ...other }) => {
         break;
       case NotificationType.Success:
         setIcon(<SuccessIcon />);
+        break;
+      case NotificationType.Warning:
+        setIcon(<WarningIcon />);
         break;
     }
   }, [type]);

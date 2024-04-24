@@ -9,7 +9,6 @@ import CardWrapper from "~/components/card-wrapper";
 import Form from "~/components/form";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
-import { setUser } from "~/redux/slices/userSlice";
 import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
 import { useAppDispatch } from "~/hooks/useRedux";
 
@@ -18,33 +17,28 @@ import useForm from "~/hooks/useForm";
 import { validate as signupValidate } from "~/validators/signupValidators";
 import { ISignUpFormState } from "./types";
 import { NotificationType } from "~/types";
+import useDatabase from "~/hooks/useDatabase";
 
 const SignupPage: FC = () => {
   const dispatch = useAppDispatch();
+  const { pushUserData } = useDatabase();
 
   const handleSignUp = async (values: ISignUpFormState) => {
-    const { email, password } = values;
+    const { email, password, name } = values;
 
     try {
       dispatch(setLoggingIn());
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
-
-      dispatch(
-        setUser({
-          email: user.email,
-          id: user.uid,
-          token: user.refreshToken,
-        })
-      );
-      dispatch(resetLoggingIn());
+      await pushUserData({...user, userName: name})
     } catch (error) {
-      dispatch(resetLoggingIn());
       dispatch(
         showNotification({
           type: NotificationType.Error,
           content: error instanceof FirebaseError ? error.message : "Something went wrong",
         })
       );
+    } finally {
+      dispatch(resetLoggingIn());
     }
   };
 

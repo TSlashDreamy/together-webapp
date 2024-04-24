@@ -1,5 +1,6 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { child, get, getDatabase, ref, set } from "firebase/database";
 
 const envData = import.meta.env;
 
@@ -14,6 +15,6 @@ const firebaseConfig: FirebaseOptions = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const database = { db: getDatabase(app), dbSet: set, dbGet: get, dbRef: ref, dbChild: child };
 
-
-export { app, auth };
+export { app, auth, database };

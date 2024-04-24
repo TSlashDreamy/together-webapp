@@ -26,6 +26,7 @@ export default {
         documents: "#8665F2",
       },
       orange: {
+        transparent: "#43140780",
         50: "#FFF7ED",
         100: "#FFEDD5",
         200: "#FED7AA",

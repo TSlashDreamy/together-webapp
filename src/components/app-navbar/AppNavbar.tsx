@@ -6,6 +6,7 @@ import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
 import ProfileIcon from "~/assets/icons/navbar-icons/profileIcon.svg?react";
 
 import { useAuth } from "~/hooks/useAuth";
+import { useAppSelector } from "~/hooks/useRedux";
 
 import Logo from "../logo";
 import NavbarNavlink from "./navbar-navlink/NavbarNavlink";
@@ -17,6 +18,7 @@ import NavbarItem from "./navbar-item";
 
 const AppNavbar: FC = () => {
   const { signUserOut, isLoggingIn } = useAuth();
+  const { userName } = useAppSelector((state) => state.user);
   const [contextMenu, setContextMenu] = useState(contextMenuInitial);
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -78,7 +80,7 @@ const AppNavbar: FC = () => {
         isToggled={contextMenu.toggled}
         posX={contextMenu.position.x}
         posY={contextMenu.position.y}
-        title={"UserName"} // TODO: Firebase username here
+        title={userName || "Friend"}
         buttons={contextMenuButtons}
       />
     </div>
