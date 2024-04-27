@@ -1,71 +1,71 @@
 import { FirebaseError } from "firebase/app";
-import { User as FirebaseUser } from "firebase/auth";
 import { useCallback } from "react";
+import { DBCollections } from "~/constants";
 import { database } from "~/firebase";
 import { useAppDispatch } from "~/hooks/useRedux";
 import { showNotification } from "~/redux/slices/notificationSlice";
-import { setUser } from "~/redux/slices/userSlice";
 import { NotificationType, User } from "~/types";
-
-interface IUserPushData extends FirebaseUser {
-  userName: string;
-}
 
 const useDatabase = () => {
   const dispatch = useAppDispatch();
-  const { db, dbRef, dbChild, dbGet, dbSet } = database;
+  const { db, dbRef, dbChild, dbGet, dbSet, dbUpdate } = database;
 
-  const getUserData = useCallback(
-    async (user: FirebaseUser | null) => {
+  const _handleDBError = useCallback(
+    (e: unknown) => {
+      dispatch(
+        showNotification({
+          type: NotificationType.Error,
+          content: e instanceof FirebaseError ? e.message : "Something went wrong (Database)",
+        })
+      );
+    },
+    [dispatch]
+  );
+
+  const getData = useCallback(
+    async (collection: DBCollections, id: string) => {
       try {
-        const snapshot = await dbGet(dbChild(dbRef(db), `users/${user?.uid}`));
+        const snapshot = await dbGet(dbChild(dbRef(db), `${collection}/${id}`));
         if (snapshot.exists()) {
           return snapshot.val() as Omit<User, "token">;
         }
       } catch (e) {
-        dispatch(
-          showNotification({
-            type: NotificationType.Error,
-            content: e instanceof FirebaseError ? e.message : "Something went wrong (Database)",
-          })
-        );
+        _handleDBError(e);
       }
     },
-    [db, dbChild, dbGet, dbRef, dispatch]
+    [_handleDBError, db, dbChild, dbGet, dbRef]
   );
 
-  const pushUserData = useCallback(
-    async (userToPush: IUserPushData) => {
+  const pushData = useCallback(
+    async <T>(collection: DBCollections, dataToPush: T, id: string) => {
       try {
-        const userData: Omit<User, "token"> = {
-          id: userToPush.uid,
-          email: userToPush.email,
-          userName: userToPush.userName,
-          lastLogin: Date.now(),
-        };
-        await dbSet(dbRef(db, "users/" + userData.id), userData);
-        
-        dispatch(
-          setUser({
-            ...userData,
-            token: userToPush.refreshToken,
-          })
-        );
+        await dbSet(dbRef(db, `${collection}/${id}`), dataToPush);
       } catch (e) {
-        dispatch(
-          showNotification({
-            type: NotificationType.Error,
-            content: e instanceof FirebaseError ? e.message : "Something went wrong (Database)",
-          })
-        );
+        _handleDBError(e);
       }
     },
-    [db, dbRef, dbSet, dispatch]
+    [_handleDBError, db, dbRef, dbSet]
+  );
+
+  const updateData = useCallback(
+    async <T>(collection: DBCollections, dataToUpdate: T, id: string) => {
+      try {
+        const updates = {
+          [`${collection}/${id}`]: dataToUpdate,
+        };
+
+        await dbUpdate(dbRef(db), updates);
+      } catch (e) {
+        _handleDBError(e);
+      }
+    },
+    [_handleDBError, db, dbRef, dbUpdate]
   );
 
   return {
-    getUserData,
-    pushUserData,
+    getData,
+    pushData,
+    updateData,
   };
 };
 

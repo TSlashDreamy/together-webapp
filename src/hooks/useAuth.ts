@@ -6,12 +6,13 @@ import { auth } from "~/firebase";
 import { removeUser, setUser } from "~/redux/slices/userSlice";
 import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
 import useDatabase from "./useDatabase";
+import { DBCollections } from "~/constants";
 
 export const useAuth = () => {
-  const { email, token, id } = useAppSelector((state) => state.user);
+  const { email, token, uid } = useAppSelector((state) => state.user);
   const { isLoggingIn } = useAppSelector((state) => state.authentication);
   const dispatch = useAppDispatch();
-  const { getUserData } = useDatabase();
+  const { getData } = useDatabase();
 
   const signUserOut = async () => {
     dispatch(setLoggingIn());
@@ -23,12 +24,12 @@ export const useAuth = () => {
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userData = await getUserData(user);
+        const userData = await getData(DBCollections.Users, user.uid);
         userData &&
           dispatch(
             setUser({
               email: user.email,
-              id: user.uid,
+              uid: user.uid,
               token: user.refreshToken,
               userName: userData.userName,
               lastLogin: userData.lastLogin,
@@ -36,13 +37,13 @@ export const useAuth = () => {
           );
       }
     });
-  }, [dispatch, getUserData]);
+  }, [dispatch, getData]);
 
   return {
     isLoggedIn: Boolean(email),
     email,
     token,
-    id,
+    uid,
     signUserOut,
     isLoggingIn,
   };

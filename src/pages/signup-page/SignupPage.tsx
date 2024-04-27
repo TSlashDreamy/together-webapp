@@ -8,28 +8,41 @@ import OptionalLoginBlock from "~/containers/optional-login-block";
 import CardWrapper from "~/components/card-wrapper";
 import Form from "~/components/form";
 
+import { setUser } from "~/redux/slices/userSlice";
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
+
 import { useAppDispatch } from "~/hooks/useRedux";
+import useForm from "~/hooks/useForm";
+import useDatabase from "~/hooks/useDatabase";
 
 import { auth } from "~/firebase";
-import useForm from "~/hooks/useForm";
 import { validate as signupValidate } from "~/validators/signupValidators";
-import { ISignUpFormState } from "./types";
+import { convertUserData } from "./utils";
+import { DBCollections } from "~/constants";
 import { NotificationType } from "~/types";
-import useDatabase from "~/hooks/useDatabase";
+import { ISignUpFormState } from "./types";
+
+type ISignUp = (values: ISignUpFormState) => void;
 
 const SignupPage: FC = () => {
   const dispatch = useAppDispatch();
-  const { pushUserData } = useDatabase();
+  const { pushData } = useDatabase();
 
-  const handleSignUp = async (values: ISignUpFormState) => {
-    const { email, password, name } = values;
-
+  const handleSignUp: ISignUp = async ({ email, password, name }) => {
     try {
       dispatch(setLoggingIn());
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
-      await pushUserData({...user, userName: name})
+      const userData = convertUserData(user, name);
+
+      await pushData<typeof userData>(DBCollections.Users, userData, user.uid);
+
+      dispatch(
+        setUser({
+          ...userData,
+          token: user.refreshToken,
+        })
+      );
     } catch (error) {
       dispatch(
         showNotification({
