@@ -1,4 +1,4 @@
-export const menuStyle = "absolute flex flex-col gap-4 w-max transition-opacity backdrop-blur-[150px]";
+export const menuStyle = "absolute flex flex-col gap-4 w-max transition-opacity";
 export const menuEnabled = "opacity-100";
 export const menuDisabled = "opacity-0";
 

@@ -1,52 +1,71 @@
-import { FC, MouseEvent, useEffect, useRef, useState } from "react";
+import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import ContextMenu from "~/components/context-menu";
+import UserContextMenu from "~/containers/user-context-menu";
+import RoomContextMenu from "~/containers/room-context-menu";
+import Logo from "~/components/logo";
 import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
 import ProfileIcon from "~/assets/icons/navbar-icons/profileIcon.svg?react";
-
-import { useAuth } from "~/hooks/useAuth";
-import { useAppSelector } from "~/hooks/useRedux";
-
-import Logo from "../logo";
 import NavbarNavlink from "./navbar-navlink/NavbarNavlink";
-import { routes } from "~/router/constants";
-
-import { alignmentOffset, contextMenuInitial, navLinks } from "./constants";
-import { linkWrapperStyle, navBarStyles } from "./styles";
 import NavbarItem from "./navbar-item";
 
+import { alignmentOffset, contextMenuInitial, navLinks } from "./constants";
+import { IContextMenuConfig } from "~/components/context-menu/types";
+import { linkWrapperStyle, navBarStyles } from "./styles";
+import { routes } from "~/router/constants";
+import { useLocation } from "react-router-dom";
+
 const AppNavbar: FC = () => {
-  const { signUserOut, isLoggingIn } = useAuth();
-  const { userName } = useAppSelector((state) => state.user);
-  const [contextMenu, setContextMenu] = useState(contextMenuInitial);
+  const [userContextMenu, setUserContextMenu] = useState<IContextMenuConfig>(contextMenuInitial);
+  const [roomContextMenu, setRoomContextMenu] = useState<IContextMenuConfig>(contextMenuInitial);
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
+  const location = useLocation();
+
+  const isRoomPage = useMemo(
+    () => {
+      const rootRoom = routes.app.room;
+      const pathArr = location.pathname.split("/");
+      pathArr.length = 3;
+      
+      return pathArr.join("/") === rootRoom.slice(0, rootRoom.indexOf("/:"))
+    },
+    [location.pathname]
+  );
 
   const classes = twMerge(...navBarStyles);
 
-  const contextMenuButtons = [
-    { text: "My Profile", onClick: () => null, disabled: true },
-    { text: "Settings", onClick: () => null, disabled: true },
-    { text: "Sign out", onClick: signUserOut, isLoading: isLoggingIn },
-  ];
-
-  const showContextMenu = (e: MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-
+  const getContextData = (e: MouseEvent<HTMLDivElement>) => {
     const contextMenuAttr = contextMenuRef.current && contextMenuRef.current.getBoundingClientRect();
     const clickedItem = e.currentTarget.getBoundingClientRect();
 
-    setContextMenu({
+    return {
       position: {
         x: clickedItem.x + clickedItem.width,
         y: clickedItem.y - (contextMenuAttr ? contextMenuAttr.height : alignmentOffset),
       },
       toggled: true,
-    });
+    };
+  };
+
+  const showUserContextMenu = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
+    const contextData = getContextData(e);
+    resetContextMenu();
+    setUserContextMenu(contextData);
+  };
+
+  const showRoomContextMenu = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
+    const contextData = getContextData(e);
+    resetContextMenu();
+    setRoomContextMenu(contextData);
   };
 
   const resetContextMenu = () => {
-    setContextMenu(contextMenuInitial);
+    setUserContextMenu(contextMenuInitial);
+    setRoomContextMenu(contextMenuInitial);
   };
 
   useEffect(() => {
@@ -72,17 +91,11 @@ const AppNavbar: FC = () => {
         ))}
       </div>
       <div className={linkWrapperStyle}>
-        <NavbarNavlink to={routes.app.room} Icon={RoomIcon} />
-        <NavbarItem onClick={showContextMenu} Icon={ProfileIcon} />
+        <NavbarItem onClick={showRoomContextMenu} Icon={RoomIcon} isActive={isRoomPage} />
+        <NavbarItem onClick={showUserContextMenu} Icon={ProfileIcon} />
       </div>
-      <ContextMenu
-        contextMenuRef={contextMenuRef}
-        isToggled={contextMenu.toggled}
-        posX={contextMenu.position.x}
-        posY={contextMenu.position.y}
-        title={userName || "Friend"}
-        buttons={contextMenuButtons}
-      />
+      <UserContextMenu contextMenuRef={contextMenuRef} contextMenuConfig={userContextMenu} />
+      <RoomContextMenu contextMenuRef={contextMenuRef} contextMenuConfig={roomContextMenu} />
     </div>
   );
 };

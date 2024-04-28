@@ -11,6 +11,6 @@ export const routes = {
     friends: "/app/friends",
     collections: "/app/collections",
     liked: "/app/liked",
-    room: "/app/room",
+    room: "/app/room/:roomId",
   },
 };

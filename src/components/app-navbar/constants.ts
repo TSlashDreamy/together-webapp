@@ -4,6 +4,7 @@ import FriendsIcon from "~/assets/icons/navbar-icons/friendsIcon.svg?react";
 import HomeIcon from "~/assets/icons/navbar-icons/homeIcon.svg?react";
 import CollectionIcon from "~/assets/icons/navbar-icons/collectionIcon.svg?react";
 import LikeIcon from "~/assets/icons/navbar-icons/likeIcon.svg?react";
+import { IContextMenuConfig } from "../context-menu/types";
 
 export const alignmentOffset = 50
 
@@ -15,7 +16,7 @@ export const navLinks = [
   { path: routes.app.liked, Icon: LikeIcon },
 ];
 
-export const contextMenuInitial = {
+export const contextMenuInitial: IContextMenuConfig = {
   position: {
     x: 0,
     y: window.innerHeight + alignmentOffset,

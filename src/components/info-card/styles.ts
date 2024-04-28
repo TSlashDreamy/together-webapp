@@ -1,6 +1,6 @@
 export const wrapperStyles = [
   "xl:gap-[0.6vw] xl:px-[1.6vw] xl:py-[3.7vw] xl:min-w-[15.8vw] xl:min-h-[15.8vw] xl:rounded-[1.8vw]",
-  "flex flex-col items-center justify-center gap-[10px] px-[30px] py-[70px] min-h-[300px] min-w-[300px] bg-semitransparent-dark border-[3px] border-text-white rounded-[35px] backdrop-blur-2xl",
+  "flex flex-col items-center justify-center gap-[10px] px-[30px] py-[70px] min-h-[300px] min-w-[300px] bg-semitransparent-dark border-[1px] border-border-color rounded-[35px] backdrop-blur-2xl",
 ];
 
 export const titleStyle = "xl:gap-[0.6vw] flex items-center gap-[10px]";

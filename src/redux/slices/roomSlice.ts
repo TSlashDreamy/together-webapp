@@ -7,8 +7,9 @@ interface RoomState {
   nowPlaying: string | null; // !TEMP
   next: string | null; // !TEMP
   queue: string[]; // !TEMP
-  people: string[]; // !TEMP
+  users: string[];
   contentType: ContentType | null;
+  isLoading: boolean;
 }
 
 const initialState: RoomState = {
@@ -16,8 +17,9 @@ const initialState: RoomState = {
   nowPlaying: null,
   next: null,
   queue: [],
-  people: [],
+  users: [],
   contentType: null,
+  isLoading: false,
 };
 
 export const roomSlice = createSlice({
@@ -29,7 +31,7 @@ export const roomSlice = createSlice({
       state.nowPlaying = action.payload.nowPlaying;
       state.next = action.payload.next;
       state.queue = action.payload.queue;
-      state.people = action.payload.people;
+      state.users = action.payload.users;
       state.contentType = action.payload.contentType;
     },
     resetRoom: (state) => {
@@ -37,7 +39,7 @@ export const roomSlice = createSlice({
       state.nowPlaying = null;
       state.next = null;
       state.queue = [];
-      state.people = [];
+      state.users = [];
       state.contentType = null;
     },
     setNext: (state, action: PayloadAction<RoomState>) => {
@@ -45,8 +47,14 @@ export const roomSlice = createSlice({
       state.next = action.payload.next;
       state.queue = action.payload.queue;
     },
+    setIsLoading: (state) => {
+      state.isLoading = true;
+    },
+    resetIsLoading: (state) => {
+      state.isLoading = false;
+    },
   },
 });
 
-export const { setRoom, resetRoom, setNext } = roomSlice.actions;
+export const { setRoom, resetRoom, setNext, setIsLoading, resetIsLoading } = roomSlice.actions;
 export default roomSlice.reducer;

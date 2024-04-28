@@ -1,10 +1,11 @@
 import { FirebaseError } from "firebase/app";
 import { useCallback } from "react";
+
+import { showNotification } from "~/redux/slices/notificationSlice";
+import { useAppDispatch } from "~/hooks/useRedux";
 import { DBCollections } from "~/constants";
 import { database } from "~/firebase";
-import { useAppDispatch } from "~/hooks/useRedux";
-import { showNotification } from "~/redux/slices/notificationSlice";
-import { NotificationType, User } from "~/types";
+import { NotificationType } from "~/types";
 
 const useDatabase = () => {
   const dispatch = useAppDispatch();
@@ -27,7 +28,7 @@ const useDatabase = () => {
       try {
         const snapshot = await dbGet(dbChild(dbRef(db), `${collection}/${id}`));
         if (snapshot.exists()) {
-          return snapshot.val() as Omit<User, "token">;
+          return snapshot.val();
         }
       } catch (e) {
         _handleDBError(e);
@@ -48,10 +49,10 @@ const useDatabase = () => {
   );
 
   const updateData = useCallback(
-    async <T>(collection: DBCollections, dataToUpdate: T, id: string) => {
+    async <T>(collection: DBCollections, dataToUpdate: T, id: string, updatedValue?: string) => {
       try {
         const updates = {
-          [`${collection}/${id}`]: dataToUpdate,
+          [`${collection}/${id}${updatedValue ? `/${updatedValue}` : ""}`]: dataToUpdate,
         };
 
         await dbUpdate(dbRef(db), updates);

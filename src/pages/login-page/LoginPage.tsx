@@ -11,16 +11,21 @@ import Form from "~/components/form";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
+
 import { useAppDispatch } from "~/hooks/useRedux";
+import useDatabase from "~/hooks/useDatabase";
+import useForm from "~/hooks/useForm";
 
 import { auth } from "~/firebase";
-import useForm from "~/hooks/useForm";
 import { validate as loginValidate } from "~/validators/loginValidators";
-import { NotificationType } from "~/types";
+import { NotificationType, User } from "~/types";
 import { ILoginFormState } from "./types";
+import { DBCollections } from "~/constants";
+import { getKey } from "~/utils";
 
 const LoginPage: FC = () => {
   const dispatch = useAppDispatch();
+  const { updateData } = useDatabase();
 
   const handleLogin = async (values: ILoginFormState) => {
     const { email, password } = values;
@@ -28,7 +33,8 @@ const LoginPage: FC = () => {
     try {
       dispatch(setLoggingIn());
       await setPersistence(auth, browserSessionPersistence);
-      await signInWithEmailAndPassword(auth, email, password);
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      await updateData<number>(DBCollections.Users, Date.now(), user.uid, getKey<User, "lastLogin">("lastLogin"));
     } catch (error) {
       dispatch(
         showNotification({

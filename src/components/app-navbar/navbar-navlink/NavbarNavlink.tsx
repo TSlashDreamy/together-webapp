@@ -10,11 +10,7 @@ interface IProps {
 
 const NavbarNavlink: FC<IProps> = ({ Icon, to }) => {
   return (
-    <NavLink
-      className={({ isActive }) => navLinkStyles.join(" ").concat(" ", isActive ? activeStyle : "")}
-      to={to}
-      end
-    >
+    <NavLink className={({ isActive }) => navLinkStyles.join(" ").concat(" ", isActive ? activeStyle : "")} to={to} end>
       <Icon />
     </NavLink>
   );

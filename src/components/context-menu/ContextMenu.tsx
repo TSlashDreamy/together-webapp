@@ -9,6 +9,7 @@ interface IButtons {
   onClick: () => void;
   disabled?: boolean;
   isLoading?: boolean;
+  danger?: boolean;
 }
 
 interface IProps {
@@ -45,6 +46,7 @@ const ContextMenu: FC<IProps> = ({ posX, posY, isToggled, buttons, title, contex
                 large
                 secondary
                 outline
+                danger={button.danger}
                 disabled={button.disabled}
                 isLoading={button.isLoading}
                 key={index}

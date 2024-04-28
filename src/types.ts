@@ -32,6 +32,16 @@ export interface User {
   uid: string | null;
   userName: string | null;
   lastLogin: number | null;
+  roomId: string | null;
+}
+
+export interface Room {
+  roomId: string;
+  nowPlaying: string | null;
+  next: string | null;
+  queue: string[];
+  users: string[];
+  contentType: ContentType | null;
 }
 
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;
