@@ -7,10 +7,9 @@ import NextIcon from "~/assets/icons/etc-icons/skip.svg?react";
 import QueueIcon from "~/assets/icons/etc-icons/queue.svg?react";
 import PeopleIcon from "~/assets/icons/etc-icons/people.svg?react";
 
-import { useAppSelector } from "~/hooks/useRedux";
+import useRoom from "~/hooks/useRoom";
 
 import { generateInfoCards } from "./utils";
-import { routes } from "~/router/constants";
 import * as S from "../styles";
 
 interface IProps {
@@ -18,9 +17,8 @@ interface IProps {
 }
 
 const CreatedRoomInfo: FC<IProps> = ({ roomId }) => {
-  const { nowPlaying, next, queue, users } = useAppSelector((state) => state.room);
   const navigate = useNavigate();
-  const roomRoot = routes.app.room;
+  const { isIAmTheHost, roomRoute, roomName, nowPlaying, next, queue, users } = useRoom(roomId);
 
   const cards = useMemo(
     () => [
@@ -38,22 +36,22 @@ const CreatedRoomInfo: FC<IProps> = ({ roomId }) => {
       {
         Icon: QueueIcon,
         name: "In queue",
-        description: queue.length > 0 ? `${queue.length} items` : `Empty`,
+        description: queue && queue.length > 0 ? `${queue!.length} items` : `Empty`,
       },
       {
         Icon: PeopleIcon,
         name: "People in room",
-        description: users.length > 1 ? `${users.length} people` : `Only you are here`,
+        description: users && users.length > 1 ? `${users!.length} people` : `Only you are here`,
       },
     ],
-    [next, nowPlaying, queue.length, users.length]
+    [next, nowPlaying, queue, users]
   );
 
   return (
     <>
       <SectionHeading
-        title="Your room"
-        button={{ name: "Open room", action: () => navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`) }}
+        title={`${isIAmTheHost ? `Your` : `${roomName}`} room`}
+        button={{ name: "Open room", action: () => navigate(roomRoute) }}
       />
       <div className={S.cardWrapperStyle}>{generateInfoCards(cards)}</div>
     </>

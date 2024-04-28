@@ -9,7 +9,7 @@ import useDatabase from "./useDatabase";
 import { DBCollections } from "~/constants";
 
 export const useAuth = () => {
-  const { email, token, uid } = useAppSelector((state) => state.user);
+  const { email, token, uid, userName } = useAppSelector((state) => state.user);
   const { isLoggingIn } = useAppSelector((state) => state.authentication);
   const dispatch = useAppDispatch();
   const { getData } = useDatabase();
@@ -33,6 +33,7 @@ export const useAuth = () => {
               token: user.refreshToken,
               userName: userData.userName,
               lastLogin: userData.lastLogin,
+              roomId: null
             })
           );
       }
@@ -44,6 +45,7 @@ export const useAuth = () => {
     email,
     token,
     uid,
+    userName,
     signUserOut,
     isLoggingIn,
   };

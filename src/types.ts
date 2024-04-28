@@ -37,10 +37,12 @@ export interface User {
 
 export interface Room {
   roomId: string;
+  roomName: string;
   nowPlaying: string | null;
   next: string | null;
   queue: string[];
   users: string[];
+  hostUser: string | null;
   contentType: ContentType | null;
 }
 

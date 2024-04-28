@@ -6,7 +6,7 @@ import { useAppSelector } from "~/hooks/useRedux";
 
 import { IContextMenuConfig } from "~/components/context-menu/types";
 import { useNavigate } from "react-router-dom";
-import { routes } from "~/router/constants";
+import useRoom from "~/hooks/useRoom";
 
 interface IProps {
   contextMenuRef: Ref<HTMLElement>;
@@ -15,17 +15,18 @@ interface IProps {
 
 const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
   const { roomId } = useAppSelector((state) => state.user);
+  const { isIAmTheHost, roomRoute, roomName } = useRoom(roomId as string);
   const navigate = useNavigate();
 
   const navigateToRoom = () => {
-    const roomRoot = routes.app.room;
-    navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`);
+    navigate(roomRoute);
   };
 
   const contextMenuButtons = [
     {
-      text: "Open room",
+      text: roomId ? "Open room" : "Create room",
       onClick: roomId ? navigateToRoom : () => null,
+      disabled: Boolean(!roomId),
     },
     { text: "Close room", onClick: () => null, disabled: true, danger: true },
   ];
@@ -36,7 +37,7 @@ const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
       isToggled={contextMenuConfig.toggled}
       posX={contextMenuConfig.position.x}
       posY={contextMenuConfig.position.y}
-      title={roomId ? `Your room: ${roomId}` : `It's time to create a new room c:`}
+      title={roomId ? `${isIAmTheHost ? "Your room" : "You joined"}: ${roomName}` : `Create your room`}
       buttons={contextMenuButtons}
     />
   );

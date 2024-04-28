@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { FC, HTMLAttributes } from "react";
+import { FC, HTMLAttributes, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { IconType } from "react-icons";
 import { MdOutlineKeyboardArrowRight as ArrowIcon } from "react-icons/md";
@@ -19,6 +19,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const CategoryCard: FC<IProps> = ({ Icon, cardNum, description, borderStyle, bgStyle, disabled, ...other }) => {
+  const [scrollTimeout, setScrollTimeout] = useState<number | null>(null);
   const classes = twMerge(
     classNames(S.cardStyles, borderStyle, bgStyle, other.className, {
       [S.disabledStyle]: disabled,
@@ -30,13 +31,21 @@ const CategoryCard: FC<IProps> = ({ Icon, cardNum, description, borderStyle, bgS
   };
 
   const autoScroll = () => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    }, 100);
+      setScrollTimeout(null);
+    }, 350);
+
+    setScrollTimeout(timeout);
+  };
+
+  const cancelAutoScroll = () => {
+    clearTimeout(scrollTimeout as number);
+    setScrollTimeout(null);
   };
 
   return (
-    <div onMouseEnter={autoScroll} className={classes}>
+    <div onMouseEnter={autoScroll} onMouseOut={cancelAutoScroll} className={classes}>
       <Icon className={S.iconStyle} />
       <div className={S.contentWrapperStyle}>
         <Typography.SPAN className={S.numberStyle}>{formatNumber(cardNum)}.</Typography.SPAN>
