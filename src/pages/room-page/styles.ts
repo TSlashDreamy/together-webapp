@@ -1,0 +1,1 @@
+export const contentSideStyle = "xl:px-[2.6vw] xl:gap-[3.7vw] flex flex-col px-[50px] gap-[70px] w-full";
