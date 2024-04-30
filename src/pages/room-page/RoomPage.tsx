@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useParams } from "react-router-dom";
 
+import RoomSidebar from "~/containers/room-sidebar";
 import MusicPlayer from "~/containers/music-player";
 import IconButton from "~/components/icon-button";
 import CardWrapper from "~/components/card-wrapper";
@@ -33,7 +34,7 @@ const RoomPage: FC = () => {
           </SectionHeading>
           <MusicPlayer />
         </div>
-        <div>info sidebar</div>
+        <RoomSidebar />
       </div>
       <CardWrapper>
         <div className="flex flex-col text-text-white items-center gap-5">

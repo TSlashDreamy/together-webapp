@@ -11,6 +11,7 @@ export default {
       foreground: "#292C35",
       "border-color": "#53535380",
       primary: "#E09145",
+      "primary-chips": "rgba(224,145,69,0.1)",
       "primary-transparent": "rgba(224,145,69,0.05)",
       "light-transparent": "rgba(252,217,184,0.05)",
       text: {

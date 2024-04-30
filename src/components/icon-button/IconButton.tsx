@@ -9,13 +9,17 @@ interface IProps extends HTMLAttributes<HTMLButtonElement> {
   Icon: FC | IconType;
   disabled?: boolean;
   withoutOutline?: boolean;
+  medium?: boolean;
+  small?: boolean;
 }
 
-const IconButton: FC<IProps> = ({ Icon, disabled, withoutOutline, ...other }) => {
+const IconButton: FC<IProps> = ({ Icon, disabled, withoutOutline, medium, small, ...other }) => {
   const classes = twMerge(
     classNames(S.iconButtonStyles, other.className, {
       [S.disabledStyle]: disabled,
       [S.withoudOutlineStyle]: withoutOutline,
+      [S.mediumStyle]: medium,
+      [S.smallStyle]: small,
     })
   );
 
