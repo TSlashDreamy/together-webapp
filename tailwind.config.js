@@ -70,6 +70,9 @@ export default {
       },
     },
     extend: {
+      height: {
+        'viewport-minus-padding': 'calc(100vh - 2.6vw)',
+      },
       keyframes: {
         load: {
           "0%": { transform: "scale(1) rotate(0deg)", borderRadius: "5px", borderWidth: "2px" },

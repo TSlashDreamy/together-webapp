@@ -21,7 +21,7 @@ const RoomPage: FC = () => {
 
   return (
     <PageWrapper>
-      <div className="flex">
+      <div className="flex h-viewport-minus-padding">
         <div className={S.contentSideStyle}>
           <SectionHeading
             Icon={RoomIcon}

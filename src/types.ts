@@ -18,12 +18,18 @@ export enum NotificationType {
   Information = "information",
 }
 
-export enum ContentType {
-  Music = "music",
-  Video = "video",
-  Film = "film",
-  Picture = "picture",
-  Document = "document",
+export enum Contents {
+  Music = "Music",
+  Video = "Video",
+  Film = "Film",
+  Picture = "Picture",
+  Document = "Document",
+}
+
+export enum Services {
+  Spotify = "Spotify",
+  SoundCloud = "SoundCloud",
+  YouTube = "YouTube",
 }
 
 export interface User {
@@ -43,7 +49,9 @@ export interface Room {
   queue: string[];
   users: string[];
   hostUser: string | null;
-  contentType: ContentType | null;
+  contentType: Contents | null;
 }
 
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;
+export type ServicesType = keyof typeof Services;
+export type ContentsType = keyof typeof Contents;

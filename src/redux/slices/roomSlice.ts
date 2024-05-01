@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ContentType } from "~/types";
+import { Contents } from "~/types";
 
 interface RoomState {
   roomId: string | null;
@@ -8,7 +8,7 @@ interface RoomState {
   next: string | null; // !TEMP
   queue: string[]; // !TEMP
   users: string[];
-  contentType: ContentType | null;
+  contentType: Contents | null;
   isLoading: boolean;
 }
 

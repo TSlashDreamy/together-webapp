@@ -12,4 +12,4 @@ export const iconStyle = "xl:size-[1.3vw] size-[25px]";
 
 export const withoudOutlineStyle = "xl:p-[0.8vw] xl:hover:rounded-[0px] p-[15px] border-[0px] hover:border-b-[1px]";
 export const mediumStyle = "xl:px-[0.7vw] xl:py-[0.6vw] xl:rounded-[0.9vw] xl:hover:p-[0.6vw] xl:hover:rounded-[1.8vw] px-[12px] py-[10px] rounded-[15px] hover:p-[10px]";
-export const smallStyle = "xl:px-[0.45vw] xl:py-[0.35vw] xl:rounded-[0.65vw] xl:hover:p-[0.35vw] xl:hover:rounded-[1.55vw] px-[9px] py-[7px] rounded-[12px] hover:p-[7px]";
+export const smallStyle = "xl:px-[0.45vw] xl:py-[0.35vw] xl:rounded-[0.65vw] xl:hover:p-[0.43vw] xl:hover:rounded-[1.55vw] px-[9px] py-[7px] rounded-[12px] hover:p-[7px]";
