@@ -50,8 +50,8 @@ const CreatedRoomInfo: FC<IProps> = ({ roomId }) => {
   return (
     <>
       <SectionHeading
-        title={`${isIAmTheHost ? `Your` : `${roomName}`} room`}
-        button={{ name: "Open room", action: () => navigate(roomRoute) }}
+        title={`${isIAmTheHost ? "Your room" : roomName}`}
+        button={{ name: "Open room", onClick: () => navigate(roomRoute) }}
       />
       <div className={S.cardWrapperStyle}>{generateInfoCards(cards)}</div>
     </>

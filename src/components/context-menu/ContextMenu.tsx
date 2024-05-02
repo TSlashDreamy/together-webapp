@@ -1,4 +1,4 @@
-import { FC, MouseEvent, Ref } from "react";
+import { FC, HTMLAttributes, MouseEvent, Ref } from "react";
 
 import Button from "~/components/button";
 import CardWrapper from "~/components/card-wrapper";
@@ -12,7 +12,7 @@ interface IButtons {
   danger?: boolean;
 }
 
-interface IProps {
+interface IProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   posX: number;
   posY: number;
@@ -21,7 +21,7 @@ interface IProps {
   contextMenuRef: Ref<HTMLElement>;
 }
 
-const ContextMenu: FC<IProps> = ({ posX, posY, isToggled, buttons, title, contextMenuRef }) => {
+const ContextMenu: FC<IProps> = ({ posX, posY, isToggled, buttons, title, contextMenuRef, children }) => {
   return (
     <menu
       ref={contextMenuRef}
@@ -34,6 +34,7 @@ const ContextMenu: FC<IProps> = ({ posX, posY, isToggled, buttons, title, contex
           <span className={S.userNameStyle}>{title}</span>
         </div>
         <hr className={S.dividerStyle} />
+        {children}
         <div className={S.contentWrapperStyle}>
           {buttons.map((button, index) => {
             const handleClick = (e: MouseEvent<HTMLElement>) => {

@@ -9,7 +9,7 @@ import { NotificationType } from "~/types";
 
 const useDatabase = () => {
   const dispatch = useAppDispatch();
-  const { db, dbRef, dbChild, dbGet, dbSet, dbUpdate } = database;
+  const { db, dbRef, dbChild, dbGet, dbSet, dbUpdate, dbRemove } = database;
 
   const _handleDBError = useCallback(
     (e: unknown) => {
@@ -49,7 +49,7 @@ const useDatabase = () => {
   );
 
   const updateData = useCallback(
-    async <T>(collection: DBCollections, dataToUpdate: T, id: string, updatedValue?: string) => {
+    async <T>(collection: DBCollections, dataToUpdate: T | null, id: string, updatedValue?: string) => {
       try {
         const updates = {
           [`${collection}/${id}${updatedValue ? `/${updatedValue}` : ""}`]: dataToUpdate,
@@ -63,10 +63,22 @@ const useDatabase = () => {
     [_handleDBError, db, dbRef, dbUpdate]
   );
 
+  const removeData = useCallback(
+    async (collection: DBCollections, id: string, fieldToDelete?: string) => {
+      try {
+        await dbRemove(dbRef(db, `${collection}/${id}${fieldToDelete ? "/".concat(fieldToDelete) : ""}`));
+      } catch (e) {
+        _handleDBError(e);
+      }
+    },
+    [_handleDBError, db, dbRef, dbRemove]
+  );
+
   return {
     getData,
     pushData,
     updateData,
+    removeData,
   };
 };
 

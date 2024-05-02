@@ -11,7 +11,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
   Icon?: FC | IconType;
   headingClassNames?: string;
   title: string;
-  button: { name: string; action: () => void; danger?: boolean; disabled?: boolean };
+  button: { name: string; onClick: () => void; danger?: boolean; disabled?: boolean; isLoading?: boolean };
 }
 
 const SectionHeading: FC<IProps> = ({ Icon, title, headingClassNames, button, children, ...other }) => {
@@ -20,12 +20,12 @@ const SectionHeading: FC<IProps> = ({ Icon, title, headingClassNames, button, ch
   return (
     <div {...other} className={S.wrapperStyle}>
       <div className="flex items-center gap-[20px]">
-        {Icon && <Icon className="size-[40px]"/>}
+        {Icon && <Icon className="size-[40px]" />}
         <Typography.H2 className={headingClasses}>{title}</Typography.H2>
       </div>
       <div className="flex gap-[10px]">
         {children}
-        <Button primary outline danger={button.danger} disabled={button.disabled} onClick={button.action}>
+        <Button primary outline {...button}>
           {button.name}
         </Button>
       </div>

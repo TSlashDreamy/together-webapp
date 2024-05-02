@@ -84,7 +84,7 @@ const AppNavbar: FC = () => {
 
   return (
     <div className={classes}>
-      <Logo className="size-50px" onlyLogo />
+      <Logo className="size-50px" onlyLogo /> {/*// !TEMP */}
       <div className={linkWrapperStyle}>
         {navLinks.map((navLink) => (
           <NavbarNavlink key={navLink.path} to={navLink.path} Icon={navLink.Icon} />

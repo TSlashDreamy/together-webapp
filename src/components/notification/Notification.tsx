@@ -28,6 +28,16 @@ const Notification: FC<IProps> = ({ ...other }) => {
   );
 
   useEffect(() => {
+    if (type === NotificationType.Success) {
+      const unsub = setTimeout(() => {
+        dispatch(hideNotification());
+      }, 4000);
+
+      return () => clearTimeout(unsub);
+    }
+  }, [dispatch, type]);
+
+  useEffect(() => {
     switch (type) {
       case NotificationType.Error:
         setIcon(<ErrorIcon />);

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { NotificationType } from "~/components/notification/types";
+import { NotificationType } from "~/types";
 
 interface NotificationState {
   content: string | null;
