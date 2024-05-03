@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { useParams } from "react-router-dom";
+import { FC, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 import RoomSidebar from "~/containers/room-sidebar";
 import MusicPlayer from "~/containers/music-player";
@@ -18,12 +18,20 @@ import AddPersonIcon from "~/assets/icons/etc-icons/addPerson.svg?react";
 import * as S from "./styles";
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { NotificationType } from "~/types";
+import { useUser } from "~/hooks/useUser";
+import { routes } from "~/router/constants";
 
 const RoomPage: FC = () => {
   const { roomId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isVisible, hideModal, showModal } = useModal();
-  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost } = useRoom(roomId as string);
+  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom } = useRoom(roomId as string);
+  useUser(); // to update userData via websocket
+
+  useEffect(() => {
+    if (!isMeInTheRoom) navigate(routes.app.home);
+  }, [isMeInTheRoom, navigate]);
 
   const handleDangerAction = () => {
     if (isIAmTheHost) closeRoom();
@@ -48,13 +56,17 @@ const RoomPage: FC = () => {
           <SectionHeading
             Icon={RoomIcon}
             headingClassNames="font-normal"
-            title={roomName || "wha? ._ ."}
-            button={{
-              name: isIAmTheHost ? "Close room" : "Leave room",
-              onClick: handleDangerAction,
-              danger: true,
-              isLoading: isCreatingRoom,
-            }}
+            title={roomName || "Unknown room"}
+            button={
+              isMeInTheRoom
+                ? {
+                    name: isIAmTheHost ? "Close room" : "Leave room",
+                    onClick: handleDangerAction,
+                    danger: true,
+                    isLoading: isCreatingRoom,
+                  }
+                : undefined
+            }
           >
             {isIAmTheHost && <IconButton Icon={LinkIcon} onClick={copyToClipboard} />}
             {isIAmTheHost && <IconButton Icon={AddPersonIcon} onClick={showModal} />}

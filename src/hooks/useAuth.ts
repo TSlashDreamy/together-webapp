@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useCallback, useEffect } from "react";
+import { onAuthStateChanged, signOut, User as FirebaseUser } from "firebase/auth";
 
 import { useAppDispatch, useAppSelector } from "./useRedux";
 import { auth } from "~/firebase";
@@ -14,31 +14,42 @@ export const useAuth = () => {
   const dispatch = useAppDispatch();
   const { getData } = useDatabase();
 
-  const signUserOut = async () => {
+  const signUserOut = useCallback(async () => {
     dispatch(setLoggingIn());
     await signOut(auth);
     dispatch(removeUser());
     dispatch(resetLoggingIn());
-  };
+  }, [dispatch]);
+
+  const checkUserExistance = useCallback(
+    async (user: FirebaseUser) => {
+      const userData = await getData(DBCollections.Users, user.uid);
+      if (userData && !uid) {
+        dispatch(
+          setUser({
+            email: user.email,
+            uid: user.uid,
+            token: user.refreshToken,
+            userName: userData.userName,
+            lastLogin: userData.lastLogin,
+            roomId: null,
+          })
+        );
+      }
+      if (!userData && uid) dispatch(removeUser());
+    },
+    [dispatch, getData, uid]
+  );
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const userData = await getData(DBCollections.Users, user.uid);
-        userData &&
-          dispatch(
-            setUser({
-              email: user.email,
-              uid: user.uid,
-              token: user.refreshToken,
-              userName: userData.userName,
-              lastLogin: userData.lastLogin,
-              roomId: null
-            })
-          );
-      }
+    const authUnsub = onAuthStateChanged(auth, async (user) => {
+      if (user) checkUserExistance(user);
     });
-  }, [dispatch, getData]);
+
+    return () => {
+      authUnsub();
+    };
+  }, [checkUserExistance, dispatch, getData, uid]);
 
   return {
     isLoggedIn: Boolean(email),

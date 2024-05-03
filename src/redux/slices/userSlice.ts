@@ -2,10 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { User } from "~/types";
 
-interface IJoinParams {
-  roomId: string;
-}
-
 const initialState: User = {
   email: null,
   token: null,
@@ -26,6 +22,13 @@ export const userSlice = createSlice({
       state.userName = action.payload.userName;
       state.lastLogin = action.payload.lastLogin;
     },
+    updateUser: (state, action: PayloadAction<User>) => {
+      state.email = action.payload.email;
+      state.uid = action.payload.uid;
+      state.userName = action.payload.userName;
+      state.lastLogin = action.payload.lastLogin;
+      state.roomId = action.payload.roomId;
+    },
     removeUser: (state) => {
       state.email = null;
       state.token = null;
@@ -34,14 +37,8 @@ export const userSlice = createSlice({
       state.lastLogin = null;
       state.roomId = null;
     },
-    joinRoom: (state, action: PayloadAction<IJoinParams>) => {
-      state.roomId = action.payload.roomId;
-    },
-    leaveRoom: (state) => {
-      state.roomId = null;
-    },
   },
 });
 
-export const { setUser, removeUser, joinRoom, leaveRoom } = userSlice.actions;
+export const { setUser, updateUser, removeUser } = userSlice.actions;
 export default userSlice.reducer;

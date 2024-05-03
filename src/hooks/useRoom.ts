@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
 import useDatabase from "~/hooks/useDatabase";
 
 import { getKey, getRandomNum } from "~/utils";
-import { resetIsLoading, setIsLoading } from "~/redux/slices/roomSlice";
+import { resetIsLoading, resetRoom, setIsLoading, setRoom } from "~/redux/slices/roomSlice";
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { routes } from "~/router/constants";
 import { initialRoomState } from "~/containers/home-info/no-room-info/constants";
@@ -20,8 +20,8 @@ const useRoom = (roomId?: string) => {
   const navigate = useNavigate();
   const { uid, userName } = useAuth();
   const { pushData, updateData, removeData, getData } = useDatabase();
-  const { isLoading } = useAppSelector((state) => state.room);
-  const { data } = useWebsocket<Room>(DBCollections.Rooms, roomId as string);
+  const room = useAppSelector((state) => state.room);
+  const { data } = useWebsocket<Room>(DBCollections.Rooms, roomId as string, setRoom);
   const roomRoot = routes.app.room;
 
   const _handleRoomError = useCallback(
@@ -61,10 +61,11 @@ const useRoom = (roomId?: string) => {
     try {
       dispatch(setIsLoading());
 
-      data?.users.forEach(async (user) => {
+      (data as Room)?.users.forEach(async (user) => {
         await updateData(DBCollections.Users, null, user, getKey<User, "roomId">("roomId"));
       });
       await removeData(DBCollections.Rooms, roomId as string);
+      dispatch(resetRoom());
       navigate(routes.app.home);
     } catch (error) {
       _handleRoomError(error);
@@ -77,12 +78,13 @@ const useRoom = (roomId?: string) => {
     try {
       dispatch(setIsLoading());
 
-      data?.users.forEach(async (user, index) => {
+      (data as Room)?.users.forEach(async (user, index) => {
         if (user === uid) {
           await removeData(DBCollections.Rooms, roomId as string, getKey<Room, "users">("users").concat(`/${index}`));
         }
       });
       await updateData(DBCollections.Users, null, uid as string, getKey<User, "roomId">("roomId"));
+      dispatch(resetRoom());
       navigate(routes.app.home);
     } catch (error) {
       _handleRoomError(error);
@@ -99,7 +101,12 @@ const useRoom = (roomId?: string) => {
       if (!room) throw new FirebaseError("", "This room doesn't exist");
 
       await updateData(DBCollections.Users, roomId, uid as string, getKey<User, "roomId">("roomId"));
-      await updateData(DBCollections.Rooms, uid as string, roomId, getKey<Room, "users">("users").concat(`/${room.users.length}`));
+      await updateData(
+        DBCollections.Rooms,
+        uid as string,
+        roomId,
+        getKey<Room, "users">("users").concat(`/${room.users.length}`)
+      );
       navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`);
     } catch (error) {
       _handleRoomError(error);
@@ -113,11 +120,12 @@ const useRoom = (roomId?: string) => {
     closeRoom,
     leaveRoom,
     joinRoom,
-    isCreatingRoom: isLoading,
-    isIAmTheHost: uid === data?.hostUser,
+    isCreatingRoom: room.isLoading,
+    isIAmTheHost: uid === (data as Room)?.hostUser,
     isRoomExist: Boolean(data?.roomId),
+    isMeInTheRoom: room.users.includes(uid as string),
     roomRoute: `${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`,
-    ...data,
+    ...room,
   };
 };
 

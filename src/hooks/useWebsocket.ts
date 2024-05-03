@@ -1,21 +1,26 @@
-import { useEffect, useState } from "react";
-import { DBCollections } from "~/constants";
+import { useEffect } from "react";
+import { DBCollections, DBCollectionToSlice } from "~/constants";
 import { database } from "~/firebase";
+import { useAppDispatch, useAppSelector } from "./useRedux";
+import { UnknownAction } from "@reduxjs/toolkit";
 
-const useWebsocket = <T>(collection: DBCollections, id: string) => {
-  const [data, setData] = useState<T | null>(null);
+const useWebsocket = <T>(collection: DBCollections, id: string, actionCreator: (data: T) => UnknownAction) => {
+  const dispatch = useAppDispatch();
+  const data = useAppSelector((state) => state[DBCollectionToSlice[collection]]);
   const { db, dbRef, dbOnValue } = database;
 
   useEffect(() => {
     const unsub = dbOnValue(dbRef(db, `${collection}/${id}`), (snapshot) => {
-      const data = snapshot.val();
-      setData(data);
+      if (snapshot.exists()) {
+        const webSocketData = snapshot.val();
+        dispatch(actionCreator(webSocketData));
+      }
     });
 
     return () => {
       unsub();
     };
-  }, [collection, db, dbOnValue, dbRef, id]);
+  }, [actionCreator, collection, db, dbOnValue, dbRef, dispatch, id]);
 
   return { data };
 };
