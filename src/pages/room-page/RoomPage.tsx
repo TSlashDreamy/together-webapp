@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { HiMiniWrenchScrewdriver as DevIcon } from "react-icons/hi2";
 
 import RoomSidebar from "~/containers/room-sidebar";
 import MusicPlayer from "~/containers/music-player";
@@ -20,23 +21,15 @@ import { showNotification } from "~/redux/slices/notificationSlice";
 import { NotificationType } from "~/types";
 import { useUser } from "~/hooks/useUser";
 import { routes } from "~/router/constants";
+import MessageCard from "~/components/message-card";
 
 const RoomPage: FC = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isVisible, hideModal, showModal } = useModal();
-  const {
-    closeRoom,
-    leaveRoom,
-    isCreatingRoom,
-    roomName,
-    isIAmTheHost,
-    isMeInTheRoom,
-    users,
-    hostUser,
-    player,
-  } = useRoom(roomId as string);
+  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom, users, chat, hostUser, player } =
+    useRoom(roomId as string);
   useUser(); // to update userData via websocket
 
   useEffect(() => {
@@ -60,7 +53,15 @@ const RoomPage: FC = () => {
 
   return (
     <PageWrapper className={S.pageWrapper}>
-      <Modal isVisible={isVisible} hideModal={hideModal} title={"Add people"} />
+      <Modal isVisible={isVisible} hideModal={hideModal} title={"Add people"}>
+        <MessageCard
+          className="relative top-0 left-0 translate-x-0 translate-y-0"
+          Icon={DevIcon}
+          title="Work in progress (Add to room)"
+          description="Sorry about that"
+        />{" "}
+        {/* //! TEMP */}
+      </Modal>
       <div className={S.contentWrapper}>
         <div className={S.contentSideStyle}>
           <SectionHeading
@@ -83,7 +84,13 @@ const RoomPage: FC = () => {
           </SectionHeading>
           <MusicPlayer />
         </div>
-        <RoomSidebar queue={player.queue} users={users} hostUser={hostUser as string} isAutoPlay={player.isAutoplay} />
+        <RoomSidebar
+          queue={player.queue}
+          users={users}
+          chat={chat}
+          hostUser={hostUser as string}
+          isAutoPlay={player.isAutoplay}
+        />
       </div>
     </PageWrapper>
   );

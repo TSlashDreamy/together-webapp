@@ -1,23 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Player, Room } from "~/types";
-import { initialPlayerState } from "~/constants";
+import { IChat, IPerson, IPlayer, IRoom } from "~/types";
+import { initialChatState, initialPlayerState } from "~/constants";
+import { removeUser } from "./userSlice";
 
 interface RoomState {
   roomId: string | null;
   roomName: string | null;
   hostUser: string | null;
-  users: string[];
   isLoading: boolean;
-  player: Player;
+  users: IPerson[];
+  chat: IChat;
+  player: IPlayer;
 }
 
 const initialState: RoomState = {
   roomId: null,
   roomName: null,
   hostUser: null,
-  users: [],
   isLoading: false,
+  users: [],
+  chat: { messages: null },
   player: initialPlayerState,
 };
 
@@ -25,11 +28,12 @@ export const roomSlice = createSlice({
   name: "room",
   initialState,
   reducers: {
-    setRoom: (state, action: PayloadAction<Room>) => {
+    setRoom: (state, action: PayloadAction<IRoom>) => {
       state.roomId = action.payload.roomId;
       state.roomName = action.payload.roomName;
       state.hostUser = action.payload.hostUser;
       state.users = action.payload.users;
+      state.chat = action.payload.chat;
       state.player = action.payload.player;
     },
     resetRoom: (state) => {
@@ -37,6 +41,8 @@ export const roomSlice = createSlice({
       state.roomName = null;
       state.hostUser = null;
       state.users = [];
+      state.chat = initialChatState;
+      state.player = initialPlayerState;
     },
     setIsLoading: (state) => {
       state.isLoading = true;
@@ -50,6 +56,12 @@ export const roomSlice = createSlice({
     resetPlayerLoading: (state) => {
       state.player.isLoading = false;
     },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(removeUser, () => {
+      return initialState;
+    });
   },
 });
 

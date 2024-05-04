@@ -5,7 +5,7 @@ import useRoom from "~/hooks/useRoom";
 import { useAppDispatch } from "~/hooks/useRedux";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
-import { NotificationType, Player, Room } from "~/types";
+import { NotificationType, IPlayer, IRoom } from "~/types";
 import { resetPlayerLoading, setPlayerLoading } from "~/redux/slices/roomSlice";
 import { DBCollections } from "~/constants";
 import useDatabase from "./useDatabase";
@@ -36,7 +36,7 @@ export const usePlayer = () => {
         DBCollections.Rooms,
         state,
         roomId as string,
-        getKey<Room, "player">("player").concat(`/${getKey<Player, "isAutoplay">("isAutoplay")}`)
+        getKey<IRoom, "player">("player").concat(`/${getKey<IPlayer, "isAutoplay">("isAutoplay")}`)
       );
     } catch (error) {
       _handlePlayerError(error);

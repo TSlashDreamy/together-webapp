@@ -1,5 +1,5 @@
 import { User as FirebaseUser } from "firebase/auth";
-import { User } from "~/types";
+import { IUser } from "~/types";
 
 export const convertUserData = (user: FirebaseUser, userName: string) => {
   return {
@@ -7,5 +7,5 @@ export const convertUserData = (user: FirebaseUser, userName: string) => {
     email: user.email,
     userName: userName,
     lastLogin: Date.now(),
-  } as Omit<User, "token">;
+  } as Omit<IUser, "token">;
 };

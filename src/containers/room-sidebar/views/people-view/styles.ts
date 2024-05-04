@@ -1,0 +1,1 @@
+export const wrapper = "xl:gap-[0.8vw] flex flex-col gap-[15px]" 

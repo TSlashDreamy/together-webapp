@@ -7,7 +7,7 @@ export const inputStyles = [
   "focus:font-normal focus:text-text-light focus:placeholder:text-text-light focus:border-primary",
 ];
 
-export const wrapperStyle = "flex flex-col gap-2";
+export const wrapperStyle = "relative flex flex-col gap-2";
 
 export const errorTextStyle = "text-danger-600 px-0 font-light";
 export const inputErrorStyle = "border-danger-600";

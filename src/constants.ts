@@ -1,4 +1,4 @@
-import { Player } from "./types";
+import { IChat, IPlayer } from "./types";
 
 export enum DBCollections {
   Users = "users",
@@ -10,10 +10,14 @@ export const DBCollectionToSlice = {
   [DBCollections.Rooms]: "room" as const,
 };
 
-export const initialPlayerState: Player = {
+export const initialPlayerState: IPlayer = {
   next: null,
   queue: [],
   nowPlaying: null,
   isAutoplay: false,
   isLoading: false,
+};
+
+export const initialChatState: IChat = {
+  messages: null,
 };

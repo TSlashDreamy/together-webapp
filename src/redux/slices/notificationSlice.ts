@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { NotificationType } from "~/types";
+import { removeUser } from "./userSlice";
 
 interface NotificationState {
   content: string | null;
@@ -24,6 +25,12 @@ export const notificationSlice = createSlice({
       state.content = null;
       state.type = null;
     },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(removeUser, () => {
+      return initialState;
+    });
   },
 });
 

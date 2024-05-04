@@ -13,7 +13,7 @@ import { showNotification } from "~/redux/slices/notificationSlice";
 import { routes } from "~/router/constants";
 import { initialRoomState } from "~/containers/home-info/no-room-info/constants";
 import { DBCollections } from "~/constants";
-import { NotificationType, Room, User } from "~/types";
+import { IChat, IMessage, NotificationType, IPerson, IRoom, IUser } from "~/types";
 
 const useRoom = (roomId?: string) => {
   const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ const useRoom = (roomId?: string) => {
   const { uid, userName } = useAuth();
   const { pushData, updateData, removeData, getData } = useDatabase();
   const room = useAppSelector((state) => state.room);
-  const { data } = useWebsocket<Room>(DBCollections.Rooms, roomId as string, setRoom);
+  const { data } = useWebsocket<IRoom>(DBCollections.Rooms, roomId as string, setRoom);
   const roomRoot = routes.app.room;
 
   const _handleRoomError = useCallback(
@@ -36,19 +36,37 @@ const useRoom = (roomId?: string) => {
     [dispatch]
   );
 
+  const _outRoomAction = async (userId?: string) => {
+    try {
+      dispatch(setIsLoading());
+
+      const updatedUsers = (data as IRoom)?.users.filter((user) => user.id !== (userId || uid));
+      await updateData(DBCollections.Rooms, updatedUsers, room.roomId as string, getKey<IRoom, "users">("users"));
+      await updateData(DBCollections.Users, null, userId || (uid as string), getKey<IUser, "roomId">("roomId"));
+      if (!userId) {
+        dispatch(resetRoom());
+        navigate(routes.app.home);
+      }
+    } catch (error) {
+      _handleRoomError(error);
+    } finally {
+      dispatch(resetIsLoading());
+    }
+  };
+
   const createRoom = async () => {
     try {
       dispatch(setIsLoading());
-      const room: Room = {
+      const room: IRoom = {
         ...initialRoomState,
         roomId: String(Date.now()).concat(getRandomNum(10, 100000).toString()),
         roomName: `${userName}'s room`,
         hostUser: uid as string,
-        users: [uid as string],
+        users: [{ id: uid as string, name: userName as string }],
       };
 
       await pushData(DBCollections.Rooms, room, room.roomId);
-      await updateData(DBCollections.Users, room.roomId, uid as string, getKey<User, "roomId">("roomId"));
+      await updateData(DBCollections.Users, room.roomId, uid as string, getKey<IUser, "roomId">("roomId"));
       navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${room.roomId}`);
     } catch (error) {
       _handleRoomError(error);
@@ -61,8 +79,8 @@ const useRoom = (roomId?: string) => {
     try {
       dispatch(setIsLoading());
 
-      (data as Room)?.users.forEach(async (user) => {
-        await updateData(DBCollections.Users, null, user, getKey<User, "roomId">("roomId"));
+      (data as IRoom)?.users.forEach(async (user) => {
+        await updateData(DBCollections.Users, null, user.id, getKey<IUser, "roomId">("roomId"));
       });
       await removeData(DBCollections.Rooms, roomId as string);
       dispatch(resetRoom());
@@ -75,22 +93,7 @@ const useRoom = (roomId?: string) => {
   };
 
   const leaveRoom = async () => {
-    try {
-      dispatch(setIsLoading());
-
-      (data as Room)?.users.forEach(async (user, index) => {
-        if (user === uid) {
-          await removeData(DBCollections.Rooms, roomId as string, getKey<Room, "users">("users").concat(`/${index}`));
-        }
-      });
-      await updateData(DBCollections.Users, null, uid as string, getKey<User, "roomId">("roomId"));
-      dispatch(resetRoom());
-      navigate(routes.app.home);
-    } catch (error) {
-      _handleRoomError(error);
-    } finally {
-      dispatch(resetIsLoading());
-    }
+    await _outRoomAction();
   };
 
   const joinRoom = async (roomId: string) => {
@@ -100,12 +103,12 @@ const useRoom = (roomId?: string) => {
       const room = await getData(DBCollections.Rooms, roomId);
       if (!room) throw new FirebaseError("", "This room doesn't exist");
 
-      await updateData(DBCollections.Users, roomId, uid as string, getKey<User, "roomId">("roomId"));
+      await updateData(DBCollections.Users, roomId, uid as string, getKey<IUser, "roomId">("roomId"));
       await updateData(
         DBCollections.Rooms,
-        uid as string,
+        { id: uid as string, name: userName as string } as IPerson,
         roomId,
-        getKey<Room, "users">("users").concat(`/${room.users.length}`)
+        getKey<IRoom, "users">("users").concat(`/${room.users.length}`)
       );
       navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`);
     } catch (error) {
@@ -115,15 +118,45 @@ const useRoom = (roomId?: string) => {
     }
   };
 
+  const kickFromRoom = async (userId: string) => {
+    try {
+      if (!userId) throw new FirebaseError("", "Illegal action (userId doesn't exist)");
+      if (!room.roomId)
+        throw new FirebaseError("", "Whew, looks like something wrong with this room. Try to reload it (Ctrl+R)");
+      await _outRoomAction(userId);
+    } catch (error) {
+      _handleRoomError(error);
+    }
+  };
+
+  const sendMessage = async (content: string) => {
+    try {
+      if (!content) throw new FirebaseError("", "Can't send empty message.");
+
+      const message = { user: { id: uid, name: userName } as IPerson, content } as IMessage;
+      const msgIndex = ((data as IRoom).chat && (data as IRoom).chat.messages!.length) ?? 0;
+      await updateData(
+        DBCollections.Rooms,
+        message,
+        room.roomId as string,
+        getKey<IRoom, "chat">("chat").concat(`/${getKey<IChat, "messages">("messages")}/${msgIndex}`)
+      );
+    } catch (error) {
+      _handleRoomError(error);
+    }
+  };
+
   return {
     createRoom,
     closeRoom,
     leaveRoom,
     joinRoom,
+    kickFromRoom,
+    sendMessage,
     isCreatingRoom: room.isLoading,
-    isIAmTheHost: uid === (data as Room)?.hostUser,
+    isIAmTheHost: uid === (data as IRoom)?.hostUser,
     isRoomExist: Boolean(data?.roomId),
-    isMeInTheRoom: room.users.includes(uid as string),
+    isMeInTheRoom: room.users.some((user) => user.id === uid),
     roomRoute: `${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`,
     ...room,
   };

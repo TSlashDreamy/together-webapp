@@ -18,7 +18,7 @@ import useForm from "~/hooks/useForm";
 
 import { auth } from "~/firebase";
 import { validate as loginValidate } from "~/validators/loginValidators";
-import { NotificationType, User } from "~/types";
+import { NotificationType, IUser } from "~/types";
 import { ILoginFormState } from "./types";
 import { DBCollections } from "~/constants";
 import { getKey } from "~/utils";
@@ -34,7 +34,7 @@ const LoginPage: FC = () => {
       dispatch(setLoggingIn());
       await setPersistence(auth, browserSessionPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      await updateData<number>(DBCollections.Users, Date.now(), user.uid, getKey<User, "lastLogin">("lastLogin"));
+      await updateData<number>(DBCollections.Users, Date.now(), user.uid, getKey<IUser, "lastLogin">("lastLogin"));
     } catch (error) {
       dispatch(
         showNotification({

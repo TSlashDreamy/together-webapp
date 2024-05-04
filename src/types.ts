@@ -32,7 +32,7 @@ export enum Services {
   YouTube = "YouTube",
 }
 
-export interface User {
+export interface IUser {
   email: string | null;
   token: string | null;
   uid: string | null;
@@ -41,7 +41,7 @@ export interface User {
   roomId: string | null;
 }
 
-export interface Player {
+export interface IPlayer {
   next: string | null; // !TEMP
   queue: string[]; // !TEMP
   nowPlaying: string | null; // !TEMP
@@ -49,12 +49,27 @@ export interface Player {
   isLoading: boolean;
 }
 
-export interface Room {
+export interface IRoom {
   roomId: string;
   roomName: string;
-  users: string[];
+  users: IPerson[];
+  chat: IChat;
   hostUser: string | null;
-  player: Player;
+  player: IPlayer;
+}
+
+export interface IPerson {
+  id: string;
+  name: string;
+}
+
+export interface IMessage {
+  user: IPerson;
+  content: string;
+}
+
+export interface IChat {
+  messages: IMessage[] | null;
 }
 
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;

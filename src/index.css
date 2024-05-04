@@ -6,6 +6,7 @@
 body {
   background-color: #17181d;
   font-family: "Kanit", sans-serif;
+  user-select: none;
 }
 
 .hidden-scroll::-webkit-scrollbar {
