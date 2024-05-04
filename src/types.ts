@@ -41,15 +41,20 @@ export interface User {
   roomId: string | null;
 }
 
+export interface Player {
+  next: string | null; // !TEMP
+  queue: string[]; // !TEMP
+  nowPlaying: string | null; // !TEMP
+  isAutoplay: boolean;
+  isLoading: boolean;
+}
+
 export interface Room {
   roomId: string;
   roomName: string;
-  nowPlaying: string | null;
-  next: string | null;
-  queue: string[];
   users: string[];
   hostUser: string | null;
-  contentType: Contents | null;
+  player: Player;
 }
 
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;

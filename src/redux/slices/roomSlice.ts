@@ -1,29 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Contents, Room } from "~/types";
+import { Player, Room } from "~/types";
+import { initialPlayerState } from "~/constants";
 
 interface RoomState {
   roomId: string | null;
   roomName: string | null;
   hostUser: string | null;
-  nowPlaying: string | null; // !TEMP
-  next: string | null; // !TEMP
-  queue: string[]; // !TEMP
   users: string[];
-  contentType: Contents | null;
   isLoading: boolean;
+  player: Player;
 }
 
 const initialState: RoomState = {
   roomId: null,
   roomName: null,
   hostUser: null,
-  nowPlaying: null,
-  next: null,
-  queue: [],
   users: [],
-  contentType: null,
   isLoading: false,
+  player: initialPlayerState,
 };
 
 export const roomSlice = createSlice({
@@ -34,26 +29,14 @@ export const roomSlice = createSlice({
       state.roomId = action.payload.roomId;
       state.roomName = action.payload.roomName;
       state.hostUser = action.payload.hostUser;
-      state.nowPlaying = action.payload.nowPlaying;
-      state.next = action.payload.next;
-      state.queue = action.payload.queue;
       state.users = action.payload.users;
-      state.contentType = action.payload.contentType;
+      state.player = action.payload.player;
     },
     resetRoom: (state) => {
       state.roomId = null;
       state.roomName = null;
       state.hostUser = null;
-      state.nowPlaying = null;
-      state.next = null;
-      state.queue = [];
       state.users = [];
-      state.contentType = null;
-    },
-    setNext: (state, action: PayloadAction<Room>) => {
-      state.nowPlaying = action.payload.nowPlaying;
-      state.next = action.payload.next;
-      state.queue = action.payload.queue;
     },
     setIsLoading: (state) => {
       state.isLoading = true;
@@ -61,8 +44,15 @@ export const roomSlice = createSlice({
     resetIsLoading: (state) => {
       state.isLoading = false;
     },
+    setPlayerLoading: (state) => {
+      state.player.isLoading = true;
+    },
+    resetPlayerLoading: (state) => {
+      state.player.isLoading = false;
+    },
   },
 });
 
-export const { setRoom, resetRoom, setNext, setIsLoading, resetIsLoading } = roomSlice.actions;
+export const { setRoom, resetRoom, setIsLoading, resetIsLoading, setPlayerLoading, resetPlayerLoading } =
+  roomSlice.actions;
 export default roomSlice.reducer;

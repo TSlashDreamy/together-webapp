@@ -26,7 +26,17 @@ const RoomPage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isVisible, hideModal, showModal } = useModal();
-  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom } = useRoom(roomId as string);
+  const {
+    closeRoom,
+    leaveRoom,
+    isCreatingRoom,
+    roomName,
+    isIAmTheHost,
+    isMeInTheRoom,
+    users,
+    hostUser,
+    player,
+  } = useRoom(roomId as string);
   useUser(); // to update userData via websocket
 
   useEffect(() => {
@@ -49,9 +59,9 @@ const RoomPage: FC = () => {
   };
 
   return (
-    <PageWrapper>
+    <PageWrapper className={S.pageWrapper}>
       <Modal isVisible={isVisible} hideModal={hideModal} title={"Add people"} />
-      <div className="flex h-viewport-minus-padding">
+      <div className={S.contentWrapper}>
         <div className={S.contentSideStyle}>
           <SectionHeading
             Icon={RoomIcon}
@@ -73,7 +83,7 @@ const RoomPage: FC = () => {
           </SectionHeading>
           <MusicPlayer />
         </div>
-        <RoomSidebar />
+        <RoomSidebar queue={player.queue} users={users} hostUser={hostUser as string} isAutoPlay={player.isAutoplay} />
       </div>
     </PageWrapper>
   );
