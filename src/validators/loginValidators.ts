@@ -1,4 +1,4 @@
-import { ILoginFormState } from "~/pages/login-page/types";
+import { ILoginFormState } from "~/pages/login/types";
 
 export const validate = (values: ILoginFormState): { [key: string]: string } => {
   const errors: { [key: string]: string } = {};

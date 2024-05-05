@@ -59,7 +59,7 @@ const RoomPage: FC = () => {
           Icon={DevIcon}
           title="Work in progress (Add to room)"
           description="Sorry about that"
-        />{" "}
+        />
         {/* //! TEMP */}
       </Modal>
       <div className={S.contentWrapper}>

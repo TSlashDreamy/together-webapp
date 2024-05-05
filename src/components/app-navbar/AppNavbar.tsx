@@ -21,16 +21,18 @@ const AppNavbar: FC = () => {
   const contextMenuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
-  const isRoomPage = useMemo(
-    () => {
-      const rootRoom = routes.app.room;
-      const pathArr = location.pathname.split("/");
-      pathArr.length = 3;
-      
-      return pathArr.join("/") === rootRoom.slice(0, rootRoom.indexOf("/:"))
-    },
-    [location.pathname]
-  );
+  const isRoomPage = useMemo(() => {
+    const rootRoom = routes.app.room;
+    const pathArr = location.pathname.split("/");
+    pathArr.length = 3;
+
+    return pathArr.join("/") === rootRoom.slice(0, rootRoom.indexOf("/:"));
+  }, [location.pathname]);
+
+  const isSettingsProfilePage = useMemo(() => {
+    const pathName = location.pathname;
+    return pathName === routes.app.settings || pathName === routes.app.myProfile;
+  }, [location.pathname]);
 
   const classes = twMerge(...navBarStyles);
 
@@ -92,7 +94,7 @@ const AppNavbar: FC = () => {
       </div>
       <div className={linkWrapperStyle}>
         <NavbarItem onClick={showRoomContextMenu} Icon={RoomIcon} isActive={isRoomPage} />
-        <NavbarItem onClick={showUserContextMenu} Icon={ProfileIcon} />
+        <NavbarItem onClick={showUserContextMenu} Icon={ProfileIcon} isActive={isSettingsProfilePage} />
       </div>
       <UserContextMenu contextMenuRef={contextMenuRef} contextMenuConfig={userContextMenu} />
       <RoomContextMenu contextMenuRef={contextMenuRef} contextMenuConfig={roomContextMenu} />

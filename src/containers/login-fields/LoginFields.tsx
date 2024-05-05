@@ -4,8 +4,8 @@ import { MdOutlineKeyboardArrowRight as ArrowIcon } from "react-icons/md";
 import Button from "~/components/button";
 import Input from "~/components/input";
 
-import { Inputs } from "~/pages/login-page/constants";
-import { ILoginFormState } from "~/pages/login-page/types";
+import { Inputs } from "~/pages/login/constants";
+import { ILoginFormState } from "~/pages/login/types";
 import { InputTypes } from "~/types";
 import * as S from "./styles";
 import { useAuth } from "~/hooks/useAuth";

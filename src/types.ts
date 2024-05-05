@@ -32,6 +32,27 @@ export enum Services {
   YouTube = "YouTube",
 }
 
+export enum ServiceStatus {
+  Active = "Active",
+  Unactive = "Unactive",
+  Error = "Error",
+}
+
+export interface IServiceState {
+  token: string | null;
+  status: ServiceStatus;
+}
+
+export interface IAppServices {
+  spotify: IServiceState;
+  soundCloud: IServiceState;
+  youTube: IServiceState;
+}
+
+export interface IAppAppearance {
+  floatingObjects: boolean;
+}
+
 export interface IUser {
   email: string | null;
   token: string | null;

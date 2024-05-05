@@ -5,8 +5,8 @@ import Button from "~/components/button";
 import Input from "~/components/input";
 
 import { useAuth } from "~/hooks/useAuth";
-import { Inputs } from "~/pages/signup-page/constants";
-import { ISignUpFormState } from "~/pages/signup-page/types";
+import { Inputs } from "~/pages/signup/constants";
+import { ISignUpFormState } from "~/pages/signup/types";
 import { InputTypes } from "~/types";
 import * as S from "./styles";
 

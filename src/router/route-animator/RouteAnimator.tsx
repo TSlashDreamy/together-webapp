@@ -2,21 +2,22 @@ import { FC } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-import ErrorPage from "~/pages/error-page/ErrorPage";
-import LandingPage from "~/pages/landing-page";
-import LoginPage from "~/pages/login-page";
+import ErrorPage from "~/pages/error/ErrorPage";
+import LandingPage from "~/pages/landing";
+import LoginPage from "~/pages/login";
 import PrivateLayout from "~/pages/private-layout";
 import PublicLayout from "~/pages/public-layout";
-import SignupPage from "~/pages/signup-page";
-import ResetPasswordPage from "~/pages/reset-password-page";
-import HomePage from "~/pages/home-page";
-import SearchPage from "~/pages/search-page";
-import FriendsPage from "~/pages/friends-page";
-import CollectionsPage from "~/pages/collections-page";
-import LikedPage from "~/pages/liked-page";
+import SignupPage from "~/pages/signup";
+import ResetPasswordPage from "~/pages/reset-password";
+import HomePage from "~/pages/home";
+import SearchPage from "~/pages/search";
+import FriendsPage from "~/pages/friends";
+import CollectionsPage from "~/pages/collections";
+import LikedPage from "~/pages/liked";
+import RoomPage from "~/pages/room/RoomPage";
+import SettingsPage from "~/pages/settings";
 
 import { routes } from "~/router/constants";
-import RoomPage from "~/pages/room-page/RoomPage";
 
 const RouteAnimator: FC = () => {
   const location = useLocation();
@@ -35,6 +36,9 @@ const RouteAnimator: FC = () => {
           <Route path={routes.app.collections} element={<CollectionsPage />} />
           <Route path={routes.app.liked} element={<LikedPage />} />
           <Route path={routes.app.room} element={<RoomPage />} />
+          <Route path={routes.app.settings} element={<SettingsPage />} />
+          <Route path={routes.app.serviceRedirect} element={new Error("NOT IMPLEMENTED!")} />
+          <Route path={routes.app.myProfile} element={new Error("NOT IMPLEMENTED!")} />
           <Route index element={<HomePage />} />
         </Route>
       </Routes>
