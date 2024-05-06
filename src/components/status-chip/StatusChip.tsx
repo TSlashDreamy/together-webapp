@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 
 import Typography from "~/components/typography";
 
-import { ServiceStatus } from "~/types";
 import { statusPresets } from "./constants";
+import { ServiceStatus } from "~/services/constants";
 import * as S from "./styles";
 
 interface IProps {

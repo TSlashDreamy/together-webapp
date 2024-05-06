@@ -2,7 +2,7 @@ import { FaSpotify as SpotifyIcon } from "react-icons/fa";
 import { PiSoundcloudLogoFill as SoundCloudIcon } from "react-icons/pi";
 import { FaYoutube as YoutubeIcon } from "react-icons/fa";
 
-import { Services } from "~/types";
+import { Services } from "~/services/constants";
 
 export const services = {
     Spotify: { name: Services.Spotify, Icon: SpotifyIcon },

@@ -11,15 +11,17 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
   Icon: FC | IconType;
   title: string;
   description: string;
+  iconStyle?: string;
 }
 
-const MessageCard: FC<IProps> = ({ Icon, title, description, ...other }) => {
+const MessageCard: FC<IProps> = ({ Icon, title, description, iconStyle, ...other }) => {
   const classes = twMerge(S.wrapper, other.className);
+  const iconClasses = twMerge(S.icon, iconStyle);
 
   return (
     <CardWrapper className={classes}>
       <div>
-        <Icon className={S.icon} />
+        <Icon className={iconClasses} />
       </div>
       <div>
         <Typography.H2>{title}</Typography.H2>

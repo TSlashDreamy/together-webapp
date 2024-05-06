@@ -18,6 +18,7 @@ import RoomPage from "~/pages/room/RoomPage";
 import SettingsPage from "~/pages/settings";
 
 import { routes } from "~/router/constants";
+import ServiceRedirect from "~/pages/service-redirect/ServiceRedirect";
 
 const RouteAnimator: FC = () => {
   const location = useLocation();
@@ -37,7 +38,7 @@ const RouteAnimator: FC = () => {
           <Route path={routes.app.liked} element={<LikedPage />} />
           <Route path={routes.app.room} element={<RoomPage />} />
           <Route path={routes.app.settings} element={<SettingsPage />} />
-          <Route path={routes.app.serviceRedirect} element={new Error("NOT IMPLEMENTED!")} />
+          <Route path={routes.app.serviceRedirect} element={<ServiceRedirect />} />
           <Route path={routes.app.myProfile} element={new Error("NOT IMPLEMENTED!")} />
           <Route index element={<HomePage />} />
         </Route>

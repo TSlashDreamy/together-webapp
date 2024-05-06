@@ -1,1 +1,1 @@
-export const wrapper = "xl:py-[0.6vw] xl:rounded-[0.75vw] flex justify-center py-[10px] w-full rounded-[15px]";
+export const wrapper = "xl:py-[0.6vw] xl:rounded-[0.75vw] flex justify-center py-[10px] w-full rounded-[15px] transition-all";

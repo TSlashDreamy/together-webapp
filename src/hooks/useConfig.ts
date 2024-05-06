@@ -2,8 +2,9 @@ import { AppState } from "~/redux/slices/appSlice";
 
 import { useAppSelector } from "~/hooks/useRedux";
 
-import { IAppAppearance, IAppServices } from "~/types";
+import { IAppAppearance } from "~/types";
 import { configKey } from "~/configuration/constants";
+import { IAppServices } from "~/services/types";
 
 type updateOptions =
   | AppState

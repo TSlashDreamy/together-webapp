@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { configKey } from "~/configuration/constants";
 import { initialAppState } from "~/constants";
-import { IAppAppearance, IAppServices } from "~/types";
+import { IAppServices } from "~/services/types";
+import { IAppAppearance } from "~/types";
 
 export interface AppState {
   appearance: IAppAppearance;

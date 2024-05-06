@@ -4,13 +4,13 @@ import { onAuthStateChanged, signOut, User as FirebaseUser } from "firebase/auth
 import { useAppDispatch, useAppSelector } from "./useRedux";
 import { auth } from "~/firebase";
 import { removeUser, setUser } from "~/redux/slices/userSlice";
-import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
+import { resetLoggingIn, resetRestoringSession, setLoggingIn } from "~/redux/slices/authSlice";
 import useDatabase from "./useDatabase";
 import { DBCollections } from "~/constants";
 
 export const useAuth = () => {
   const { email, token, uid, userName } = useAppSelector((state) => state.user);
-  const { isLoggingIn } = useAppSelector((state) => state.authentication);
+  const { isLoggingIn, restoringSession } = useAppSelector((state) => state.authentication);
   const dispatch = useAppDispatch();
   const { getData } = useDatabase();
 
@@ -37,13 +37,15 @@ export const useAuth = () => {
         );
       }
       if (!userData && uid) dispatch(removeUser());
+      restoringSession && dispatch(resetRestoringSession());
     },
-    [dispatch, getData, uid]
+    [dispatch, getData, restoringSession, uid]
   );
 
   useEffect(() => {
     const authUnsub = onAuthStateChanged(auth, async (user) => {
       if (user) checkUserExistance(user);
+      else dispatch(resetRestoringSession());
     });
 
     return () => {

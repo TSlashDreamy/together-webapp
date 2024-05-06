@@ -1,4 +1,4 @@
-import { ServiceStatus } from "~/types";
+import { ServiceStatus } from "~/services/constants";
 
 export const statusPresets = {
   [ServiceStatus.Active]: { style: "bg-success-600", content: "Active" },

@@ -1,3 +1,5 @@
+import { initialSevicesState } from "~/services/constants";
+
 export const configKey = "app-config";
 
 export const initialConfig = {
@@ -5,17 +7,6 @@ export const initialConfig = {
     floatingObjects: true,
   },
   services: {
-    spotify: {
-      token: null,
-      status: "Unactive",
-    },
-    soundCloud: {
-      token: null,
-      status: "Unactive",
-    },
-    youTube: {
-      token: null,
-      status: "Unactive",
-    },
+    initialSevicesState,
   },
 };

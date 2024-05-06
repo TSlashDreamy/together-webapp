@@ -26,29 +26,6 @@ export enum Contents {
   Document = "Document",
 }
 
-export enum Services {
-  Spotify = "Spotify",
-  SoundCloud = "SoundCloud",
-  YouTube = "YouTube",
-}
-
-export enum ServiceStatus {
-  Active = "Active",
-  Unactive = "Unactive",
-  Error = "Error",
-}
-
-export interface IServiceState {
-  token: string | null;
-  status: ServiceStatus;
-}
-
-export interface IAppServices {
-  spotify: IServiceState;
-  soundCloud: IServiceState;
-  youTube: IServiceState;
-}
-
 export interface IAppAppearance {
   floatingObjects: boolean;
 }
@@ -94,5 +71,4 @@ export interface IChat {
 }
 
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;
-export type ServicesType = keyof typeof Services;
 export type ContentsType = keyof typeof Contents;

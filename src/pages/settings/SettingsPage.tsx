@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 
 import Button from "~/components/button";
 import PageWrapper from "~/components/page-wrapper";
@@ -9,11 +9,21 @@ import SectionWrapper from "./section-wrapper";
 
 import { useConfig } from "~/hooks/useConfig";
 
-import { ServiceStatus } from "~/types";
+import { codeVerifier, spotifyRedirect } from "~/services/spotify";
 import * as S from "./styles";
+import { spotifyInitialState } from "~/services/constants";
+import { IAppServices } from "~/services/types";
 
 const SettingsPage: FC = () => {
-  const { appearance, updateAppConfig } = useConfig();
+  const { appearance, services, updateAppConfig } = useConfig();
+  const handleSpotify = useCallback(() => {
+    if (services.spotify.access_token) {
+      updateAppConfig({ spotify: spotifyInitialState } as IAppServices);
+    } else {
+      window.localStorage.setItem("spotify_code_verifier", codeVerifier);
+      window.location.href = spotifyRedirect.toString();
+    }
+  }, [services.spotify.access_token, updateAppConfig]);
 
   return (
     <PageWrapper>
@@ -30,29 +40,31 @@ const SettingsPage: FC = () => {
         </SectionWrapper>
         <SectionWrapper name="Spotify">
           <div className={S.option}>
-            <StatusChip status={ServiceStatus.Unactive} />
+            <StatusChip status={services.spotify.status} />
           </div>
           <div className={S.option}>
             <Typography.SPAN>Service action</Typography.SPAN>
-            <Button secondary>Connect</Button>
+            <Button secondary danger={Boolean(services.spotify.access_token)} onClick={handleSpotify}>
+              {services.spotify.access_token ? "Disconnect" : "Connect"}
+            </Button>
           </div>
         </SectionWrapper>
         <SectionWrapper name="SoundCloud">
           <div className={S.option}>
-            <StatusChip status={ServiceStatus.Unactive} />
+            <StatusChip status={services.soundCloud.status} />
           </div>
           <div className={S.option}>
             <Typography.SPAN>Service action</Typography.SPAN>
-            <Button secondary>Connect</Button>
+            <Button secondary>{services.soundCloud.token ? "Disconnect" : "Connect"}</Button>
           </div>
         </SectionWrapper>
         <SectionWrapper name="YouTube">
           <div className={S.option}>
-            <StatusChip status={ServiceStatus.Unactive} />
+            <StatusChip status={services.youTube.status} />
           </div>
           <div className={S.option}>
             <Typography.SPAN>Service action</Typography.SPAN>
-            <Button secondary>Connect</Button>
+            <Button secondary>{services.youTube.token ? "Disconnect" : "Connect"}</Button>
           </div>
         </SectionWrapper>
       </div>

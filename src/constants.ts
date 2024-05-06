@@ -1,5 +1,6 @@
 import { AppState } from "./redux/slices/appSlice";
-import { IAppServices, IChat, IPlayer, ServiceStatus } from "./types";
+import { initialSevicesState } from "./services/constants";
+import { IChat, IPlayer } from "./types";
 
 export enum DBCollections {
   Users = "users",
@@ -21,12 +22,6 @@ export const initialPlayerState: IPlayer = {
 
 export const initialChatState: IChat = {
   messages: null,
-};
-
-export const initialSevicesState: IAppServices = {
-  spotify: { token: null, status: ServiceStatus.Unactive },
-  soundCloud: { token: null, status: ServiceStatus.Unactive },
-  youTube: { token: null, status: ServiceStatus.Unactive },
 };
 
 export const initialAppState: AppState = {

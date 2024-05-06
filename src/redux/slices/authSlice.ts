@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface NotificationState {
   isLoggingIn: boolean;
+  restoringSession: boolean;
 }
 
 const initialState: NotificationState = {
   isLoggingIn: false,
+  restoringSession: true,
 };
 
 export const authSlice = createSlice({
@@ -18,8 +20,11 @@ export const authSlice = createSlice({
     resetLoggingIn: (state) => {
       state.isLoggingIn = false;
     },
+    resetRestoringSession: (state) => {
+      state.restoringSession = false;
+    },
   },
 });
 
-export const { setLoggingIn, resetLoggingIn } = authSlice.actions;
+export const { setLoggingIn, resetLoggingIn, resetRestoringSession } = authSlice.actions;
 export default authSlice.reducer;

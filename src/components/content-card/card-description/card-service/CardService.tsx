@@ -2,7 +2,7 @@ import { FC, useMemo } from "react";
 
 import Typography from "~/components/typography";
 
-import { ServicesType } from "~/types";
+import { ServicesType } from "~/services/types";
 import { services } from "./constants";
 import * as S from "./styles";
 
