@@ -1,9 +1,14 @@
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+
 const envData = import.meta.env;
 const redirectUri = envData.VITE_SPOTIFY_REDIRECT_URI;
 const clientId = envData.VITE_SPOTIFY_CLIENT_ID;
+const secret = envData.VITE_SPOTIFY_CLIENT_SECRET;
 const scope =
   "streaming user-read-email user-read-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state";
-const authUrl = new URL("https://accounts.spotify.com/authorize");
+const spotifyAuthURL = new URL("https://accounts.spotify.com/authorize");
+
+const spotifyWebApi = SpotifyApi.withClientCredentials(clientId, secret, scope.split(" "));
 
 const generateRandomString = (length: number) => {
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -37,6 +42,6 @@ const params = {
   redirect_uri: redirectUri,
 };
 
-authUrl.search = new URLSearchParams(params).toString();
+spotifyAuthURL.search = new URLSearchParams(params).toString();
 
-export const spotifyRedirect = authUrl;
+export { spotifyAuthURL, spotifyWebApi };

@@ -20,9 +20,7 @@ interface IProps {
 const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
   const { roomId } = useAppSelector((state) => state.user);
   const [inputValue, setInputValue] = useState("");
-  const { createRoom, closeRoom, leaveRoom, joinRoom, isIAmTheHost, isCreatingRoom, roomRoute, roomName } = useRoom(
-    roomId as string
-  );
+  const { createRoom, closeRoom, leaveRoom, joinRoom, isIAmTheHost, isCreatingRoom, roomRoute, roomName } = useRoom();
   const { isVisible, hideModal, showModal } = useModal();
   const navigate = useNavigate();
 

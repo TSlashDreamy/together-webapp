@@ -32,7 +32,7 @@ export const useConfig = () => {
     if (optionAppearance && optionServices) {
       _updateLocalStorage(updateOptions);
     }
-    if (floatingObjects !== null) {
+    if (floatingObjects !== undefined) {
       const updatedOptions = { appearance: { floatingObjects }, services };
       _updateLocalStorage(updatedOptions);
     }

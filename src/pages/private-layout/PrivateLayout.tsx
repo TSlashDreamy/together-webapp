@@ -5,11 +5,12 @@ import { Outlet, useNavigate } from "react-router-dom";
 import AppNavbar from "~/components/app-navbar";
 import Cubes from "~/components/cubes";
 import OverlayMessage from "~/components/overlay-message";
+import TransitionLoader from "~/components/transition-loader";
 
 import { useAuth } from "~/hooks/useAuth";
-import { routes } from "~/router/constants";
-import TransitionLoader from "~/components/transition-loader";
 import { useAppSelector } from "~/hooks/useRedux";
+
+import { routes } from "~/router/constants";
 
 const PrivateLayout = () => {
   const { restoringSession } = useAppSelector(state => state.authentication);

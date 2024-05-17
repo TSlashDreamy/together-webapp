@@ -7,10 +7,11 @@ import IconButton from "~/components/icon-button";
 
 import { usePlayer } from "~/hooks/usePlayer";
 
+import { ISpotifyTrack } from "~/types";
 import * as S from "./styles";
 
 interface IProps {
-  queue: string[];
+  queue: ISpotifyTrack[];
 }
 
 const QueueInfobars: FC<IProps> = ({ queue }) => {
@@ -27,7 +28,7 @@ const QueueInfobars: FC<IProps> = ({ queue }) => {
         <Switch onChange={handleSwitchAutoplay} checked={isAutoplay} />
       </div>
       <div className={S.actionBlockWrapper}>
-        <Typography.SPAN className="font-normal">{queue ? `${queue.length} in queue` : "Empty"}</Typography.SPAN>
+        <Typography.SPAN className="font-normal">{queue && queue.length > 0 ? `${queue.length} in queue` : "Empty"}</Typography.SPAN>
         <IconButton small Icon={AddIcon} />
       </div>
     </>

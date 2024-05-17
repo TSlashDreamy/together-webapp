@@ -7,6 +7,6 @@ export const initialConfig = {
     floatingObjects: true,
   },
   services: {
-    initialSevicesState,
+    ...initialSevicesState,
   },
 };

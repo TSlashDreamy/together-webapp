@@ -10,7 +10,7 @@ interface UseFormHook<T> {
 function useForm<T extends object>(
   initialValues: T,
   onSubmit: (values: T) => void,
-  validate: (values: T) => { [K in keyof T]?: string }
+  validate?: (values: T) => { [K in keyof T]?: string }
 ): UseFormHook<T> {
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<{ [K in keyof T]?: string }>({});
@@ -23,14 +23,21 @@ function useForm<T extends object>(
     }));
   }, []);
 
-  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const validationErrors = validate(values);
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length === 0) {
-      onSubmit(values);
-    }
-  }, [onSubmit, validate, values]);
+  const handleSubmit = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (validate) {
+        const validationErrors = validate(values);
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length === 0) {
+          onSubmit(values);
+        }
+      } else {
+        onSubmit(values);
+      }
+    },
+    [onSubmit, validate, values]
+  );
 
   return {
     values,

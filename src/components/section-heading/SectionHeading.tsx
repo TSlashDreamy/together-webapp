@@ -10,17 +10,19 @@ import { twMerge } from "tailwind-merge";
 interface IProps extends HTMLAttributes<HTMLDivElement> {
   Icon?: FC | IconType;
   headingClassNames?: string;
+  iconClassNames?: string;
   title: string;
   button?: { name: string; onClick: () => void; danger?: boolean; disabled?: boolean; isLoading?: boolean };
 }
 
-const SectionHeading: FC<IProps> = ({ Icon, title, headingClassNames, button, children, ...other }) => {
+const SectionHeading: FC<IProps> = ({ Icon, title, headingClassNames, button, children, iconClassNames, ...other }) => {
   const headingClasses = twMerge(S.headerStyle, headingClassNames);
+  const iconClasses = twMerge(S.icon, iconClassNames);
 
   return (
     <div {...other} className={S.wrapperStyle}>
       <div className={S.descriptionWrapper}>
-        {Icon && <Icon className={S.icon} />}
+        {Icon && <Icon className={iconClasses} />}
         <Typography.H2 className={headingClasses}>{title}</Typography.H2>
       </div>
       <div className={S.buttonsWrapper}>

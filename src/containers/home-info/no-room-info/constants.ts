@@ -1,4 +1,4 @@
-import { initialChatState, initialPlayerState } from "~/constants";
+import { initialChatState } from "~/constants";
 import { IRoom } from "~/types";
 
 export const initialRoomState: IRoom = {
@@ -6,6 +6,6 @@ export const initialRoomState: IRoom = {
   roomName: "",
   users: [],
   hostUser: null,
-  player: initialPlayerState,
+  playerId: "",
   chat: initialChatState,
 };

@@ -1,9 +1,21 @@
-import { HiMiniWrenchScrewdriver as DevIcon } from "react-icons/hi2";
+import { FC } from "react";
 
-import MessageCard from "~/components/message-card";
+import PageWrapper from "~/components/page-wrapper";
+import TopBar from "./top-bar";
+import FoundedContent from "./founded-content";
+import HistorySection from "./history-section";
 
-const SearchPage = () => {
-  return <MessageCard Icon={DevIcon} title="Work in progress (Content searching)" description="We are still working on this functionality. Sorry about that 😅🛠️"/>;
+import { useAppSelector } from "~/hooks/useRedux";
+
+const SearchPage: FC = () => {
+  const { searchResults, mode } = useAppSelector((state) => state.search);
+
+  return (
+    <PageWrapper>
+      <TopBar mode={mode} />
+      {searchResults ? <FoundedContent searchResults={searchResults} /> : <HistorySection />}
+    </PageWrapper>
+  );
 };
 
 export default SearchPage;

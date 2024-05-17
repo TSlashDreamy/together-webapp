@@ -1,11 +1,12 @@
-import { useCallback, useEffect } from "react";
-import { onAuthStateChanged, signOut, User as FirebaseUser } from "firebase/auth";
+import { useCallback } from "react";
+import { signOut, User as FirebaseUser } from "firebase/auth";
 
-import { useAppDispatch, useAppSelector } from "./useRedux";
-import { auth } from "~/firebase";
+import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
+import useDatabase from "~/hooks/useDatabase";
+
 import { removeUser, setUser } from "~/redux/slices/userSlice";
 import { resetLoggingIn, resetRestoringSession, setLoggingIn } from "~/redux/slices/authSlice";
-import useDatabase from "./useDatabase";
+import { auth } from "~/firebase";
 import { DBCollections } from "~/constants";
 
 export const useAuth = () => {
@@ -42,24 +43,14 @@ export const useAuth = () => {
     [dispatch, getData, restoringSession, uid]
   );
 
-  useEffect(() => {
-    const authUnsub = onAuthStateChanged(auth, async (user) => {
-      if (user) checkUserExistance(user);
-      else dispatch(resetRestoringSession());
-    });
-
-    return () => {
-      authUnsub();
-    };
-  }, [checkUserExistance, dispatch, getData, uid]);
-
   return {
     isLoggedIn: Boolean(email),
     email,
     token,
     uid,
     userName,
-    signUserOut,
     isLoggingIn,
+    signUserOut,
+    checkUserExistance,
   };
 };

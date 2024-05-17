@@ -11,21 +11,23 @@ import Form from "~/components/form";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
+import { setUser } from "~/redux/slices/userSlice";
 
 import { useAppDispatch } from "~/hooks/useRedux";
 import useDatabase from "~/hooks/useDatabase";
 import useForm from "~/hooks/useForm";
 
-import { auth } from "~/firebase";
 import { validate as loginValidate } from "~/validators/loginValidators";
+import { getKey } from "~/utils";
+import { auth } from "~/firebase";
+import { DBCollections } from "~/constants";
 import { NotificationType, IUser } from "~/types";
 import { ILoginFormState } from "./types";
-import { DBCollections } from "~/constants";
-import { getKey } from "~/utils";
+import { convertUserData } from "../signup/utils";
 
 const LoginPage: FC = () => {
   const dispatch = useAppDispatch();
-  const { updateData } = useDatabase();
+  const { updateData, getData } = useDatabase();
 
   const handleLogin = async (values: ILoginFormState) => {
     const { email, password } = values;
@@ -34,7 +36,15 @@ const LoginPage: FC = () => {
       dispatch(setLoggingIn());
       await setPersistence(auth, browserSessionPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const { userName } = await getData(DBCollections.Users, user.uid);
       await updateData<number>(DBCollections.Users, Date.now(), user.uid, getKey<IUser, "lastLogin">("lastLogin"));
+
+      dispatch(
+        setUser({
+          ...convertUserData(user, userName),
+          token: user.refreshToken,
+        })
+      );
     } catch (error) {
       dispatch(
         showNotification({

@@ -40,12 +40,19 @@ export interface IUser {
 }
 
 export interface IPlayer {
-  next: string | null; // !TEMP
-  queue: string[]; // !TEMP
-  nowPlaying: string | null; // !TEMP
+  id: string | null;
+  next: ISpotifyTrack | null;
+  queue: ISpotifyTrack[];
+  nowPlaying: ISpotifyTrack | null;
+  lastSeekTimestamp: number | null;
+  currentDuration: number | null;
+  volume: number | null;
+  isPlaying: boolean;
   isAutoplay: boolean;
   isLoading: boolean;
 }
+
+export interface IFirebasePlayer extends Omit<IPlayer, "isLoading" | "volume" | "currentDuration"> {}
 
 export interface IRoom {
   roomId: string;
@@ -53,7 +60,7 @@ export interface IRoom {
   users: IPerson[];
   chat: IChat;
   hostUser: string | null;
-  player: IPlayer;
+  playerId: string;
 }
 
 export interface IPerson {
@@ -68,6 +75,21 @@ export interface IMessage {
 
 export interface IChat {
   messages: IMessage[] | null;
+}
+
+export interface ISpotifyTrack {
+  name: string;
+  author: string;
+  duration: number;
+  image: string;
+  trackUri: string;
+  requestedBy: string;
+}
+
+export interface ISearchResult {
+  songs: ISpotifyTrack[];
+  next: string;
+  total: number;
 }
 
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;

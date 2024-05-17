@@ -9,7 +9,7 @@ import SectionWrapper from "./section-wrapper";
 
 import { useConfig } from "~/hooks/useConfig";
 
-import { codeVerifier, spotifyRedirect } from "~/services/spotify";
+import { codeVerifier, spotifyAuthURL } from "~/services/spotify";
 import * as S from "./styles";
 import { spotifyInitialState } from "~/services/constants";
 import { IAppServices } from "~/services/types";
@@ -21,7 +21,7 @@ const SettingsPage: FC = () => {
       updateAppConfig({ spotify: spotifyInitialState } as IAppServices);
     } else {
       window.localStorage.setItem("spotify_code_verifier", codeVerifier);
-      window.location.href = spotifyRedirect.toString();
+      window.location.href = spotifyAuthURL.toString();
     }
   }, [services.spotify.access_token, updateAppConfig]);
 
@@ -38,7 +38,16 @@ const SettingsPage: FC = () => {
             />
           </div>
         </SectionWrapper>
-        <SectionWrapper name="Spotify">
+        <SectionWrapper name="SoundCloud">
+          <div className={S.option}>
+            <StatusChip status={services.soundCloud.status} />
+          </div>
+          <div className={S.option}>
+            <Typography.SPAN>Service action</Typography.SPAN>
+            <Button secondary>{services.soundCloud.token ? "Disconnect" : "Connect"}</Button>
+          </div>
+        </SectionWrapper>
+        <SectionWrapper name="Spotify" message="requires Spotify premium">
           <div className={S.option}>
             <StatusChip status={services.spotify.status} />
           </div>
@@ -47,15 +56,6 @@ const SettingsPage: FC = () => {
             <Button secondary danger={Boolean(services.spotify.access_token)} onClick={handleSpotify}>
               {services.spotify.access_token ? "Disconnect" : "Connect"}
             </Button>
-          </div>
-        </SectionWrapper>
-        <SectionWrapper name="SoundCloud">
-          <div className={S.option}>
-            <StatusChip status={services.soundCloud.status} />
-          </div>
-          <div className={S.option}>
-            <Typography.SPAN>Service action</Typography.SPAN>
-            <Button secondary>{services.soundCloud.token ? "Disconnect" : "Connect"}</Button>
           </div>
         </SectionWrapper>
         <SectionWrapper name="YouTube">

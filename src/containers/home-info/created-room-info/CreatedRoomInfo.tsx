@@ -12,32 +12,30 @@ import useRoom from "~/hooks/useRoom";
 
 import { generateInfoCards } from "./utils";
 import * as S from "../styles";
+import { usePlayer } from "~/hooks/usePlayer";
 
-interface IProps {
-  roomId: string;
-}
-
-const CreatedRoomInfo: FC<IProps> = ({ roomId }) => {
+const CreatedRoomInfo: FC = () => {
   const navigate = useNavigate();
-  const { isIAmTheHost, roomRoute, roomName, users, player } = useRoom(roomId);
+  const { isIAmTheHost, roomRoute, roomName, users } = useRoom();
+  const { nowPlaying, next, queue } = usePlayer();
 
   const cards = useMemo(
     () => [
       {
         Icon: PlayIcon,
         name: "Now Playing",
-        description: player.nowPlaying || "Nothing",
-        actionBtn: player.nowPlaying ? { action: () => null, name: "Skip" } : undefined,
+        description: nowPlaying?.name || "Nothing",
+        actionBtn: nowPlaying ? { action: () => null, name: "Skip" } : undefined,
       },
       {
         Icon: NextIcon,
         name: "Next",
-        description: player.next || "Nothing",
+        description: next?.name || "Nothing",
       },
       {
         Icon: QueueIcon,
         name: "In queue",
-        description: player.queue && player.queue.length > 0 ? `${player.queue.length} items` : `Empty`,
+        description: queue && queue.length > 0 ? `${queue.length} items` : `Empty`,
       },
       {
         Icon: PeopleIcon,
@@ -45,7 +43,7 @@ const CreatedRoomInfo: FC<IProps> = ({ roomId }) => {
         description: users && users.length > 1 ? `${users!.length} people` : `Only you are here`,
       },
     ],
-    [player, users]
+    [next, nowPlaying, queue, users]
   );
 
   return (

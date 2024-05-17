@@ -1,1 +1,1 @@
-export const cardStyle = "xl:p-[1.1vw] xl:w-[16.1vw] xl:rounded-[1.8vw] xl:hover:pt-[12.7vw] flex p-[20px] w-[305px] rounded-[35px] bg-cover bg-center group hover:pt-[240px] transition-all";
+export const cardStyle = "xl:p-[1.1vw] xl:min-w-[16.1vw] xl:rounded-[1.8vw] xl:hover:pt-[12.7vw] flex p-[20px] min-w-[305px] rounded-[35px] bg-cover bg-center group hover:pt-[240px] transition-all";

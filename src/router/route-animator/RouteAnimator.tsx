@@ -39,7 +39,7 @@ const RouteAnimator: FC = () => {
           <Route path={routes.app.room} element={<RoomPage />} />
           <Route path={routes.app.settings} element={<SettingsPage />} />
           <Route path={routes.app.serviceRedirect} element={<ServiceRedirect />} />
-          <Route path={routes.app.myProfile} element={new Error("NOT IMPLEMENTED!")} />
+          <Route path={routes.app.myProfile} element={<div>NOT IMPLEMENTED!</div>} />
           <Route index element={<HomePage />} />
         </Route>
       </Routes>

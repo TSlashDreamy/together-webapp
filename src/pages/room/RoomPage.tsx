@@ -8,6 +8,7 @@ import IconButton from "~/components/icon-button";
 import PageWrapper from "~/components/page-wrapper";
 import SectionHeading from "~/components/section-heading";
 import Modal from "~/components/modal";
+import MessageCard from "~/components/message-card";
 
 import { useAppDispatch } from "~/hooks/useRedux";
 import useRoom from "~/hooks/useRoom";
@@ -16,21 +17,18 @@ import { useModal } from "~/hooks/useModal";
 import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
 import LinkIcon from "~/assets/icons/etc-icons/link.svg?react";
 import AddPersonIcon from "~/assets/icons/etc-icons/addPerson.svg?react";
-import * as S from "./styles";
 import { showNotification } from "~/redux/slices/notificationSlice";
-import { NotificationType } from "~/types";
-import { useUser } from "~/hooks/useUser";
 import { routes } from "~/router/constants";
-import MessageCard from "~/components/message-card";
+import { NotificationType } from "~/types";
+import * as S from "./styles";
 
 const RoomPage: FC = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isVisible, hideModal, showModal } = useModal();
-  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom, users, chat, hostUser, player } =
-    useRoom(roomId as string);
-  useUser(); // to update userData via websocket
+  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom } =
+    useRoom();
 
   useEffect(() => {
     if (!isMeInTheRoom) navigate(routes.app.home);
@@ -84,13 +82,7 @@ const RoomPage: FC = () => {
           </SectionHeading>
           <MusicPlayer />
         </div>
-        <RoomSidebar
-          queue={player.queue}
-          users={users}
-          chat={chat}
-          hostUser={hostUser as string}
-          isAutoPlay={player.isAutoplay}
-        />
+        <RoomSidebar />
       </div>
     </PageWrapper>
   );

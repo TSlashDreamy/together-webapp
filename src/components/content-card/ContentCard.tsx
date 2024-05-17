@@ -2,11 +2,17 @@ import { FC } from "react";
 
 import CardDescription from "./card-description";
 import { cardStyle } from "./styles";
+import { ISpotifyTrack } from "~/types";
 
-const ContentCard: FC = () => {
+interface IProps {
+  track: ISpotifyTrack;
+  onButtonClick: (track: ISpotifyTrack) => void;
+}
+
+const ContentCard: FC<IProps> = ({ track, onButtonClick }) => {
   return (
-    <div className={cardStyle} style={{ backgroundImage: "url('https://f4.bcbits.com/img/a2992416002_10.jpg')" }}>
-      <CardDescription />
+    <div className={cardStyle} style={{ backgroundImage: `url('${track.image}')` }}>
+      <CardDescription track={track} onButtonClick={onButtonClick} />
     </div>
   );
 };

@@ -4,6 +4,8 @@ import userReducer from "./slices/userSlice";
 import notificationReducer from "./slices/notificationSlice";
 import authReducer from "./slices/authSlice";
 import roomReducer from "./slices/roomSlice";
+import playerReducer from "./slices/playerSlice";
+import searchReducer from "./slices/searchSlice";
 import appReducer from "./slices/appSlice";
 
 export const store = configureStore({
@@ -13,6 +15,8 @@ export const store = configureStore({
     notification: notificationReducer,
     authentication: authReducer,
     room: roomReducer,
+    search: searchReducer,
+    player: playerReducer,
   },
 });
 

@@ -15,7 +15,7 @@ const code = new URLSearchParams(window.location.search).get("code");
 
 const ServiceRedirect: FC = () => {
   const [status, setStatus] = useState(statuses.Fail);
-  const [timerId, setTimerId] = useState<number | null>(null);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
   const { updateAppConfig } = useConfig();
   const { getSpotifyToken } = useSpotify();
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ const ServiceRedirect: FC = () => {
 
   useEffect(() => {
     return () => {
-      clearTimeout(timerId as number);
+      clearTimeout(timerId as NodeJS.Timeout);
     };
   }, [timerId]);
 

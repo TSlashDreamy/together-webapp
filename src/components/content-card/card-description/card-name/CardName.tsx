@@ -5,14 +5,16 @@ import Typography from "~/components/typography";
 import * as S from "./styles";
 
 interface IProps {
-    name: string;
-    length: string;
+  name: string;
+  length: string;
 }
 
-const CardName: FC<IProps> = ({name, length}) => {
+const CardName: FC<IProps> = ({ name, length }) => {
   return (
     <div className={S.wrapperStyle}>
-      <Typography.SPAN className={S.nameStyle}>{name}</Typography.SPAN>
+      <div>
+        <Typography.SPAN className={S.nameStyle}>{name}</Typography.SPAN>
+      </div>
       <Typography.SPAN className={S.lengthStyle}>{length}</Typography.SPAN>
     </div>
   );

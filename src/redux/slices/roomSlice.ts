@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { IChat, IPerson, IPlayer, IRoom } from "~/types";
-import { initialChatState, initialPlayerState } from "~/constants";
 import { removeUser } from "./userSlice";
+
+import { initialChatState } from "~/constants";
+import { IChat, IPerson, IRoom } from "~/types";
 
 interface RoomState {
   roomId: string | null;
@@ -11,7 +12,7 @@ interface RoomState {
   isLoading: boolean;
   users: IPerson[];
   chat: IChat;
-  player: IPlayer;
+  playerId: string | null;
 }
 
 const initialState: RoomState = {
@@ -20,8 +21,8 @@ const initialState: RoomState = {
   hostUser: null,
   isLoading: false,
   users: [],
-  chat: { messages: null },
-  player: initialPlayerState,
+  chat: initialChatState,
+  playerId: null,
 };
 
 export const roomSlice = createSlice({
@@ -34,7 +35,7 @@ export const roomSlice = createSlice({
       state.hostUser = action.payload.hostUser;
       state.users = action.payload.users;
       state.chat = action.payload.chat;
-      state.player = action.payload.player;
+      state.playerId = action.payload.playerId;
     },
     resetRoom: (state) => {
       state.roomId = null;
@@ -42,7 +43,7 @@ export const roomSlice = createSlice({
       state.hostUser = null;
       state.users = [];
       state.chat = initialChatState;
-      state.player = initialPlayerState;
+      state.playerId = null;
     },
     setIsLoading: (state) => {
       state.isLoading = true;
@@ -50,11 +51,23 @@ export const roomSlice = createSlice({
     resetIsLoading: (state) => {
       state.isLoading = false;
     },
-    setPlayerLoading: (state) => {
-      state.player.isLoading = true;
+    setRoomId: (state, action: PayloadAction<string>) => {
+      state.roomId = action.payload;
     },
-    resetPlayerLoading: (state) => {
-      state.player.isLoading = false;
+    setRoomName: (state, action: PayloadAction<string>) => {
+      state.roomName = action.payload;
+    },
+    setHostUser: (state, action: PayloadAction<string>) => {
+      state.hostUser = action.payload;
+    },
+    setUsers: (state, action: PayloadAction<IPerson[]>) => {
+      state.users = action.payload;
+    },
+    setChat: (state, action: PayloadAction<IChat>) => {
+      state.chat = action.payload;
+    },
+    setPlayerId: (state, action: PayloadAction<string>) => {
+      state.playerId = action.payload;
     },
   },
 
@@ -65,6 +78,16 @@ export const roomSlice = createSlice({
   },
 });
 
-export const { setRoom, resetRoom, setIsLoading, resetIsLoading, setPlayerLoading, resetPlayerLoading } =
-  roomSlice.actions;
+export const {
+  setRoom,
+  resetRoom,
+  setIsLoading,
+  resetIsLoading,
+  setRoomId,
+  setRoomName,
+  setHostUser,
+  setUsers,
+  setChat,
+  setPlayerId,
+} = roomSlice.actions;
 export default roomSlice.reducer;

@@ -19,7 +19,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const CategoryCard: FC<IProps> = ({ Icon, cardNum, description, borderStyle, bgStyle, disabled, ...other }) => {
-  const [scrollTimeout, setScrollTimeout] = useState<number | null>(null);
+  const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(null);
   const classes = twMerge(
     classNames(S.cardStyles, borderStyle, bgStyle, other.className, {
       [S.disabledStyle]: disabled,
@@ -40,7 +40,7 @@ const CategoryCard: FC<IProps> = ({ Icon, cardNum, description, borderStyle, bgS
   };
 
   const cancelAutoScroll = () => {
-    clearTimeout(scrollTimeout as number);
+    clearTimeout(scrollTimeout as NodeJS.Timeout);
     setScrollTimeout(null);
   };
 

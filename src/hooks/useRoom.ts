@@ -2,26 +2,25 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 
-import useWebsocket from "~/hooks/useWebsocket";
 import { useAuth } from "~/hooks/useAuth";
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
 import useDatabase from "~/hooks/useDatabase";
 
-import { getKey, getRandomNum } from "~/utils";
-import { resetIsLoading, resetRoom, setIsLoading, setRoom } from "~/redux/slices/roomSlice";
+import { generateId, getKey } from "~/utils";
+import { resetIsLoading, resetRoom, setIsLoading } from "~/redux/slices/roomSlice";
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { routes } from "~/router/constants";
 import { initialRoomState } from "~/containers/home-info/no-room-info/constants";
-import { DBCollections } from "~/constants";
-import { IChat, IMessage, NotificationType, IPerson, IRoom, IUser } from "~/types";
+import { DBCollections, initalFirebasePlayerState } from "~/constants";
+import { IChat, IMessage, NotificationType, IPerson, IRoom, IUser, IFirebasePlayer } from "~/types";
 
-const useRoom = (roomId?: string) => {
+const useRoom = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { uid, userName } = useAuth();
   const { pushData, updateData, removeData, getData } = useDatabase();
   const room = useAppSelector((state) => state.room);
-  const { data } = useWebsocket<IRoom>(DBCollections.Rooms, roomId as string, setRoom);
+  const { roomId } = useAppSelector((state) => state.user);
   const roomRoot = routes.app.room;
 
   const _handleRoomError = useCallback(
@@ -40,7 +39,7 @@ const useRoom = (roomId?: string) => {
     try {
       dispatch(setIsLoading());
 
-      const updatedUsers = (data as IRoom)?.users.filter((user) => user.id !== (userId || uid));
+      const updatedUsers = room?.users.filter((user) => user.id !== (userId || uid));
       await updateData(DBCollections.Rooms, updatedUsers, room.roomId as string, getKey<IRoom, "users">("users"));
       await updateData(DBCollections.Users, null, userId || (uid as string), getKey<IUser, "roomId">("roomId"));
       if (!userId) {
@@ -59,13 +58,20 @@ const useRoom = (roomId?: string) => {
       dispatch(setIsLoading());
       const room: IRoom = {
         ...initialRoomState,
-        roomId: String(Date.now()).concat(getRandomNum(10, 100000).toString()),
+        roomId: generateId(),
         roomName: `${userName}'s room`,
         hostUser: uid as string,
         users: [{ id: uid as string, name: userName as string }],
+        playerId: generateId(),
+      };
+
+      const player: IFirebasePlayer = {
+        ...initalFirebasePlayerState,
+        id: room.playerId,
       };
 
       await pushData(DBCollections.Rooms, room, room.roomId);
+      await pushData(DBCollections.Players, player, player.id as string);
       await updateData(DBCollections.Users, room.roomId, uid as string, getKey<IUser, "roomId">("roomId"));
       navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${room.roomId}`);
     } catch (error) {
@@ -79,7 +85,7 @@ const useRoom = (roomId?: string) => {
     try {
       dispatch(setIsLoading());
 
-      (data as IRoom)?.users.forEach(async (user) => {
+      room?.users.forEach(async (user) => {
         await updateData(DBCollections.Users, null, user.id, getKey<IUser, "roomId">("roomId"));
       });
       await removeData(DBCollections.Rooms, roomId as string);
@@ -134,7 +140,7 @@ const useRoom = (roomId?: string) => {
       if (!content) throw new FirebaseError("", "Can't send empty message.");
 
       const message = { user: { id: uid, name: userName } as IPerson, content } as IMessage;
-      const msgIndex = ((data as IRoom).chat && (data as IRoom).chat.messages!.length) ?? 0;
+      const msgIndex = (room.chat && room.chat.messages!.length) ?? 0;
       await updateData(
         DBCollections.Rooms,
         message,
@@ -154,8 +160,8 @@ const useRoom = (roomId?: string) => {
     kickFromRoom,
     sendMessage,
     isCreatingRoom: room.isLoading,
-    isIAmTheHost: uid === (data as IRoom)?.hostUser,
-    isRoomExist: Boolean(data?.roomId),
+    isIAmTheHost: uid === room.hostUser,
+    isRoomExist: Boolean(room.roomId),
     isMeInTheRoom: room.users.some((user) => user.id === uid),
     roomRoute: `${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`,
     ...room,

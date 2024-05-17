@@ -9,6 +9,10 @@ body {
   user-select: none;
 }
 
+.large-bg-size {
+  background-size: 400% 400%;
+}
+
 .hidden-scroll::-webkit-scrollbar {
   display: none; /* Webkit browsers (Chrome, Safari, etc.) */
 }
@@ -16,4 +20,29 @@ body {
 .hidden-scroll {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+// range inputs reset
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox */
+  background: transparent; /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border */
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
 }

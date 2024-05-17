@@ -2,38 +2,54 @@ import { FC } from "react";
 import { FaSpotify as SpotifyIcon } from "react-icons/fa";
 
 import Typography from "~/components/typography";
+import NextBlock from "./next-block";
 
-import MusicIcon from "~/assets/icons/content-icons/music.svg?react";
-import SkipIcon from "~/assets/icons/etc-icons/skip.svg?react";
+import { ISpotifyTrack } from "~/types";
 import * as S from "./styles";
 
-const PlayerRightSide: FC = () => {
+interface IProps {
+  currentTrack: ISpotifyTrack | null;
+  nextTrack: ISpotifyTrack | null;
+  currentDuration: number | null;
+}
+
+const PlayerRightSide: FC<IProps> = ({ currentTrack, nextTrack, currentDuration }) => {
+  const formatDuration = (duration: number) => {
+    const seconds = String(Math.floor((duration / 1000) % 60));
+    const minutes = String(Math.floor((duration / (1000 * 60)) % 60));
+
+    return `${minutes}:${seconds.padStart(2, "0")}`;
+  };
+
   return (
     <div className={S.rightSideStyle}>
       <div className={S.serviceWrapper}>
         <Typography.SPAN>Playing from</Typography.SPAN>
         <SpotifyIcon className={S.serviceIconStyle} />
       </div>
-      <div className={S.songDetailsStyle}>
-        <div>
-          <Typography.H3 className="font-medium">Apathy - loooooooooong name in this song</Typography.H3>
-          <Typography.SPAN>Burning Time Machine</Typography.SPAN>
-        </div>
-        <Typography.H3 className="font-medium">1:02 / 3:14</Typography.H3>
-      </div>
-      {true && (
-        <div className={S.skipInfoWrapperStyle}>
-          <div className={S.infoTextStyle}>
-            <SkipIcon className={S.infoTitleIconStyle} />
-            <Typography.H4>Next</Typography.H4>
+      {currentTrack ? (
+        <div className={S.songDetailsStyle}>
+          <div>
+            <Typography.H3 className="font-medium">{currentTrack.name}</Typography.H3>
+            <Typography.SPAN>{currentTrack.author}</Typography.SPAN>
           </div>
-          <div className={S.infoTextStyle}>
-            <MusicIcon className={S.infoDescriptionIconStyle} />
-            <Typography.SPAN>Artery - Burning time machine</Typography.SPAN>
-          </div>
+          <Typography.H3 className="font-medium">
+            {formatDuration(currentDuration || 0)} / {formatDuration(currentTrack.duration)}
+          </Typography.H3>
         </div>
+      ) : (
+        <Typography.H3 className="font-medium">Nothing is playing now</Typography.H3>
       )}
-      <Typography.SPAN className={S.requestedTextStyle}>Requested by: User</Typography.SPAN>
+      {nextTrack && (
+        <NextBlock
+          currentDuration={currentDuration || 0}
+          trackName={nextTrack.name}
+          trackLength={(currentTrack?.duration as number) || 0}
+        />
+      )}
+      <Typography.SPAN className={S.requestedTextStyle}>
+        Requested by: {currentTrack?.requestedBy || "Unknown"}
+      </Typography.SPAN>
     </div>
   );
 };

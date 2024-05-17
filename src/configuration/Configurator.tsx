@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 
+import { useWebSocketUpdates } from "~/hooks/websocket-updates/useWebsocketUpdates";
 import { useAppDispatch } from "~/hooks/useRedux";
 import { useConfig } from "~/hooks/useConfig";
 import { useSpotify } from "~/hooks/useSpotify";
@@ -13,6 +14,7 @@ const Configurator = () => {
   const dispatch = useAppDispatch();
   const { updateAppConfig } = useConfig();
   const { refreshSpotifyToken, current_refresh_token, current_expires_in } = useSpotify();
+  useWebSocketUpdates(); // Handles all websocket updates (without additional rerenders)
 
   const tokenRefresher = useCallback(() => {
     refreshSpotifyToken()
@@ -32,7 +34,7 @@ const Configurator = () => {
   useEffect(() => {
     const config = localStorage.getItem(configKey);
     if (!config) localStorage.setItem(configKey, JSON.stringify(initialConfig));
-    else dispatch(updateConfig(JSON.parse(localStorage.getItem(configKey) as string)));
+    else dispatch(updateConfig(JSON.parse(config)));
     if (current_refresh_token) tokenRefresher();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -51,7 +53,7 @@ const Configurator = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    let refresh_timer: number;
+    let refresh_timer: NodeJS.Timeout;
 
     if (current_refresh_token) {
       refresh_timer = setTimeout(() => {
