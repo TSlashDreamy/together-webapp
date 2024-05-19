@@ -33,6 +33,7 @@ export const usePlayer = () => {
 
   const _handlePlayerError = useCallback(
     (e: unknown) => {
+      console.error("(E) Player: \n", e);
       dispatch(
         showNotification({
           type: NotificationType.Error,
@@ -62,17 +63,20 @@ export const usePlayer = () => {
     }
   };
 
-  const togglePlay = useCallback(async () => {
-    try {
-      dispatch(setIsLoading());
+  const togglePlay = useCallback(
+    async (play?: boolean) => {
+      try {
+        dispatch(setIsLoading());
 
-      await _updatePlayerInfo(!isPlaying, getKey<IPlayer, "isPlaying">("isPlaying"));
-    } catch (error) {
-      _handlePlayerError(error);
-    } finally {
-      dispatch(resetIsLoading());
-    }
-  }, [_handlePlayerError, _updatePlayerInfo, dispatch, isPlaying]);
+        await _updatePlayerInfo(play !== undefined ? play : !isPlaying, getKey<IPlayer, "isPlaying">("isPlaying"));
+      } catch (error) {
+        _handlePlayerError(error);
+      } finally {
+        dispatch(resetIsLoading());
+      }
+    },
+    [_handlePlayerError, _updatePlayerInfo, dispatch, isPlaying]
+  );
 
   const skip = useCallback(async () => {
     try {
@@ -84,8 +88,9 @@ export const usePlayer = () => {
       await _updatePlayerInfo(nextItem, getKey<IPlayer, "nowPlaying">("nowPlaying"));
       await _updatePlayerInfo(newQueue, getKey<IPlayer, "queue">("queue"));
       await _updatePlayerInfo(newQueue[0] || null, getKey<IPlayer, "next">("next"));
-      queue === null || !queue.length && dispatch(setNowPlaying(null)) && togglePlay();
+      queue === null || (!queue.length && dispatch(setNowPlaying(null)) && togglePlay());
       queue.length === 1 && dispatch(setQueue([])) && dispatch(setNext(null));
+      nextItem && togglePlay(true);
     } catch (error) {
       _handlePlayerError(error);
     } finally {
@@ -126,7 +131,6 @@ export const usePlayer = () => {
         dispatch(setIsLoading());
         await spotifyPlay(spotifyDevice?.device_id as string, trackUri);
       } catch (error) {
-        console.error(error); // !TEMP
         _handlePlayerError(error);
       } finally {
         dispatch(resetIsLoading());

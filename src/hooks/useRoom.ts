@@ -25,6 +25,7 @@ const useRoom = () => {
 
   const _handleRoomError = useCallback(
     (e: unknown) => {
+      console.error("(E) Room: \n", e);
       dispatch(
         showNotification({
           type: NotificationType.Error,
@@ -89,6 +90,7 @@ const useRoom = () => {
         await updateData(DBCollections.Users, null, user.id, getKey<IUser, "roomId">("roomId"));
       });
       await removeData(DBCollections.Rooms, roomId as string);
+      await removeData(DBCollections.Players, room.playerId as string);
       dispatch(resetRoom());
       navigate(routes.app.home);
     } catch (error) {
@@ -140,7 +142,7 @@ const useRoom = () => {
       if (!content) throw new FirebaseError("", "Can't send empty message.");
 
       const message = { user: { id: uid, name: userName } as IPerson, content } as IMessage;
-      const msgIndex = (room.chat && room.chat.messages!.length) ?? 0;
+      const msgIndex = (room.chat && room.chat.messages && room.chat.messages.length) ?? 0;
       await updateData(
         DBCollections.Rooms,
         message,

@@ -13,6 +13,7 @@ const useDatabase = () => {
 
   const _handleDBError = useCallback(
     (e: unknown) => {
+      console.error("(E) Database: \n", e);
       dispatch(
         showNotification({
           type: NotificationType.Error,

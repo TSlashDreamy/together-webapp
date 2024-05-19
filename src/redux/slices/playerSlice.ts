@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { removeUser } from "./userSlice";
+import { resetRoom } from "./roomSlice";
 
 import { initialPlayerState } from "~/constants";
 import { IFirebasePlayer, IPlayer, ISpotifyTrack } from "~/types";
@@ -71,6 +72,9 @@ export const playerSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addCase(removeUser, () => {
+      return initialState;
+    });
+    builder.addCase(resetRoom, () => {
       return initialState;
     });
   },

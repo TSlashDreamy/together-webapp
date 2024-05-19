@@ -53,7 +53,7 @@ const PlayerLeftSide: FC<IProps> = ({
         )}
         <div className={S.buttonsContainerStyle}>
           <div className={S.buttonsWrapperStyle}>
-            <IconButton Icon={isPlaying ? PauseIcon : PlayIcon} isLoading={isLoading} onClick={togglePlay} />
+            <IconButton Icon={isPlaying ? PauseIcon : PlayIcon} isLoading={isLoading} onClick={() => togglePlay()} />
             <IconButton Icon={SkipIcon} withoutOutline disabled={!next} onClick={skip} />
             <div className={S.volumeWrapper}>
               <IconButton Icon={VolumeIcon} withoutOutline onClick={() => setVolumeShown((state) => !state)} />

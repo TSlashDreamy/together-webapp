@@ -20,7 +20,7 @@ export const initalFirebasePlayerState: IFirebasePlayer = {
   next: null,
   queue: [],
   lastSeekTimestamp: null,
-  isAutoplay: false,
+  isAutoplay: true,
   isPlaying: false,
 };
 

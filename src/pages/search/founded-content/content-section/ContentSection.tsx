@@ -2,6 +2,7 @@ import { FC, useEffect, useRef } from "react";
 import { IconType } from "react-icons";
 import { IoChevronBackOutline as BackIcon } from "react-icons/io5";
 import { IoChevronForwardOutline as ForwardIcon } from "react-icons/io5";
+import { IoAddOutline as AddIcon } from "react-icons/io5";
 
 import IconButton from "~/components/icon-button";
 import ContentCard from "~/components/content-card";
@@ -18,7 +19,7 @@ interface IProps {
 }
 
 const ContentSection: FC<IProps> = ({ searchResults, section }) => {
-  const { addToQueue } = usePlayer();
+  const { addToQueue, isLoading } = usePlayer();
   const sectionRef = useRef<HTMLDivElement>(null);
   const { Icon, name } = section;
 
@@ -42,9 +43,8 @@ const ContentSection: FC<IProps> = ({ searchResults, section }) => {
       <div className={S.contentWrapper}>
         <IconButton Icon={BackIcon} onClick={() => handleScrollSection(false)} />
         <div ref={sectionRef} className={S.cardsWrapper}>
-          {searchResults?.songs.map((result) => (
-            // key ignored for transitions!!
-            <ContentCard track={result} onButtonClick={addToQueue} />
+          {searchResults?.songs.map((result, index) => (
+            <ContentCard key={index} ButtonIcon={AddIcon} isLoading={isLoading} track={result} onButtonClick={addToQueue} />
           ))}
         </div>
         <IconButton Icon={ForwardIcon} onClick={() => handleScrollSection()} />

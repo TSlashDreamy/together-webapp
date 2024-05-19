@@ -7,6 +7,7 @@ import { useUser } from "~/hooks/useUser";
 import useWebsocket from "~/hooks/useWebsocket";
 
 import {
+  resetPlayer,
   setAutoplay,
   setCurrentDuration,
   setId,
@@ -40,18 +41,19 @@ export const usePlayerUpdates = () => {
   useWebsocket<boolean>(DBCollections.Players, playerId, setAutoplay, getKey<IFirebasePlayer, "isAutoplay">("isAutoplay"));
   /* //? ~Questionable way~ */
 
-  const { lastSeekTimestamp: lastSkipTimestamp, isPlaying, currentDuration, nowPlaying, isAutoplay, skip, play, togglePlay } = usePlayer();
+  const { lastSeekTimestamp: lastSkipTimestamp, isPlaying, currentDuration, nowPlaying, isAutoplay, skip, seek, play, togglePlay } = usePlayer();
 
   useEffect(() => {
+    if (!isLoggedIn) spotifyPlayer?.pause();
+  }, [isLoggedIn, spotifyPlayer]);
+
+  useEffect(() => {
+    if (!isLoggedIn && nowPlaying) dispatch(resetPlayer());
     if (!isLoggedIn) return;
     if (!device) return;
-    if (nowPlaying) {
-      play(nowPlaying.trackUri).then(() => {
-        isAutoplay ? spotifyPlayer?.resume() : spotifyPlayer?.pause();
-      });
-    }
+    if (nowPlaying) play(nowPlaying.trackUri);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [device, isLoggedIn, nowPlaying, play, spotifyPlayer]);
+  }, [device, nowPlaying]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -63,7 +65,8 @@ export const usePlayerUpdates = () => {
     if (!isLoggedIn) return;
     if (!device) return;
     spotifyPlayer?.seek(lastSkipTimestamp as number);
-  }, [device, isLoggedIn, lastSkipTimestamp, spotifyPlayer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [device, isLoggedIn, lastSkipTimestamp]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -74,10 +77,16 @@ export const usePlayerUpdates = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
     if (!device) return;
-    const offset = 970;
+    const offset = 980;
     if (!(currentDuration && currentDuration >= (nowPlaying?.duration as number) - offset)) return;
-    isAutoplay ? skip() : togglePlay();
-  }, [currentDuration, device, isAutoplay, isLoggedIn, nowPlaying?.duration, skip, togglePlay]);
+    if (isAutoplay) {
+      skip();
+    } else {
+      togglePlay(false).then(() => {
+        seek(0);
+      });
+    }
+  }, [currentDuration, device, isAutoplay, isLoggedIn, nowPlaying?.duration, seek, skip, togglePlay]);
 
   useEffect(() => {
     if (!isLoggedIn) return;

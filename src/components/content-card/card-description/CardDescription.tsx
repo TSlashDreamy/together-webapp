@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { IconType } from "react-icons";
 
 import CardService from "./card-service";
 import CardName from "./card-name";
@@ -10,9 +11,11 @@ import { ISpotifyTrack } from "~/types";
 interface IProps {
   track: ISpotifyTrack;
   onButtonClick: (track: ISpotifyTrack) => void;
+  ButtonIcon?: IconType | FC;
+  isLoading?: boolean;
 }
 
-const CardDescription: FC<IProps> = ({ track, onButtonClick }) => {
+const CardDescription: FC<IProps> = ({ track, onButtonClick, ButtonIcon, isLoading }) => {
   const convertDuration = (duration: number) => {
     const seconds = String(Math.floor((duration / 1000) % 60));
     const minutes = String(Math.floor((duration / (1000 * 60)) % 60));
@@ -28,7 +31,7 @@ const CardDescription: FC<IProps> = ({ track, onButtonClick }) => {
         <CardName name={track.name} length={convertDuration(track.duration)} />
       </div>
       <hr className={S.dividerStyle} />
-      <CardActions author={track.author} contentType="Music" onPlay={() => onButtonClick(track)} />
+      <CardActions author={track.author} contentType="Music" onPlay={() => onButtonClick(track)} ButtonIcon={ButtonIcon} isLoading={isLoading} />
     </div>
   );
 };
