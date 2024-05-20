@@ -1,6 +1,5 @@
 import { FC, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { HiMiniWrenchScrewdriver as DevIcon } from "react-icons/hi2";
 
 import RoomSidebar from "~/containers/room-sidebar";
 import MusicPlayer from "~/containers/music-player";
@@ -8,7 +7,6 @@ import IconButton from "~/components/icon-button";
 import PageWrapper from "~/components/page-wrapper";
 import SectionHeading from "~/components/section-heading";
 import Modal from "~/components/modal";
-import MessageCard from "~/components/message-card";
 
 import { useAppDispatch } from "~/hooks/useRedux";
 import useRoom from "~/hooks/useRoom";
@@ -21,14 +19,14 @@ import { showNotification } from "~/redux/slices/notificationSlice";
 import { routes } from "~/router/constants";
 import { NotificationType } from "~/types";
 import * as S from "./styles";
+import { ModalType } from "~/constants";
 
 const RoomPage: FC = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isVisible, hideModal, showModal } = useModal();
-  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom } =
-    useRoom();
+  const { isOpen, hideModal, showModal } = useModal();
+  const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom } = useRoom();
 
   useEffect(() => {
     if (!isMeInTheRoom) navigate(routes.app.home);
@@ -37,6 +35,7 @@ const RoomPage: FC = () => {
   const handleDangerAction = () => {
     if (isIAmTheHost) closeRoom();
     else leaveRoom();
+    hideModal();
   };
 
   const copyToClipboard = () => {
@@ -51,15 +50,17 @@ const RoomPage: FC = () => {
 
   return (
     <PageWrapper className={S.pageWrapper}>
-      <Modal isVisible={isVisible} hideModal={hideModal} title={"Add people"}>
-        <MessageCard
-          className="relative top-0 left-0 translate-x-0 translate-y-0"
-          Icon={DevIcon}
-          title="Work in progress (Add to room)"
-          description="Sorry about that"
-        />
-        {/* //! TEMP */}
-      </Modal>
+      <Modal
+        isOpen={isOpen}
+        modalType={ModalType.CONFIRM}
+        modalProps={{
+          message: isIAmTheHost
+            ? "This action will completely delete the current room!"
+            : "This room will not be available for you after you leave it!",
+          onCancel: hideModal,
+          onConfirm: handleDangerAction,
+        }}
+      />
       <div className={S.contentWrapper}>
         <div className={S.contentSideStyle}>
           <SectionHeading
@@ -70,7 +71,7 @@ const RoomPage: FC = () => {
               isMeInTheRoom
                 ? {
                     name: isIAmTheHost ? "Close room" : "Leave room",
-                    onClick: handleDangerAction,
+                    onClick: showModal,
                     danger: true,
                     isLoading: isCreatingRoom,
                   }
@@ -78,7 +79,7 @@ const RoomPage: FC = () => {
             }
           >
             {isIAmTheHost && <IconButton Icon={LinkIcon} onClick={copyToClipboard} />}
-            {isIAmTheHost && <IconButton Icon={AddPersonIcon} onClick={showModal} />}
+            {isIAmTheHost && <IconButton Icon={AddPersonIcon} onClick={() => null} />}
           </SectionHeading>
           <MusicPlayer />
         </div>

@@ -1,19 +1,19 @@
 import { useCallback, useState } from "react";
 
-interface IModalProps {
-  isVisible: boolean;
+interface ModalState {
+  isOpen: boolean;
   showModal: () => void;
   hideModal: () => void;
 }
 
-export const useModal = (): IModalProps => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+export const useModal = (): ModalState => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const hideModal = useCallback(() => setIsVisible(false), [setIsVisible]);
-  const showModal = useCallback(() => setIsVisible(true), [setIsVisible]);
+  const hideModal = useCallback(() => setIsOpen(false), [setIsOpen]);
+  const showModal = useCallback(() => setIsOpen(true), [setIsOpen]);
 
   return {
-    isVisible,
+    isOpen,
     showModal,
     hideModal,
   };

@@ -4,25 +4,54 @@ import { RxCross1 as CloseIcon } from "react-icons/rx";
 
 import Typography from "~/components/typography";
 import IconButton from "~/components/icon-button";
+import Button from "~/components/button";
 
-interface IProps extends HTMLAttributes<HTMLDivElement> {
-  isVisible: boolean;
-  title: string;
-  hideModal: () => void;
+import { ModalType } from "~/constants";
+import * as S from "./styles";
+
+interface IModalProps {
+  message?: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  title?: string;
 }
 
-const Modal: FC<IProps> = ({ children, isVisible, title, hideModal }) => {
+interface IProps extends HTMLAttributes<HTMLDivElement> {
+  isOpen: boolean;
+  modalType: ModalType;
+  modalProps: IModalProps;
+}
+
+const Modal: FC<IProps> = ({ children, isOpen, modalProps, modalType }) => {
   return createPortal(
-    <div
-      style={{ left: isVisible ? "0%" : "-100%", opacity: isVisible ? 1 : 0 }}
-      className="fixed z-20 top-0 left-0 size-full bg-semitransparent-dark backdrop-blur-[100px] transition-all"
-    >
-      <div className="absolute top-1/2 left-1/2 min-w-[40vw] min-h-[27vw] px-[3vw] py-[1vw] flex flex-col items-center gap-[0.5vw] bg-semitransparent-dark rounded-2xl translate-x-[-50%] translate-y-[-50%] backdrop-blur-[100px]">
-        <div className="w-full flex items-center justify-between">
-          <Typography.H3>{title}</Typography.H3>
-          <IconButton small Icon={CloseIcon} onClick={hideModal} />
-        </div>
-        {children}
+    <div style={{ opacity: isOpen ? "1" : "0", pointerEvents: isOpen ? "auto" : "none" }} className={S.backdrop}>
+      <div style={{ scale: isOpen ? "1" : "0.8" }} className={S.modal}>
+        {modalType === ModalType.CONFIRM && (
+          <div className={S.confirmWrapper}>
+            <div className={S.titleWrapper}>
+              <Typography.H3>{modalProps.title || "Are you sure?"}</Typography.H3>
+              <IconButton small Icon={CloseIcon} onClick={modalProps.onCancel} />
+            </div>
+            <Typography.H5>{modalProps.message || "Do you really want to perform this action?"}</Typography.H5>
+            <div className={S.buttonsWrapper}>
+              <Button secondary outline onClick={modalProps.onCancel}>
+                Cancel
+              </Button>
+              <Button danger outline onClick={modalProps.onConfirm}>
+                Confirm
+              </Button>
+            </div>
+          </div>
+        )}
+        {modalType === ModalType.CONTENT && (
+          <>
+            <div className={S.titleWrapper}>
+              <Typography.H3>{modalProps.title}</Typography.H3>
+              <IconButton small Icon={CloseIcon} onClick={modalProps.onCancel} />
+            </div>
+            {children}
+          </>
+        )}
       </div>
     </div>,
     document.getElementById("portal") as HTMLElement

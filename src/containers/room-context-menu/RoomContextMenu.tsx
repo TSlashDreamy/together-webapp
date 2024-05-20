@@ -1,16 +1,16 @@
-import { FC, Ref, useState } from "react";
+import { FC, Ref } from "react";
 import { useNavigate } from "react-router-dom";
 
+import RoomContextModal from "~/containers/room-context-modal";
 import ContextMenu from "~/components/context-menu";
-import Modal from "~/components/modal";
-import Input from "~/components/input";
 
 import { useAppSelector } from "~/hooks/useRedux";
 import useRoom from "~/hooks/useRoom";
 import { useModal } from "~/hooks/useModal";
 
 import { IContextMenuConfig } from "~/components/context-menu/types";
-import Button from "~/components/button";
+import Modal from "~/components/modal";
+import { ModalType } from "~/constants";
 
 interface IProps {
   contextMenuRef: Ref<HTMLElement>;
@@ -19,17 +19,19 @@ interface IProps {
 
 const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
   const { roomId } = useAppSelector((state) => state.user);
-  const [inputValue, setInputValue] = useState("");
+  const { isOpen, hideModal, showModal } = useModal();
+  const { isOpen: isConfirmOpen, hideModal: hideConfirm, showModal: showConfirm } = useModal();
   const { createRoom, closeRoom, leaveRoom, joinRoom, isIAmTheHost, isCreatingRoom, roomRoute, roomName } = useRoom();
-  const { isVisible, hideModal, showModal } = useModal();
   const navigate = useNavigate();
 
   const navigateToRoom = () => {
     navigate(roomRoute);
   };
 
-  const handleJoinRoom = () => {
-    joinRoom(inputValue);
+  const handleDangerAction = () => {
+    if (isIAmTheHost) closeRoom();
+    else leaveRoom();
+    hideConfirm();
   };
 
   const contextMenuButtons = [
@@ -41,7 +43,7 @@ const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
     roomId
       ? {
           text: isIAmTheHost ? "Close room" : "Leave room",
-          onClick: isIAmTheHost ? closeRoom : leaveRoom,
+          onClick: showConfirm,
           isLoading: isCreatingRoom,
           danger: true,
         }
@@ -53,20 +55,18 @@ const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
 
   return (
     <>
-      <Modal isVisible={isVisible} title={"Join room"} hideModal={hideModal}>
-        <div className="flex flex-col gap-5 items-center m-auto mt-[20%]">
-          <Input
-            name={"roomId"}
-            placeholder={"Room id"}
-            value={inputValue}
-            type={"text"}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <Button primary outline isLoading={isCreatingRoom} onClick={handleJoinRoom}>
-            Join
-          </Button>
-        </div>
-      </Modal>
+      <RoomContextModal isOpen={isOpen} isLoading={isCreatingRoom} modalProps={{ onCancel: hideModal }} handleJoin={joinRoom} />
+      <Modal
+        isOpen={isConfirmOpen}
+        modalType={ModalType.CONFIRM}
+        modalProps={{
+          message: isIAmTheHost
+            ? "This action will completely delete the current room!"
+            : "This room will not be available for you after you leave it!",
+          onCancel: hideConfirm,
+          onConfirm: handleDangerAction,
+        }}
+      />
       <ContextMenu
         contextMenuRef={contextMenuRef}
         isToggled={contextMenuConfig.toggled}

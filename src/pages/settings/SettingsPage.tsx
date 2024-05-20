@@ -7,8 +7,10 @@ import StatusChip from "~/components/status-chip";
 import Switch from "~/components/switch";
 import Typography from "~/components/typography";
 import SectionWrapper from "./section-wrapper";
+import Modal from "~/components/modal";
 
 import { useConfig } from "~/hooks/useConfig";
+import { useModal } from "~/hooks/useModal";
 
 import { codeVerifier, spotifyAuthURL } from "~/services/spotify";
 import * as S from "./styles";
@@ -16,8 +18,10 @@ import { spotifyInitialState } from "~/services/constants";
 import { IAppServices } from "~/services/types";
 import { resetApp } from "./utils";
 import { routes } from "~/router/constants";
+import { ModalType } from "~/constants";
 
 const SettingsPage: FC = () => {
+  const { isOpen, showModal, hideModal } = useModal();
   const navigate = useNavigate();
   const { appearance, services, updateAppConfig } = useConfig();
   const handleSpotify = useCallback(() => {
@@ -38,6 +42,15 @@ const SettingsPage: FC = () => {
 
   return (
     <PageWrapper>
+      <Modal
+        isOpen={isOpen}
+        modalType={ModalType.CONFIRM}
+        modalProps={{
+          message: "This action will disconnect all your services and will fully reset the app.",
+          onCancel: hideModal,
+          onConfirm: handleReset,
+        }}
+      />
       <Typography.H1>App Settings</Typography.H1>
       <div className={S.wrapper}>
         <SectionWrapper name="Appearance">
@@ -78,7 +91,7 @@ const SettingsPage: FC = () => {
         <SectionWrapper name="Danger area" danger>
           <div className={S.option}>
             <Typography.SPAN>In case if something went really wrong</Typography.SPAN>
-            <Button danger secondary onClick={handleReset}>
+            <Button danger secondary onClick={showModal}>
               Reset webapp
             </Button>
           </div>

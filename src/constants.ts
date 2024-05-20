@@ -14,6 +14,11 @@ export const DBCollectionToSlice = {
   [DBCollections.Players]: "player" as const,
 };
 
+export enum ModalType {
+  CONFIRM = "CONFIRM",
+  CONTENT = "CONTENT",
+}
+
 export const initalFirebasePlayerState: IFirebasePlayer = {
   id: "",
   nowPlaying: null,

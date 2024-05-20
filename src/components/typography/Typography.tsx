@@ -28,13 +28,13 @@ const H4: FC<IProps> = ({ children, ...other }) => {
 };
 
 const H5: FC<IProps> = ({ children, ...other }) => {
-  const classes = twMerge(S.typographyStyle, "text-[48px]", other.className);
-  return <h5 className={classes}>IMPLEMENT ME!!</h5>; // TODO: implement styling
+  const classes = twMerge(S.typographyStyle, S.h5Style, other.className);
+  return <h5 className={classes}>{children}</h5>;
 };
 
 const H6: FC<IProps> = ({ children, ...other }) => {
-  const classes = twMerge(S.typographyStyle, "text-[48px]", other.className);
-  return <h6 className={classes}>IMPLEMENT ME!!</h6>; // TODO: implement styling
+  const classes = twMerge(S.typographyStyle, S.h6Style, other.className);
+  return <h6 className={classes}>{children}</h6>;
 };
 
 const SPAN: FC<IProps> = ({ children, ...other }) => {
