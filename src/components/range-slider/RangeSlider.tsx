@@ -1,6 +1,8 @@
 import { FC, MouseEvent, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { InputTypes } from "~/types";
+
 interface RangeSliderProps {
   value?: number;
   onChange: (value: number) => void;
@@ -28,13 +30,13 @@ const RangeSlider: FC<RangeSliderProps> = ({ value, onChange, min, max }) => {
   };
 
   useEffect(() => {
-    isChanging && setCurrentValue(undefined);
+    isChanging && setCurrentValue(undefined); // ? This will show warning for uncontrolled input
     !isChanging && value !== undefined && setCurrentValue(value);
   }, [isChanging, value]);
 
   return (
     <input
-      type="range"
+      type={InputTypes.Range}
       className={classes}
       value={currentValue}
       onChange={() => null}

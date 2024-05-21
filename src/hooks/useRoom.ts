@@ -87,12 +87,11 @@ const useRoom = () => {
     try {
       dispatch(setIsLoading());
 
+      await removeData(DBCollections.Players, room.playerId as string);
+      await removeData(DBCollections.Rooms, roomId as string);
       room?.users.forEach(async (user) => {
         await updateData(DBCollections.Users, null, user.id, getKey<IUser, "roomId">("roomId"));
       });
-      await removeData(DBCollections.Rooms, roomId as string);
-      await removeData(DBCollections.Players, room.playerId as string);
-      dispatch(resetRoom());
       doNavigate && navigate(routes.app.home);
     } catch (error) {
       _handleRoomError(error);

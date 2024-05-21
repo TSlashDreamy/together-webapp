@@ -11,7 +11,8 @@ const useWebsocket = <T>(
   id: string | null,
   actionCreator: (data: T) => UnknownAction,
   path?: string,
-  checks?: boolean
+  checks?: boolean,
+  defaultValue?: T
 ) => {
   const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state[DBCollectionToSlice[collection]]);
@@ -25,12 +26,15 @@ const useWebsocket = <T>(
       if (snapshot.exists()) {
         const webSocketData = snapshot.val();
         dispatch(actionCreator(webSocketData));
+      } else {
+        dispatch(actionCreator(defaultValue as T));
       }
     });
 
     return () => {
       unsub();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionCreator, checks, collection, db, dbOnValue, dbRef, dispatch, id, path]);
 
   return { data };

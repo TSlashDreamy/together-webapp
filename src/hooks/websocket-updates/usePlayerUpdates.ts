@@ -32,13 +32,13 @@ export const usePlayerUpdates = () => {
   const dispatch = useAppDispatch();
 
   /* //? Questionable way: IDK if this is a propper way to update each redux key independently (maybe there is a better way) */
-  useWebsocket<string>(DBCollections.Players, playerId, setId, getKey<IFirebasePlayer, "id">("id"));
-  useWebsocket<ISpotifyTrack>(DBCollections.Players, playerId, setNext, getKey<IFirebasePlayer, "next">("next"));
-  useWebsocket<ISpotifyTrack[]>(DBCollections.Players, playerId, setQueue, getKey<IFirebasePlayer, "queue">("queue"));
-  useWebsocket<ISpotifyTrack>(DBCollections.Players, playerId, setNowPlaying, getKey<IFirebasePlayer, "nowPlaying">("nowPlaying"));
-  useWebsocket<number>(DBCollections.Players, playerId, setLastSeekTimestamp, getKey<IFirebasePlayer, "lastSeekTimestamp">("lastSeekTimestamp"));
-  useWebsocket<boolean>(DBCollections.Players, playerId, setIsPlaying, getKey<IFirebasePlayer, "isPlaying">("isPlaying"));
-  useWebsocket<boolean>(DBCollections.Players, playerId, setAutoplay, getKey<IFirebasePlayer, "isAutoplay">("isAutoplay"));
+  useWebsocket<string>(DBCollections.Players, playerId, setId, getKey<IFirebasePlayer, "id">("id"), undefined, "");
+  useWebsocket<ISpotifyTrack | null>(DBCollections.Players, playerId, setNext, getKey<IFirebasePlayer, "next">("next"), undefined, null);
+  useWebsocket<ISpotifyTrack[] | []>(DBCollections.Players, playerId, setQueue, getKey<IFirebasePlayer, "queue">("queue"), undefined, []);
+  useWebsocket<ISpotifyTrack | null>(DBCollections.Players, playerId, setNowPlaying, getKey<IFirebasePlayer, "nowPlaying">("nowPlaying"), undefined, null);
+  useWebsocket<number>(DBCollections.Players, playerId, setLastSeekTimestamp, getKey<IFirebasePlayer, "lastSeekTimestamp">("lastSeekTimestamp"), undefined, 0);
+  useWebsocket<boolean>(DBCollections.Players, playerId, setIsPlaying, getKey<IFirebasePlayer, "isPlaying">("isPlaying"), undefined, false);
+  useWebsocket<boolean>(DBCollections.Players, playerId, setAutoplay, getKey<IFirebasePlayer, "isAutoplay">("isAutoplay"), undefined, true);
   /* //? ~Questionable way~ */
 
   const { lastSeekTimestamp: lastSkipTimestamp, isPlaying, currentDuration, nowPlaying, isAutoplay, skip, seek, play, togglePlay } = usePlayer();

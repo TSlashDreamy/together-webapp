@@ -51,22 +51,22 @@ export const roomSlice = createSlice({
     resetIsLoading: (state) => {
       state.isLoading = false;
     },
-    setRoomId: (state, action: PayloadAction<string>) => {
+    setRoomId: (state, action: PayloadAction<string | null>) => {
       state.roomId = action.payload;
     },
-    setRoomName: (state, action: PayloadAction<string>) => {
+    setRoomName: (state, action: PayloadAction<string | null>) => {
       state.roomName = action.payload;
     },
-    setHostUser: (state, action: PayloadAction<string>) => {
+    setHostUser: (state, action: PayloadAction<string | null>) => {
       state.hostUser = action.payload;
     },
-    setUsers: (state, action: PayloadAction<IPerson[]>) => {
+    setUsers: (state, action: PayloadAction<IPerson[] | []>) => {
       state.users = action.payload;
     },
     setChat: (state, action: PayloadAction<IChat>) => {
       state.chat = action.payload;
     },
-    setPlayerId: (state, action: PayloadAction<string>) => {
+    setPlayerId: (state, action: PayloadAction<string | null>) => {
       state.playerId = action.payload;
     },
   },

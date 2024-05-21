@@ -7,16 +7,7 @@ import useDatabase from "~/hooks/useDatabase";
 import { useSpotify } from "~/hooks/useSpotify";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
-import {
-  setIsLoading,
-  resetIsLoading,
-  setCurrentDuration,
-  resetCurrentDuration,
-  setVolume,
-  setQueue,
-  setNext,
-  setNowPlaying,
-} from "~/redux/slices/playerSlice";
+import { setIsLoading, resetIsLoading, setCurrentDuration, resetCurrentDuration, setVolume } from "~/redux/slices/playerSlice";
 
 import { getKey } from "~/utils";
 import { DBCollections } from "~/constants";
@@ -84,13 +75,12 @@ export const usePlayer = () => {
 
       const nextItem = next || null;
       const newQueue = queue?.filter((_, index) => index !== 0) || [];
-      
+
       await _updatePlayerInfo(nextItem, getKey<IPlayer, "nowPlaying">("nowPlaying"));
       await _updatePlayerInfo(newQueue, getKey<IPlayer, "queue">("queue"));
       await _updatePlayerInfo(newQueue[0] || null, getKey<IPlayer, "next">("next"));
-      queue === null || (!queue.length && dispatch(setNowPlaying(null)) && togglePlay());
-      queue.length === 1 && dispatch(setQueue([])) && dispatch(setNext(null));
-      nextItem && togglePlay(true);
+
+      nextItem ? togglePlay(true) : togglePlay(false);
     } catch (error) {
       _handlePlayerError(error);
     } finally {

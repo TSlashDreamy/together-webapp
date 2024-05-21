@@ -4,6 +4,7 @@ export enum InputTypes {
   Password = "password",
   Email = "email",
   Text = "text",
+  Range = "range",
 }
 
 export interface IMinMax {

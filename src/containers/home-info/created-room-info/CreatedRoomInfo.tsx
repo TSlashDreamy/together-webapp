@@ -9,10 +9,10 @@ import QueueIcon from "~/assets/icons/etc-icons/queue.svg?react";
 import PeopleIcon from "~/assets/icons/etc-icons/people.svg?react";
 
 import useRoom from "~/hooks/useRoom";
+import { usePlayer } from "~/hooks/usePlayer";
 
 import { generateInfoCards } from "./utils";
 import * as S from "../styles";
-import { usePlayer } from "~/hooks/usePlayer";
 
 const CreatedRoomInfo: FC = () => {
   const navigate = useNavigate();

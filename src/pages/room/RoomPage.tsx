@@ -12,14 +12,16 @@ import { useAppDispatch } from "~/hooks/useRedux";
 import useRoom from "~/hooks/useRoom";
 import { useModal } from "~/hooks/useModal";
 
+import { showNotification } from "~/redux/slices/notificationSlice";
+
 import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
 import LinkIcon from "~/assets/icons/etc-icons/link.svg?react";
 import AddPersonIcon from "~/assets/icons/etc-icons/addPerson.svg?react";
-import { showNotification } from "~/redux/slices/notificationSlice";
-import { routes } from "~/router/constants";
+
 import { NotificationType } from "~/types";
-import * as S from "./styles";
+import { routes } from "~/router/constants";
 import { ModalType } from "~/constants";
+import * as S from "./styles";
 
 const RoomPage: FC = () => {
   const { roomId } = useParams();
