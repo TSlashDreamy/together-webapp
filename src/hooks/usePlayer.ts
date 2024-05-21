@@ -76,6 +76,8 @@ export const usePlayer = () => {
       const nextItem = next || null;
       const newQueue = queue?.filter((_, index) => index !== 0) || [];
 
+      spotifyPlayer?.pause();
+      await _updatePlayerInfo(0, getKey<IPlayer, "lastSeekTimestamp">("lastSeekTimestamp"));
       await _updatePlayerInfo(nextItem, getKey<IPlayer, "nowPlaying">("nowPlaying"));
       await _updatePlayerInfo(newQueue, getKey<IPlayer, "queue">("queue"));
       await _updatePlayerInfo(newQueue[0] || null, getKey<IPlayer, "next">("next"));
@@ -87,7 +89,7 @@ export const usePlayer = () => {
       dispatch(resetCurrentDuration());
       dispatch(resetIsLoading());
     }
-  }, [_handlePlayerError, _updatePlayerInfo, dispatch, next, queue, togglePlay]);
+  }, [_handlePlayerError, _updatePlayerInfo, dispatch, next, queue, spotifyPlayer, togglePlay]);
 
   const seek = async (position_ms: number) => {
     try {

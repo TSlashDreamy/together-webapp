@@ -19,7 +19,7 @@ const NoRoomInfo: FC = () => {
           <RoomIcon className={S.icon}/>
           <Typography.H4>Don't have a room yet?</Typography.H4>
         </div>
-        <Button primary outline isLoading={isCreatingRoom} onClick={createRoom}>
+        <Button primary outline isLoading={isCreatingRoom} onClick={() => createRoom()}>
           Let's create one!
         </Button>
       </div>

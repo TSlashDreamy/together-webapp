@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { MdOutlineChair as RoomIcon } from "react-icons/md";
 
 import RoomSidebar from "~/containers/room-sidebar";
 import MusicPlayer from "~/containers/music-player";
@@ -14,7 +15,6 @@ import { useModal } from "~/hooks/useModal";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
 
-import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
 import LinkIcon from "~/assets/icons/etc-icons/link.svg?react";
 import AddPersonIcon from "~/assets/icons/etc-icons/addPerson.svg?react";
 

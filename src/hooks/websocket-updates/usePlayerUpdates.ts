@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePlayerDevice, useSpotifyPlayer } from "react-spotify-web-playback-sdk";
 
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
@@ -24,6 +24,7 @@ import { IFirebasePlayer, ISpotifyTrack } from "~/types";
 import { getKey } from "~/utils";
 
 export const usePlayerUpdates = () => {
+  const [isSkipping, setIsSkipping] = useState(false);
   const { uid } = useUser();
   const { playerId } = useAppSelector((state) => state.room);
   const isLoggedIn = useMemo(() => Boolean(uid), [uid]);
@@ -35,8 +36,22 @@ export const usePlayerUpdates = () => {
   useWebsocket<string>(DBCollections.Players, playerId, setId, getKey<IFirebasePlayer, "id">("id"), undefined, "");
   useWebsocket<ISpotifyTrack | null>(DBCollections.Players, playerId, setNext, getKey<IFirebasePlayer, "next">("next"), undefined, null);
   useWebsocket<ISpotifyTrack[] | []>(DBCollections.Players, playerId, setQueue, getKey<IFirebasePlayer, "queue">("queue"), undefined, []);
-  useWebsocket<ISpotifyTrack | null>(DBCollections.Players, playerId, setNowPlaying, getKey<IFirebasePlayer, "nowPlaying">("nowPlaying"), undefined, null);
-  useWebsocket<number>(DBCollections.Players, playerId, setLastSeekTimestamp, getKey<IFirebasePlayer, "lastSeekTimestamp">("lastSeekTimestamp"), undefined, 0);
+  useWebsocket<ISpotifyTrack | null>(
+    DBCollections.Players,
+    playerId,
+    setNowPlaying,
+    getKey<IFirebasePlayer, "nowPlaying">("nowPlaying"),
+    undefined,
+    null
+  );
+  useWebsocket<number>(
+    DBCollections.Players,
+    playerId,
+    setLastSeekTimestamp,
+    getKey<IFirebasePlayer, "lastSeekTimestamp">("lastSeekTimestamp"),
+    undefined,
+    0
+  );
   useWebsocket<boolean>(DBCollections.Players, playerId, setIsPlaying, getKey<IFirebasePlayer, "isPlaying">("isPlaying"), undefined, false);
   useWebsocket<boolean>(DBCollections.Players, playerId, setAutoplay, getKey<IFirebasePlayer, "isAutoplay">("isAutoplay"), undefined, true);
   /* //? ~Questionable way~ */
@@ -77,16 +92,22 @@ export const usePlayerUpdates = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
     if (!device) return;
-    const offset = 980;
+    const offset = 990;
     if (!(currentDuration && currentDuration >= (nowPlaying?.duration as number) - offset)) return;
-    if (isAutoplay) {
-      skip();
+    if (isAutoplay && !isSkipping) {
+      console.log(`currentDuration ${currentDuration}`);
+      console.log(`size ${nowPlaying?.duration}`);
+      setIsSkipping(true);
+      skip().then(() => {
+        setIsSkipping(false);
+      });
     } else {
       togglePlay(false).then(() => {
         seek(0);
       });
     }
-  }, [currentDuration, device, isAutoplay, isLoggedIn, nowPlaying?.duration, seek, skip, togglePlay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentDuration, nowPlaying?.duration]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
