@@ -1,8 +1,8 @@
 import { FC } from "react";
+import { MdOutlineChair as RoomIcon } from "react-icons/md";
 
 import Typography from "~/components/typography";
 import Button from "~/components/button";
-import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
 
 import useRoom from "~/hooks/useRoom";
 
@@ -16,7 +16,7 @@ const NoRoomInfo: FC = () => {
       <Typography.H2 className={S.headerStyle}>Create a room</Typography.H2>
       <div className={S.contentWrapper}>
         <div className={S.descriptionWrapper}>
-          <RoomIcon />
+          <RoomIcon className={S.icon}/>
           <Typography.H4>Don't have a room yet?</Typography.H4>
         </div>
         <Button primary outline isLoading={isCreatingRoom} onClick={createRoom}>

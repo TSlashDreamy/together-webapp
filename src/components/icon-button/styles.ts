@@ -5,8 +5,7 @@ export const iconButtonStyles = [
   "active:scale-[0.9]",
 ];
 
-export const disabledStyle =
-  "xl:hover:rounded-[1.1vw] xl:px-[0.9vw] xl:py-[0.8vw] opacity-50 cursor-not-allowed hover:px-[17px] hover:py-[15px] hover:rounded-[20px]";
+export const disabledStyle = "opacity-50 pointer-events-none";
 
 export const iconStyle = "xl:size-[1.3vw] size-[25px]";
 export const iconOnly = "xl:px-0 xl:py-0 xl:hover:px-0 xl:hover:rounded-none py-0 border-[0] hover:border-b-[1px] hover:rounded-none";

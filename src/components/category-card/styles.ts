@@ -2,7 +2,7 @@ export const cardStyles = [
   "xl:gap-[2.6vw] xl:px-[2.6vw] xl:py-[3.6vw] xl:w-[21.5vw] xl:rounded-[1.8vw]",
   "flex flex-col gap-[50px] px-[50px] py-[70px] w-[410px] border-[3px] rounded-[35px] transition-all group",
 ];
-export const disabledStyle = "opacity-50";
+export const disabledStyle = "opacity-50 pointer-events-none";
 
 export const iconStyle = "xl:size-[3.2vw] size-[60px] group-hover:fill-black";
 export const contentWrapperStyle = "xl:gap-[0.3vw] flex flex-col gap-[5px]";

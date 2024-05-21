@@ -31,11 +31,11 @@ const Notification: FC<IProps> = ({ ...other }) => {
     if (type === NotificationType.Success) {
       const unsub = setTimeout(() => {
         dispatch(hideNotification());
-      }, 4000);
+      }, 6000);
 
       return () => clearTimeout(unsub);
     }
-  }, [dispatch, type]);
+  }, [dispatch, type, content]);
 
   useEffect(() => {
     switch (type) {

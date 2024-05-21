@@ -18,7 +18,7 @@ const ContentChip: FC<IProps> = ({ style, Icon, disabled, active, name, ...other
   const activeStyle = twMerge(style.active, "border-transparent");
   const classes = twMerge(
     classNames(S.wrapper, style.wrapper, {
-      "opacity-50 pointer-events-none": disabled,
+      [S.disabled]: disabled,
       [activeStyle]: active,
     })
   );

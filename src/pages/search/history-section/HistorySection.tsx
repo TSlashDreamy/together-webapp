@@ -22,7 +22,7 @@ const HistorySection: FC = () => {
         headingClassNames={S.headingClassNames}
         iconClassNames={S.iconClassNames}
       >
-        <Button primary outline onClick={clearHistory}>
+        <Button primary outline onClick={clearHistory} disabled={!history.length}>
           Clear history
         </Button>
       </SectionHeading>

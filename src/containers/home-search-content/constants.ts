@@ -15,6 +15,7 @@ export const cards = [
     description: "Video and clips",
     borderStyle: "border-content-video",
     bgStyle: "hover:bg-content-video",
+    disabled: true,
   },
   {
     Icon: FilmIcon,

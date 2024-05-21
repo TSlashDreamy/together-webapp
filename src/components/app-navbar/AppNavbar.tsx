@@ -1,10 +1,10 @@
 import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { MdOutlineChair as RoomIcon } from "react-icons/md";
 
 import UserContextMenu from "~/containers/user-context-menu";
 import RoomContextMenu from "~/containers/room-context-menu";
 import Logo from "~/components/logo";
-import RoomIcon from "~/assets/icons/navbar-icons/roomIcon.svg?react";
 import ProfileIcon from "~/assets/icons/navbar-icons/profileIcon.svg?react";
 import NavbarNavlink from "./navbar-navlink/NavbarNavlink";
 import NavbarItem from "./navbar-item";
@@ -93,7 +93,7 @@ const AppNavbar: FC = () => {
         ))}
       </div>
       <div className={linkWrapperStyle}>
-        <NavbarItem onClick={showRoomContextMenu} Icon={RoomIcon} isActive={isRoomPage} />
+        <NavbarItem className="hover:[&>svg]:fill-text-white" onClick={showRoomContextMenu} Icon={RoomIcon} isActive={isRoomPage} />
         <NavbarItem onClick={showUserContextMenu} Icon={ProfileIcon} isActive={isSettingsProfilePage} />
       </div>
       <UserContextMenu contextMenuRef={contextMenuRef} contextMenuConfig={userContextMenu} />

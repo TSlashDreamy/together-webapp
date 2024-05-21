@@ -1,7 +1,7 @@
 import { FC, Ref } from "react";
 import { useNavigate } from "react-router-dom";
 
-import RoomContextModal from "~/containers/room-context-modal";
+import JoinRoomModal from "~/containers/join-room-modal";
 import ContextMenu from "~/components/context-menu";
 
 import { useAppSelector } from "~/hooks/useRedux";
@@ -18,6 +18,7 @@ interface IProps {
 }
 
 const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
+  const doNavigate = false;
   const { roomId } = useAppSelector((state) => state.user);
   const { isOpen, hideModal, showModal } = useModal();
   const { isOpen: isConfirmOpen, hideModal: hideConfirm, showModal: showConfirm } = useModal();
@@ -29,7 +30,7 @@ const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
   };
 
   const handleDangerAction = () => {
-    if (isIAmTheHost) closeRoom();
+    if (isIAmTheHost) closeRoom(doNavigate);
     else leaveRoom();
     hideConfirm();
   };
@@ -55,7 +56,7 @@ const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
 
   return (
     <>
-      <RoomContextModal isOpen={isOpen} isLoading={isCreatingRoom} modalProps={{ onCancel: hideModal }} handleJoin={joinRoom} />
+      <JoinRoomModal isOpen={isOpen} isLoading={isCreatingRoom} modalProps={{ onCancel: hideModal }} handleJoin={joinRoom} />
       <Modal
         isOpen={isConfirmOpen}
         modalType={ModalType.CONFIRM}

@@ -9,19 +9,27 @@ import ContentCard from "~/components/content-card";
 import Typography from "~/components/typography";
 
 import { usePlayer } from "~/hooks/usePlayer";
+import { useUser } from "~/hooks/useUser";
 
-import { ISearchResult } from "~/types";
+import { ISearchResult, ISpotifyTrack } from "~/types";
 import * as S from "./styles";
 
 interface IProps {
   section: { name: string; Icon: IconType };
   searchResults: ISearchResult | null;
+  showAlert: () => void;
 }
 
-const ContentSection: FC<IProps> = ({ searchResults, section }) => {
+const ContentSection: FC<IProps> = ({ searchResults, section, showAlert }) => {
+  const { roomId } = useUser();
   const { addToQueue, isLoading } = usePlayer();
   const sectionRef = useRef<HTMLDivElement>(null);
   const { Icon, name } = section;
+
+  const handleAddToQueue = (track: ISpotifyTrack) => {
+    if (!roomId) showAlert();
+    else addToQueue(track);
+  };
 
   const handleScrollSection = (forward: boolean = true) => {
     const wrapperGap = Number(getComputedStyle(sectionRef.current as HTMLDivElement).gap.split("px")[0]);
@@ -44,7 +52,7 @@ const ContentSection: FC<IProps> = ({ searchResults, section }) => {
         <IconButton Icon={BackIcon} onClick={() => handleScrollSection(false)} />
         <div ref={sectionRef} className={S.cardsWrapper}>
           {searchResults?.songs.map((result, index) => (
-            <ContentCard key={index} ButtonIcon={AddIcon} isLoading={isLoading} track={result} onButtonClick={addToQueue} />
+            <ContentCard key={index} ButtonIcon={AddIcon} isLoading={isLoading} track={result} onButtonClick={handleAddToQueue} />
           ))}
         </div>
         <IconButton Icon={ForwardIcon} onClick={() => handleScrollSection()} />

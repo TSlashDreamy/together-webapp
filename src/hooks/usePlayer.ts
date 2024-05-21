@@ -84,7 +84,7 @@ export const usePlayer = () => {
 
       const nextItem = next || null;
       const newQueue = queue?.filter((_, index) => index !== 0) || [];
-
+      
       await _updatePlayerInfo(nextItem, getKey<IPlayer, "nowPlaying">("nowPlaying"));
       await _updatePlayerInfo(newQueue, getKey<IPlayer, "queue">("queue"));
       await _updatePlayerInfo(newQueue[0] || null, getKey<IPlayer, "next">("next"));

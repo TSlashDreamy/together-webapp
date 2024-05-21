@@ -54,7 +54,7 @@ const useRoom = () => {
     }
   };
 
-  const createRoom = async () => {
+  const createRoom = async (doNavigate: boolean = true) => {
     try {
       dispatch(setIsLoading());
       const room: IRoom = {
@@ -74,15 +74,16 @@ const useRoom = () => {
       await pushData(DBCollections.Rooms, room, room.roomId);
       await pushData(DBCollections.Players, player, player.id as string);
       await updateData(DBCollections.Users, room.roomId, uid as string, getKey<IUser, "roomId">("roomId"));
-      navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${room.roomId}`);
+      doNavigate && navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${room.roomId}`);
     } catch (error) {
       _handleRoomError(error);
     } finally {
       dispatch(resetIsLoading());
+      dispatch(showNotification({ type: NotificationType.Success, content: "Your room was successfully created!" }));
     }
   };
 
-  const closeRoom = async () => {
+  const closeRoom = async (doNavigate: boolean = true) => {
     try {
       dispatch(setIsLoading());
 
@@ -92,7 +93,7 @@ const useRoom = () => {
       await removeData(DBCollections.Rooms, roomId as string);
       await removeData(DBCollections.Players, room.playerId as string);
       dispatch(resetRoom());
-      navigate(routes.app.home);
+      doNavigate && navigate(routes.app.home);
     } catch (error) {
       _handleRoomError(error);
     } finally {
@@ -129,8 +130,7 @@ const useRoom = () => {
   const kickFromRoom = async (userId: string) => {
     try {
       if (!userId) throw new FirebaseError("", "Illegal action (userId doesn't exist)");
-      if (!room.roomId)
-        throw new FirebaseError("", "Whew, looks like something wrong with this room. Try to reload it (Ctrl+R)");
+      if (!room.roomId) throw new FirebaseError("", "Whew, looks like something wrong with this room. Try to reload it (Ctrl+R)");
       await _outRoomAction(userId);
     } catch (error) {
       _handleRoomError(error);

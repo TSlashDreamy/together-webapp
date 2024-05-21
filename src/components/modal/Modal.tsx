@@ -14,6 +14,7 @@ interface IModalProps {
   onConfirm?: () => void;
   onCancel?: () => void;
   title?: string;
+  isInProgress?: boolean;
 }
 
 interface IProps extends HTMLAttributes<HTMLDivElement> {
@@ -34,10 +35,10 @@ const Modal: FC<IProps> = ({ children, isOpen, modalProps, modalType }) => {
             </div>
             <Typography.H5>{modalProps.message || "Do you really want to perform this action?"}</Typography.H5>
             <div className={S.buttonsWrapper}>
-              <Button secondary outline onClick={modalProps.onCancel}>
+              <Button secondary outline isLoading={modalProps.isInProgress} onClick={modalProps.onCancel}>
                 Cancel
               </Button>
-              <Button danger outline onClick={modalProps.onConfirm}>
+              <Button danger outline isLoading={modalProps.isInProgress} onClick={modalProps.onConfirm}>
                 Confirm
               </Button>
             </div>

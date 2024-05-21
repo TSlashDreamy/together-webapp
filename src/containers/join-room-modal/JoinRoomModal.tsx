@@ -22,7 +22,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
   handleJoin: (roomId: string) => Promise<void>;
 }
 
-const RoomContextModal: FC<IProps> = ({ isOpen, isLoading, modalProps, handleJoin }) => {
+const JoinRoomModal: FC<IProps> = ({ isOpen, isLoading, modalProps, handleJoin }) => {
   const [inputValue, setInputValue] = useState("");
 
   return (
@@ -43,4 +43,4 @@ const RoomContextModal: FC<IProps> = ({ isOpen, isLoading, modalProps, handleJoi
   );
 };
 
-export default RoomContextModal;
+export default JoinRoomModal;
