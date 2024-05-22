@@ -1,4 +1,4 @@
-export const menuStyle = "absolute flex flex-col gap-4 w-max transition-opacity transition-all";
+export const menuStyle = "absolute flex flex-col gap-4 w-max transition-opacity overflow-hidden transition-all";
 export const menuEnabled = "opacity-100";
 export const menuDisabled = "opacity-0";
 

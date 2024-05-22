@@ -95,8 +95,6 @@ export const usePlayerUpdates = () => {
     const offset = 990;
     if (!(currentDuration && currentDuration >= (nowPlaying?.duration as number) - offset)) return;
     if (isAutoplay && !isSkipping) {
-      console.log(`currentDuration ${currentDuration}`);
-      console.log(`size ${nowPlaying?.duration}`);
       setIsSkipping(true);
       skip().then(() => {
         setIsSkipping(false);

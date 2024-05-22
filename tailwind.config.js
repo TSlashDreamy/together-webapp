@@ -85,6 +85,10 @@ export default {
           },
           "100%": { transform: "scale(1) rotate(360deg)", borderRadius: "5px", borderWidth: "2px" },
         },
+        logoLoad: {
+          "0%": { strokeDashoffset: "0px", strokeDasharray: "600px" },
+          "100%": { strokeDashoffset: "1200px", strokeDasharray: "600px" },
+        },
         float65: {
           "0%": { transform: "translateY(0px) rotate(65deg)" },
           "50%": { transform: "translateY(20px) rotate(65deg)" },
@@ -111,12 +115,13 @@ export default {
         },
       },
       animation: {
-        loading: "load 2s ease-in-out infinite",
+        loading: "load 1.7s ease-in-out infinite",
+        logoLoading: "logoLoad 1.7s linear infinite",
         floating65: "float65 6s ease-in-out infinite",
         floating115: "float115 4s ease-in-out infinite",
         floating130: "float130 2s ease-in-out infinite",
         notificationExpand: "expand 0.5s ease-in-out",
-        moveGradient: "moveGradient 15s ease infinite"
+        moveGradient: "moveGradient 15s ease infinite",
       },
       backgroundImage: {
         "landing-gradient": "url('~/assets/gradient.png')",

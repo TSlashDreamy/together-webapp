@@ -34,7 +34,7 @@ const LandingHeader: FC = () => {
 
   return (
     <div className={classes}>
-      <Logo hidden={isAuthPage} />
+      <Logo hidden={isAuthPage} filled />
       <div className={S.buttonWrapperStyle}>
         {isAuthPage ? (
           <Button primary outline onClick={() => navigate(routes.landing.main)}>

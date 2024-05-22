@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { motion } from "framer-motion";
 
+import Logo from "~/components/logo";
+
 import { loaderTransitionContainerStyle } from "./styles";
 
 const TransitionLoader: FC = () => {
@@ -22,8 +24,9 @@ const TransitionLoader: FC = () => {
         transition: { duration: 1, ease: "circInOut" },
       }}
     >
-      {/* //!TEMP LOADER */}
-      <div className="size-[100px] border-2 border-primary animate-loading" />
+      <div className="flex items-center justify-center size-[100px] border-2 border-primary overflow-hidden animate-loading">
+        <Logo onlyLogo svgStyles="size-[100px] stroke-primary stroke-[9px] animate-logoLoading" />
+      </div>
     </motion.div>
   );
 };

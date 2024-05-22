@@ -1,6 +1,7 @@
 import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { MdOutlineChair as RoomIcon } from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 import UserContextMenu from "~/containers/user-context-menu";
 import RoomContextMenu from "~/containers/room-context-menu";
@@ -13,7 +14,6 @@ import { alignmentOffset, contextMenuInitial, navLinks } from "./constants";
 import { IContextMenuConfig } from "~/components/context-menu/types";
 import { linkWrapperStyle, navBarStyles } from "./styles";
 import { routes } from "~/router/constants";
-import { useLocation } from "react-router-dom";
 
 const AppNavbar: FC = () => {
   const [userContextMenu, setUserContextMenu] = useState<IContextMenuConfig>(contextMenuInitial);
@@ -52,6 +52,7 @@ const AppNavbar: FC = () => {
   const showUserContextMenu = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
+    if (userContextMenu.toggled) return resetContextMenu();
     const contextData = getContextData(e);
     resetContextMenu();
     setUserContextMenu(contextData);
@@ -60,6 +61,7 @@ const AppNavbar: FC = () => {
   const showRoomContextMenu = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
+    if (roomContextMenu.toggled) return resetContextMenu();
     const contextData = getContextData(e);
     resetContextMenu();
     setRoomContextMenu(contextData);
