@@ -69,12 +69,12 @@ export const usePlayer = () => {
     [_handlePlayerError, _updatePlayerInfo, dispatch, isPlaying]
   );
 
-  const skip = useCallback(async () => {
+  const skip = useCallback(async (to: number = 0) => {
     try {
       dispatch(setIsLoading());
 
       const nextItem = next || null;
-      const newQueue = queue?.filter((_, index) => index !== 0) || [];
+      const newQueue = queue?.filter((_, index) => index > to) || [];
 
       spotifyPlayer?.pause();
       await _updatePlayerInfo(0, getKey<IPlayer, "lastSeekTimestamp">("lastSeekTimestamp"));
