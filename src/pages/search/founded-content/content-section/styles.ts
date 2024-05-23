@@ -6,3 +6,4 @@ export const header = "font-normal";
 
 export const contentWrapper = "flex justify-between items-center";
 export const cardsWrapper = "xl:gap-[3.2vw] xl:mx-[1.6vw] flex items-start gap-[60px] mx-[30px] overflow-hidden";
+export const logoWrapper = "flex justify-center p-4 m-auto";

@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes } from "react";
+import { forwardRef, HTMLAttributes, MutableRefObject } from "react";
 import classNames from "classnames";
 import { twMerge } from "tailwind-merge";
 
@@ -13,7 +13,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
   svgStyles?: string;
 }
 
-const Logo: FC<IProps> = ({ hidden, onlyLogo, filled, svgStyles, ...other }) => {
+const Logo = forwardRef<HTMLDivElement, IProps>(({ hidden, onlyLogo, filled, svgStyles, ...other }, ref) => {
   const classes = twMerge(
     classNames(S.logoStyle, other.className, {
       "opacity-0": hidden,
@@ -26,11 +26,11 @@ const Logo: FC<IProps> = ({ hidden, onlyLogo, filled, svgStyles, ...other }) => 
   );
 
   return (
-    <div className={classes}>
+    <div ref={ref as MutableRefObject<HTMLDivElement | null>} className={classes}>
       <LogoIcon className={logoClasses} />
       {!onlyLogo && "together"}
     </div>
   );
-};
+});
 
 export default Logo;

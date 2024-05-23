@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { RiSearch2Fill as SearchIcon } from "react-icons/ri";
 
 import ContentChip from "~/components/content-chip";
@@ -25,23 +25,21 @@ interface IProps {
 }
 
 const TopBar: FC<IProps> = ({ mode }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.search);
   const { search } = useSearch();
 
-  const handleSearch = (values: ISearchField) => {
-    search(values.search);
+  const handleSearch = async (values: ISearchField) => {
+    await search(values.search);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSwitchMode = (modeToSwitch: SearchChips) => {
     dispatch(setMode(modeToSwitch));
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm<ISearchField>(
-    { search: "" },
-    handleSearch,
-    searchValidate
-  );
+  const { values, errors, handleChange, handleSubmit } = useForm<ISearchField>({ search: "" }, handleSearch, searchValidate);
 
   useEffect(() => {
     return () => {
@@ -49,8 +47,29 @@ const TopBar: FC<IProps> = ({ mode }) => {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    const offset = 100;
+    const setScrolled = () => {
+      setIsScrolled(window.scrollY > offset);
+    };
+
+    window.addEventListener("scroll", setScrolled);
+
+    return () => {
+      window.removeEventListener("scroll", setScrolled);
+    };
+  }, []);
+
   return (
-    <div className={S.wrapper}>
+    <div
+      className={S.wrapper}
+      style={{
+        background: isScrolled ? "#5B5B5B1A" : "transparent",
+        padding: isScrolled ? "25px" : "0",
+        backdropFilter: isScrolled ? "blur(100px)" : "blur(0)",
+        justifyContent: isScrolled ? "center" : "start",
+      }}
+    >
       <Form onSubmit={handleSubmit} className={S.form}>
         <Input
           name={Inputs.Search}

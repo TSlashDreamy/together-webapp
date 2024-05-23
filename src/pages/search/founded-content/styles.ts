@@ -11,3 +11,4 @@ export const serviceIcon = "xl:size-[1.32vw] size-[25px] text-text-light";
 
 export const sectionsWrapper = "xl:gap-[2.6vw] flex flex-col gap-[50px]";
 export const columnViewWrapper = "xl:gap-[1.05vw] flex flex-col items-center justify-center gap-[20px] w-full";
+export const logoWrapper = "flex justify-center p-4 w-full";

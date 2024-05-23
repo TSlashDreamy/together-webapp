@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useCallback } from "react";
-import { SimplifiedArtist, Track } from "@spotify/web-api-ts-sdk";
+import { PartialSearchResult, SimplifiedArtist, Track } from "@spotify/web-api-ts-sdk";
 
 import { useAppSelector } from "~/hooks/useRedux";
 import { useUser } from "~/hooks/useUser";
@@ -12,11 +12,7 @@ export const useSpotify = () => {
   const envData = import.meta.env;
   const { services } = useAppSelector((state) => state.app);
   const { userName } = useUser();
-  const {
-    access_token: current_access_token,
-    refresh_token: current_refresh_token,
-    expires_in: current_expires_in,
-  } = services.spotify;
+  const { access_token: current_access_token, refresh_token: current_refresh_token, expires_in: current_expires_in } = services.spotify;
 
   const _getAuthor = (artists: SimplifiedArtist[]) => {
     return artists.map((artist) => artist.name).join(", ");
@@ -108,6 +104,20 @@ export const useSpotify = () => {
     [_transformTracks]
   );
 
+  const searchNext = useCallback(
+    async (nextUrl: string) => {
+      const { tracks } = await spotifyWebApi.makeRequest<Required<Pick<PartialSearchResult, "tracks">>>("GET", nextUrl.split("v1/")[1]);
+
+      const transformedTracks = {
+        songs: _transformTracks(tracks.items),
+        next: tracks.next,
+        total: tracks.total,
+      };
+      return { tracks: transformedTracks as ISearchResult };
+    },
+    [_transformTracks]
+  );
+
   const play = useCallback(
     async (deviceId: string, trackUri: string) => {
       const url = `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`;
@@ -134,6 +144,7 @@ export const useSpotify = () => {
     refreshSpotifyToken,
     getAccessToken,
     search,
+    searchNext,
     play,
     current_access_token,
     current_refresh_token,

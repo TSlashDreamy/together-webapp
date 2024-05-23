@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
 import { useSpotify } from "~/hooks/useSpotify";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
-import { addToHistory, resetHistory, setHistory, setIsLoading, setSearchResults, setViewMode } from "~/redux/slices/searchSlice";
+import { addToHistory, resetHistory, setHistory, setIsLoading, setSearchQuery, setSearchResults, setViewMode } from "~/redux/slices/searchSlice";
 
 import { historyKey } from "~/pages/search/top-bar/constants";
 import { NotificationType } from "~/types";
@@ -12,8 +12,8 @@ import { ViewModes } from "~/pages/search/founded-content/view-filter/constants"
 
 export const useSearch = () => {
   const dispatch = useAppDispatch();
-  const { search: trackSearch } = useSpotify();
-  const { history, viewMode } = useAppSelector((state) => state.search);
+  const { search: trackSearch, searchNext } = useSpotify();
+  const { history, viewMode, searchResults, searchQuery } = useAppSelector((state) => state.search);
 
   const addHistory = (query: string) => {
     dispatch(addToHistory(query));
@@ -42,6 +42,23 @@ export const useSearch = () => {
       const { tracks } = await trackSearch(query);
       dispatch(setSearchResults(tracks));
       addHistory(query);
+      dispatch(setSearchQuery(query));
+    } catch (e) {
+      dispatch(
+        showNotification({
+          type: NotificationType.Error,
+          content: e instanceof FirebaseError ? e.message : "Something went wrong (Search)",
+        })
+      );
+    }
+  };
+
+  const loadMore = async () => {
+    try {
+      if (!searchResults?.next) return null;
+      dispatch(setIsLoading());
+      const { tracks } = await searchNext(searchResults?.next);
+      dispatch(setSearchResults({ ...tracks, songs: [...searchResults.songs, ...tracks.songs] }));
     } catch (e) {
       dispatch(
         showNotification({
@@ -54,10 +71,13 @@ export const useSearch = () => {
 
   return {
     search,
+    loadMore,
     addHistory,
     clearHistory,
     clearHistoryItem,
     changeViewMode,
     history,
+    searchResults,
+    searchQuery,
   };
 };

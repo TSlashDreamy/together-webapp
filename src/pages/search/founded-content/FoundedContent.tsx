@@ -4,11 +4,14 @@ import { FaSpotify as SpotifyIcon } from "react-icons/fa";
 import NoRoomModal from "~/containers/no-room-modal";
 import Typography from "~/components/typography";
 import ContentItem from "~/components/content-item";
+import Logo from "~/components/logo";
 import ContentSection from "./content-section";
 import ViewFilter from "./view-filter";
 
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { useModal } from "~/hooks/useModal";
 import { useAppSelector } from "~/hooks/useRedux";
+import { useSearch } from "~/hooks/useSearch";
 
 import SearchResultIcon from "~/assets/icons/navbar-icons/searchIcon.svg?react";
 import { ViewModes } from "./view-filter/constants";
@@ -22,7 +25,10 @@ interface IProps {
 
 const FoundedContent: FC<IProps> = ({ searchResults }) => {
   const { isOpen, hideModal, showModal } = useModal();
+  const { loadMore } = useSearch();
   const { viewMode } = useAppSelector((state) => state.search);
+
+  const loaderRef = useIntersectionObserver(loadMore);
 
   return (
     <>
@@ -49,6 +55,9 @@ const FoundedContent: FC<IProps> = ({ searchResults }) => {
             {searchResults?.songs.map((song, index) => (
               <ContentItem key={index} track={song} showAlert={showModal} />
             ))}
+            <div className={S.logoWrapper}>
+              <Logo ref={loaderRef} onlyLogo svgStyles="animate-logoLoading" />
+            </div>
           </div>
         )}
       </div>

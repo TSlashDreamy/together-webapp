@@ -7,6 +7,7 @@ import { ISearchResult } from "~/types";
 export interface SearchState {
   isLoading: boolean;
   searchResults: ISearchResult | null;
+  searchQuery: string;
   mode: SearchChips;
   viewMode: ViewModes;
   history: string[];
@@ -15,6 +16,7 @@ export interface SearchState {
 const initialState: SearchState = {
   isLoading: false,
   searchResults: null,
+  searchQuery: "",
   mode: SearchChips.All,
   viewMode: ViewModes.Cards,
   history: [],
@@ -36,6 +38,9 @@ export const searchSlice = createSlice({
     },
     resetSearchResults: (state) => {
       state.searchResults = null;
+    },
+    setSearchQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
     },
     setMode: (state, action: PayloadAction<SearchChips>) => {
       state.mode = action.payload;
@@ -60,6 +65,7 @@ export const {
   resetIsLoading,
   setSearchResults,
   resetSearchResults,
+  setSearchQuery,
   setMode,
   setViewMode,
   setHistory,
