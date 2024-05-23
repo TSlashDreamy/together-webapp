@@ -5,6 +5,7 @@ import Typography from "~/components/typography";
 import NextBlock from "./next-block";
 
 import { ISpotifyTrack } from "~/types";
+import { formatMs } from "~/utils";
 import * as S from "./styles";
 
 interface IProps {
@@ -14,13 +15,6 @@ interface IProps {
 }
 
 const PlayerRightSide: FC<IProps> = ({ currentTrack, nextTrack, currentDuration }) => {
-  const formatDuration = (duration: number) => {
-    const seconds = String(Math.floor((duration / 1000) % 60));
-    const minutes = String(Math.floor((duration / (1000 * 60)) % 60));
-
-    return `${minutes}:${seconds.padStart(2, "0")}`;
-  };
-
   return (
     <div className={S.rightSideStyle}>
       <div className={S.serviceWrapper}>
@@ -34,7 +28,7 @@ const PlayerRightSide: FC<IProps> = ({ currentTrack, nextTrack, currentDuration 
             <Typography.SPAN>{currentTrack.author}</Typography.SPAN>
           </div>
           <Typography.H3 className="font-medium">
-            {formatDuration(currentDuration || 0)} / {formatDuration(currentTrack.duration)}
+            {formatMs(currentDuration || 0)} / {formatMs(currentTrack.duration)}
           </Typography.H3>
         </div>
       ) : (

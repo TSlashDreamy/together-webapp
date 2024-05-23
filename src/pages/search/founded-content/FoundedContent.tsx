@@ -3,11 +3,15 @@ import { FaSpotify as SpotifyIcon } from "react-icons/fa";
 
 import NoRoomModal from "~/containers/no-room-modal";
 import Typography from "~/components/typography";
+import ContentItem from "~/components/content-item";
 import ContentSection from "./content-section";
+import ViewFilter from "./view-filter";
 
 import { useModal } from "~/hooks/useModal";
+import { useAppSelector } from "~/hooks/useRedux";
 
 import SearchResultIcon from "~/assets/icons/navbar-icons/searchIcon.svg?react";
+import { ViewModes } from "./view-filter/constants";
 import { ISearchResult } from "~/types";
 
 import * as S from "./styles";
@@ -18,6 +22,8 @@ interface IProps {
 
 const FoundedContent: FC<IProps> = ({ searchResults }) => {
   const { isOpen, hideModal, showModal } = useModal();
+  const { viewMode } = useAppSelector((state) => state.search);
+
   return (
     <>
       <NoRoomModal isOpen={isOpen} onCancel={hideModal} />
@@ -31,10 +37,20 @@ const FoundedContent: FC<IProps> = ({ searchResults }) => {
               <SpotifyIcon className={S.serviceIcon} />
             </div>
           </div>
+          <ViewFilter />
         </div>
-        <div className={S.sectionsWrapper}>
-          <ContentSection section={{ name: "Spotify", Icon: SpotifyIcon }} searchResults={searchResults} showAlert={showModal} />
-        </div>
+        {viewMode === ViewModes.Cards && (
+          <div className={S.sectionsWrapper}>
+            <ContentSection section={{ name: "Spotify", Icon: SpotifyIcon }} searchResults={searchResults} showAlert={showModal} />
+          </div>
+        )}
+        {viewMode === ViewModes.Column && (
+          <div className={S.columnViewWrapper}>
+            {searchResults?.songs.map((song, index) => (
+              <ContentItem key={index} track={song} showAlert={showModal} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

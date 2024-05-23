@@ -9,3 +9,10 @@ export function getKey<T, K extends keyof T>(key: K): K {
 export const generateId = (minUnique: number = 10, maxUnique = 100000) => {
   return String(Date.now()).concat(getRandomNum(minUnique, maxUnique).toString());
 };
+
+export const formatMs = (ms: number) => {
+  const seconds = String(Math.floor((ms / 1000) % 60));
+  const minutes = String(Math.floor((ms / (1000 * 60)) % 60));
+
+  return `${minutes}:${seconds.padStart(2, "0")}`;
+};

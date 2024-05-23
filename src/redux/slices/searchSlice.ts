@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SearchChips } from "~/pages/search/top-bar/constants";
 
+import { ViewModes } from "~/pages/search/founded-content/view-filter/constants";
+import { SearchChips } from "~/pages/search/top-bar/constants";
 import { ISearchResult } from "~/types";
 
 export interface SearchState {
   isLoading: boolean;
   searchResults: ISearchResult | null;
   mode: SearchChips;
+  viewMode: ViewModes;
   history: string[];
 }
 
@@ -14,6 +16,7 @@ const initialState: SearchState = {
   isLoading: false,
   searchResults: null,
   mode: SearchChips.All,
+  viewMode: ViewModes.Cards,
   history: [],
 };
 
@@ -37,6 +40,9 @@ export const searchSlice = createSlice({
     setMode: (state, action: PayloadAction<SearchChips>) => {
       state.mode = action.payload;
     },
+    setViewMode: (state, action: PayloadAction<ViewModes>) => {
+      state.viewMode = action.payload;
+    },
     setHistory: (state, action: PayloadAction<string[]>) => {
       state.history = action.payload;
     },
@@ -55,6 +61,7 @@ export const {
   setSearchResults,
   resetSearchResults,
   setMode,
+  setViewMode,
   setHistory,
   addToHistory,
   resetHistory,

@@ -1,0 +1,1 @@
+export const wrapper = "xl:gap-[0.4vw] flex items-center gap-[7px]"

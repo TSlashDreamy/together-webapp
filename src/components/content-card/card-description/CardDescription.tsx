@@ -5,8 +5,9 @@ import CardService from "./card-service";
 import CardName from "./card-name";
 import CardActions from "./card-actions";
 
-import * as S from "./styles";
+import { formatMs } from "~/utils";
 import { ISpotifyTrack } from "~/types";
+import * as S from "./styles";
 
 interface IProps {
   track: ISpotifyTrack;
@@ -16,19 +17,12 @@ interface IProps {
 }
 
 const CardDescription: FC<IProps> = ({ track, onButtonClick, ButtonIcon, isLoading }) => {
-  const convertDuration = (duration: number) => {
-    const seconds = String(Math.floor((duration / 1000) % 60));
-    const minutes = String(Math.floor((duration / (1000 * 60)) % 60));
-
-    return `${minutes}:${seconds.padStart(2, "0")}`;
-  };
-
   return (
     <div className={S.wrapperStyle}>
       <div className={S.hiddenWrapperStyle}>
         <CardService service={"Spotify"} />
         <hr className={S.hiddenDividerStyle} />
-        <CardName name={track.name} length={convertDuration(track.duration)} />
+        <CardName name={track.name} length={formatMs(track.duration)} />
       </div>
       <hr className={S.dividerStyle} />
       <CardActions author={track.author} contentType="Music" onPlay={() => onButtonClick(track)} ButtonIcon={ButtonIcon} isLoading={isLoading} />
