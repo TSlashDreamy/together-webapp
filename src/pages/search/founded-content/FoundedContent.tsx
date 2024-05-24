@@ -1,26 +1,27 @@
 import { FC } from "react";
+import { createPortal } from "react-dom";
 import { FaSpotify as SpotifyIcon } from "react-icons/fa";
+import { BiFileFind as NotFoundedIcon } from "react-icons/bi";
 
 import NoRoomModal from "~/containers/no-room-modal";
-import Typography from "~/components/typography";
 import ContentItem from "~/components/content-item";
 import Logo from "~/components/logo";
 import ContentSection from "./content-section";
-import ViewFilter from "./view-filter";
 
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { useModal } from "~/hooks/useModal";
 import { useAppSelector } from "~/hooks/useRedux";
 import { useSearch } from "~/hooks/useSearch";
 
-import SearchResultIcon from "~/assets/icons/navbar-icons/searchIcon.svg?react";
 import { ViewModes } from "./view-filter/constants";
 import { ISearchResult } from "~/types";
 
 import * as S from "./styles";
+import FoundedHeading from "./founded-heading";
+import SectionDescription from "~/components/section-description";
 
 interface IProps {
-  searchResults: ISearchResult | null;
+  searchResults: ISearchResult;
 }
 
 const FoundedContent: FC<IProps> = ({ searchResults }) => {
@@ -33,32 +34,35 @@ const FoundedContent: FC<IProps> = ({ searchResults }) => {
   return (
     <>
       <NoRoomModal isOpen={isOpen} onCancel={hideModal} />
-      <div className={S.wrapper}>
-        <div className={S.header}>
-          <div className={S.text}>
-            <SearchResultIcon className={S.searchIcon} />
-            <Typography.H2 className={S.h2}>Your search results</Typography.H2>
-            <Typography.SPAN className={S.span}>({searchResults?.total || 0} results)</Typography.SPAN>
-            <div className={S.serviceIconsWrapper}>
-              <SpotifyIcon className={S.serviceIcon} />
-            </div>
-          </div>
-          <ViewFilter />
-        </div>
-        {viewMode === ViewModes.Cards && (
-          <div className={S.sectionsWrapper}>
-            <ContentSection section={{ name: "Spotify", Icon: SpotifyIcon }} searchResults={searchResults} showAlert={showModal} />
-          </div>
-        )}
-        {viewMode === ViewModes.Column && (
-          <div className={S.columnViewWrapper}>
-            {searchResults?.songs.map((song, index) => (
-              <ContentItem key={index} track={song} showAlert={showModal} />
-            ))}
-            <div className={S.logoWrapper}>
-              <Logo ref={loaderRef} onlyLogo svgStyles="animate-logoLoading" />
-            </div>
-          </div>
+      <div className={S.wrapper} style={{ height: searchResults.total > 0 ? "auto" : "100%" }}>
+        {searchResults.total > 0 ? (
+          <>
+            <FoundedHeading searchResults={searchResults} />
+            {viewMode === ViewModes.Cards && (
+              <div className={S.sectionsWrapper}>
+                <ContentSection section={{ name: "Spotify", Icon: SpotifyIcon }} searchResults={searchResults} showAlert={showModal} />
+              </div>
+            )}
+            {viewMode === ViewModes.Column && (
+              <div className={S.columnViewWrapper}>
+                {searchResults.songs.map((song, index) => (
+                  <ContentItem key={index} track={song} showAlert={showModal} />
+                ))}
+                <div className={S.logoWrapper}>
+                  <Logo ref={loaderRef} onlyLogo svgStyles="animate-logoLoading" />
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          createPortal(
+            <SectionDescription
+              Icon={NotFoundedIcon}
+              title="Nothing founded :c (But we tried)"
+              description="Check that you typed your query correctly, or try different keywords."
+            />,
+            document.getElementById("portal") as HTMLElement
+          )
         )}
       </div>
     </>
