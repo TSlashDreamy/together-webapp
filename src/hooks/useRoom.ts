@@ -12,7 +12,7 @@ import { showNotification } from "~/redux/slices/notificationSlice";
 import { routes } from "~/router/constants";
 import { initialRoomState } from "~/containers/home-info/no-room-info/constants";
 import { DBCollections, initalFirebasePlayerState } from "~/constants";
-import { IChat, IMessage, NotificationType, IPerson, IRoom, IUser, IFirebasePlayer } from "~/types";
+import { IChat, IMessage, NotificationType, IPerson, IRoom, IUser, IFirebasePlayer, IRoomInvite } from "~/types";
 
 const useRoom = () => {
   const dispatch = useAppDispatch();
@@ -74,6 +74,7 @@ const useRoom = () => {
       await pushData(DBCollections.Rooms, room, room.roomId);
       await pushData(DBCollections.Players, player, player.id as string);
       await updateData(DBCollections.Users, room.roomId, uid as string, getKey<IUser, "roomId">("roomId"));
+      setTimeout(async () => await removeData(DBCollections.Users, uid as string, getKey<IUser, "roomInvites">("roomInvites")), 900);
       doNavigate && navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${room.roomId}`);
     } catch (error) {
       _handleRoomError(error);
@@ -104,27 +105,31 @@ const useRoom = () => {
     await _outRoomAction();
   };
 
-  const joinRoom = async (roomId: string) => {
-    try {
-      dispatch(setIsLoading());
+  const joinRoom = useCallback(
+    async (roomId: string) => {
+      try {
+        dispatch(setIsLoading());
 
-      const room = await getData(DBCollections.Rooms, roomId);
-      if (!room) throw new FirebaseError("", "This room doesn't exist");
+        const room = await getData<IRoom>(DBCollections.Rooms, roomId);
+        if (!room) throw new FirebaseError("", "This room doesn't exist");
 
-      await updateData(DBCollections.Users, roomId, uid as string, getKey<IUser, "roomId">("roomId"));
-      await updateData(
-        DBCollections.Rooms,
-        { id: uid as string, name: userName as string } as IPerson,
-        roomId,
-        getKey<IRoom, "users">("users").concat(`/${room.users.length}`)
-      );
-      navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`);
-    } catch (error) {
-      _handleRoomError(error);
-    } finally {
-      dispatch(resetIsLoading());
-    }
-  };
+        await updateData(DBCollections.Users, roomId, uid as string, getKey<IUser, "roomId">("roomId"));
+        await updateData(
+          DBCollections.Rooms,
+          { id: uid as string, name: userName as string } as IPerson,
+          roomId,
+          getKey<IRoom, "users">("users").concat(`/${room.users.length}`)
+        );
+        navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`);
+        setTimeout(async () => await removeData(DBCollections.Users, uid as string, getKey<IUser, "roomInvites">("roomInvites")), 900);
+      } catch (error) {
+        _handleRoomError(error);
+      } finally {
+        dispatch(resetIsLoading());
+      }
+    },
+    [_handleRoomError, dispatch, getData, navigate, removeData, roomRoot, uid, updateData, userName]
+  );
 
   const kickFromRoom = async (userId: string) => {
     try {
@@ -153,6 +158,50 @@ const useRoom = () => {
     }
   };
 
+  const getRoomName = async (roomId: string | null) => {
+    try {
+      if (roomId === null) return null;
+      const name = await getData<string>(DBCollections.Rooms, roomId, getKey<IRoom, "roomName">("roomName"));
+      return name;
+    } catch (error) {
+      _handleRoomError(error);
+    }
+  };
+
+  const inviteToRoom = useCallback(
+    async (friend: IPerson, roomInvite: IRoomInvite) => {
+      try {
+        dispatch(setIsLoading());
+        const friendInvites = await getData<IRoomInvite[]>(DBCollections.Users, friend.id, getKey<IUser, "roomInvites">("roomInvites"));
+        const isAlredyInvited = friendInvites?.find((invite) => invite.id === roomInvite.id);
+        if (isAlredyInvited) throw new FirebaseError("", `You already invited ${friend.name} to your room.`);
+
+        await updateData(DBCollections.Users, [...(friendInvites || []), roomInvite], friend.id, getKey<IUser, "roomInvites">("roomInvites"));
+        dispatch(showNotification({ type: NotificationType.Success, content: `${friend.name} was invited to your room 🎉` }));
+      } catch (error) {
+        _handleRoomError(error);
+      } finally {
+        dispatch(resetIsLoading());
+      }
+    },
+    [_handleRoomError, dispatch, getData, updateData]
+  );
+
+  const acceptRoomInvite = useCallback(
+    async (inviteId: string) => {
+      try {
+        dispatch(setIsLoading());
+
+        await joinRoom(inviteId);
+      } catch (error) {
+        _handleRoomError(error);
+      } finally {
+        dispatch(resetIsLoading());
+      }
+    },
+    [_handleRoomError, dispatch, joinRoom]
+  );
+
   return {
     createRoom,
     closeRoom,
@@ -160,6 +209,9 @@ const useRoom = () => {
     joinRoom,
     kickFromRoom,
     sendMessage,
+    getRoomName,
+    inviteToRoom,
+    acceptRoomInvite,
     isCreatingRoom: room.isLoading,
     isIAmTheHost: uid === room.hostUser,
     isRoomExist: Boolean(room.roomId),

@@ -31,6 +31,11 @@ export interface IAppAppearance {
   floatingObjects: boolean;
 }
 
+export interface IRoomInvite {
+  name: string;
+  id: string;
+}
+
 export interface IUser {
   email: string | null;
   token: string | null;
@@ -38,6 +43,10 @@ export interface IUser {
   userName: string | null;
   lastLogin: number | null;
   roomId: string | null;
+  roomInvites: IRoomInvite[] | null;
+  outFriendsRequest: IPerson[] | null; 
+  friendsRequest: IPerson[] | null;
+  friends: IPerson[] | null;
 }
 
 export interface IPlayer {
@@ -91,6 +100,13 @@ export interface ISearchResult {
   songs: ISpotifyTrack[];
   next: string;
   total: number;
+}
+
+export enum FriendStatus {
+  Pending = "Pending",
+  Online = "Online",
+  Offline = "Offline",
+  InARoom = "In a room",
 }
 
 export type RequestFunction<Response, Params = undefined> = (params?: Params) => Promise<AxiosResponse<Response>>;

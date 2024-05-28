@@ -8,6 +8,7 @@ import { removeUser, setUser } from "~/redux/slices/userSlice";
 import { resetLoggingIn, resetRestoringSession, setLoggingIn } from "~/redux/slices/authSlice";
 import { auth } from "~/firebase";
 import { DBCollections } from "~/constants";
+import { IUser } from "~/types";
 
 export const useAuth = () => {
   const { email, token, uid, userName } = useAppSelector((state) => state.user);
@@ -24,7 +25,7 @@ export const useAuth = () => {
 
   const checkUserExistance = useCallback(
     async (user: FirebaseUser) => {
-      const userData = await getData(DBCollections.Users, user.uid);
+      const userData = await getData<IUser>(DBCollections.Users, user.uid);
       if (userData && !uid) {
         dispatch(
           setUser({
@@ -33,12 +34,16 @@ export const useAuth = () => {
             token: user.refreshToken,
             userName: userData.userName,
             lastLogin: userData.lastLogin,
-            roomId: null,
+            roomId: userData.roomId,
+            outFriendsRequest: userData.outFriendsRequest,
+            friendsRequest: userData.friendsRequest,
+            friends: userData.friendsRequest,
+            roomInvites: userData.roomInvites,
           })
         );
       }
       if (!userData && uid) dispatch(removeUser());
-      restoringSession && dispatch(resetRestoringSession());
+      restoringSession && setTimeout(() => dispatch(resetRestoringSession()), 360);
     },
     [dispatch, getData, restoringSession, uid]
   );

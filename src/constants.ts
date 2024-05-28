@@ -19,6 +19,12 @@ export enum ModalType {
   CONTENT = "CONTENT",
 }
 
+export enum NotificationCounterType {
+  ACTION = "ACTION",
+  ATTENTION = "ATTENTION",
+  NEUTRAL = "NEUTRAL",
+}
+
 export const initalFirebasePlayerState: IFirebasePlayer = {
   id: "",
   nowPlaying: null,

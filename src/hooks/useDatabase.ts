@@ -25,11 +25,11 @@ const useDatabase = () => {
   );
 
   const getData = useCallback(
-    async (collection: DBCollections, id: string) => {
+    async <T>(collection: DBCollections, id: string, path?: string): Promise<T | undefined> => {
       try {
-        const snapshot = await dbGet(dbChild(dbRef(db), `${collection}/${id}`));
+        const snapshot = await dbGet(dbChild(dbRef(db), `${collection}/${id}${path ? "/".concat(path) : ""}`));
         if (snapshot.exists()) {
-          return snapshot.val();
+          return snapshot.val() as T;
         }
       } catch (e) {
         _handleDBError(e);
@@ -50,10 +50,10 @@ const useDatabase = () => {
   );
 
   const updateData = useCallback(
-    async <T>(collection: DBCollections, dataToUpdate: T | null, id: string, updatedValue?: string) => {
+    async <T>(collection: DBCollections, dataToUpdate: T | null, id: string, path?: string) => {
       try {
         const updates = {
-          [`${collection}/${id}${updatedValue ? `/${updatedValue}` : ""}`]: dataToUpdate,
+          [`${collection}/${id}${path ? `/${path}` : ""}`]: dataToUpdate,
         };
 
         await dbUpdate(dbRef(db), updates);
@@ -65,9 +65,9 @@ const useDatabase = () => {
   );
 
   const removeData = useCallback(
-    async (collection: DBCollections, id: string, fieldToDelete?: string) => {
+    async (collection: DBCollections, id: string, path?: string) => {
       try {
-        await dbRemove(dbRef(db, `${collection}/${id}${fieldToDelete ? "/".concat(fieldToDelete) : ""}`));
+        await dbRemove(dbRef(db, `${collection}/${id}${path ? "/".concat(path) : ""}`));
       } catch (e) {
         _handleDBError(e);
       }

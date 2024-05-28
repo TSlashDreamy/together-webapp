@@ -11,7 +11,6 @@ import Form from "~/components/form";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
 import { resetLoggingIn, setLoggingIn } from "~/redux/slices/authSlice";
-import { setUser } from "~/redux/slices/userSlice";
 
 import { useAppDispatch } from "~/hooks/useRedux";
 import useDatabase from "~/hooks/useDatabase";
@@ -23,7 +22,6 @@ import { auth } from "~/firebase";
 import { DBCollections } from "~/constants";
 import { NotificationType, IUser } from "~/types";
 import { ILoginFormState } from "./types";
-import { convertUserData } from "../signup/utils";
 
 const LoginPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -36,15 +34,10 @@ const LoginPage: FC = () => {
       dispatch(setLoggingIn());
       await setPersistence(auth, browserSessionPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      const { userName } = await getData(DBCollections.Users, user.uid);
+      const dbUser = await getData<IUser>(DBCollections.Users, user.uid);
       await updateData<number>(DBCollections.Users, Date.now(), user.uid, getKey<IUser, "lastLogin">("lastLogin"));
 
-      dispatch(
-        setUser({
-          ...convertUserData(user, userName),
-          token: user.refreshToken,
-        })
-      );
+      if (!dbUser) return;
     } catch (error) {
       dispatch(
         showNotification({
@@ -57,11 +50,7 @@ const LoginPage: FC = () => {
     }
   };
 
-  const { values, errors, handleChange, handleSubmit } = useForm<ILoginFormState>(
-    { email: "", password: "" },
-    handleLogin,
-    loginValidate
-  );
+  const { values, errors, handleChange, handleSubmit } = useForm<ILoginFormState>({ email: "", password: "" }, handleLogin, loginValidate);
 
   return (
     <AuthorizationWrapper>

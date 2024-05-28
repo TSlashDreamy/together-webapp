@@ -3,14 +3,18 @@ import { useNavigate } from "react-router-dom";
 
 import JoinRoomModal from "~/containers/join-room-modal";
 import ContextMenu from "~/components/context-menu";
+import Typography from "~/components/typography";
+import Modal from "~/components/modal";
+import Button from "~/components/button";
 
 import { useAppSelector } from "~/hooks/useRedux";
 import useRoom from "~/hooks/useRoom";
 import { useModal } from "~/hooks/useModal";
+import { useUser } from "~/hooks/useUser";
 
 import { IContextMenuConfig } from "~/components/context-menu/types";
-import Modal from "~/components/modal";
 import { ModalType } from "~/constants";
+import * as S from "./styles";
 
 interface IProps {
   contextMenuRef: Ref<HTMLElement>;
@@ -19,10 +23,11 @@ interface IProps {
 
 const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
   const doNavigate = false;
+  const { roomInvites } = useUser();
   const { roomId } = useAppSelector((state) => state.user);
   const { isOpen, hideModal, showModal } = useModal();
   const { isOpen: isConfirmOpen, hideModal: hideConfirm, showModal: showConfirm } = useModal();
-  const { createRoom, closeRoom, leaveRoom, joinRoom, isIAmTheHost, isCreatingRoom, roomRoute, roomName } = useRoom();
+  const { createRoom, closeRoom, leaveRoom, joinRoom, acceptRoomInvite, isIAmTheHost, isCreatingRoom, roomRoute, roomName } = useRoom();
   const navigate = useNavigate();
 
   const navigateToRoom = () => {
@@ -75,7 +80,20 @@ const RoomContextMenu: FC<IProps> = ({ contextMenuRef, contextMenuConfig }) => {
         posY={contextMenuConfig.position.y}
         title={roomId ? `${isIAmTheHost ? "Your room" : "You joined"}: ${roomName}` : `It's lonely here`}
         buttons={contextMenuButtons}
-      />
+      >
+        {roomInvites && (
+          <div className={S.invitesWrapper}>
+            <Typography.SPAN className={S.invitesHeader}>You got room invite!</Typography.SPAN>
+            <div className={S.invites}>
+              {roomInvites.map((invite) => (
+                <Button key={invite.id} medium primary outline onClick={() => acceptRoomInvite(invite.id)}>
+                  {invite.name}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+      </ContextMenu>
     </>
   );
 };

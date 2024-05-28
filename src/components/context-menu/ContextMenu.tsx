@@ -4,6 +4,7 @@ import Button from "~/components/button";
 import CardWrapper from "~/components/card-wrapper";
 
 import * as S from "./styles";
+import { createPortal } from "react-dom";
 
 interface IButtons {
   text: string;
@@ -23,19 +24,20 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const ContextMenu: FC<IProps> = ({ posX, posY, isToggled, buttons, title, contextMenuRef, children }) => {
-  return (
+  return createPortal(
     <menu
       ref={contextMenuRef}
       style={{ top: `${posY + 2}px`, left: `${posX + 2}px` }}
       className={S.menuStyle.concat(" ", isToggled ? S.menuEnabled : S.menuDisabled)}
     >
-      <CardWrapper className="bg-transparent-dark">
+      <CardWrapper>
         <div className={S.headerStyle}>
           <span className={S.greetingsStyle}>Hello 👋</span>
           <span className={S.userNameStyle}>{title}</span>
         </div>
         <hr className={S.dividerStyle} />
         {children}
+        {Boolean(children) && <hr className={S.dividerStyle} />}
         <div className={S.contentWrapperStyle}>
           {buttons.map((button, index) => {
             const handleClick = (e: MouseEvent<HTMLElement>) => {
@@ -60,7 +62,8 @@ const ContextMenu: FC<IProps> = ({ posX, posY, isToggled, buttons, title, contex
           })}
         </div>
       </CardWrapper>
-    </menu>
+    </menu>,
+    document.getElementById("portal") as HTMLElement
   );
 };
 

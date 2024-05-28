@@ -21,6 +21,12 @@ export default {
         white: "#F0F0F0",
         "white-transparent": "#F0F0F0AF",
       },
+      status: {
+        pending: "#FED7AA",
+        online: "#16A34A",
+        "in-a-room": "#E09145",
+        offline: "#292C35",
+      },
       content: {
         music: "#D0E957",
         video: "#F2B2D7",

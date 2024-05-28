@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FC, MouseEvent, MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { MdOutlineChair as RoomIcon } from "react-icons/md";
 import { useLocation } from "react-router-dom";
@@ -10,15 +10,20 @@ import ProfileIcon from "~/assets/icons/navbar-icons/profileIcon.svg?react";
 import NavbarNavlink from "./navbar-navlink/NavbarNavlink";
 import NavbarItem from "./navbar-item";
 
+import { useUser } from "~/hooks/useUser";
+
 import { alignmentOffset, contextMenuInitial, navLinks } from "./constants";
+import { routes } from "~/router/constants";
+import { NotificationCounterType } from "~/constants";
 import { IContextMenuConfig } from "~/components/context-menu/types";
 import { linkWrapperStyle, navBarStyles } from "./styles";
-import { routes } from "~/router/constants";
 
 const AppNavbar: FC = () => {
+  const { roomInvites } = useUser();
   const [userContextMenu, setUserContextMenu] = useState<IContextMenuConfig>(contextMenuInitial);
   const [roomContextMenu, setRoomContextMenu] = useState<IContextMenuConfig>(contextMenuInitial);
-  const contextMenuRef = useRef<HTMLDivElement | null>(null);
+  const userContextMenuRef = useRef<HTMLDivElement | null>(null);
+  const roomContextMenuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
   const isRoomPage = useMemo(() => {
@@ -36,8 +41,9 @@ const AppNavbar: FC = () => {
 
   const classes = twMerge(...navBarStyles);
 
-  const getContextData = (e: MouseEvent<HTMLDivElement>) => {
-    const contextMenuAttr = contextMenuRef.current && contextMenuRef.current.getBoundingClientRect();
+  const getContextData = (e: MouseEvent<HTMLDivElement>, refEl: MutableRefObject<HTMLDivElement | null>) => {
+    if (!refEl) return contextMenuInitial;
+    const contextMenuAttr = refEl.current && refEl.current.getBoundingClientRect();
     const clickedItem = e.currentTarget.getBoundingClientRect();
 
     return {
@@ -53,7 +59,7 @@ const AppNavbar: FC = () => {
     e.stopPropagation();
 
     if (userContextMenu.toggled) return resetContextMenu();
-    const contextData = getContextData(e);
+    const contextData = getContextData(e, userContextMenuRef);
     resetContextMenu();
     setUserContextMenu(contextData);
   };
@@ -62,7 +68,7 @@ const AppNavbar: FC = () => {
     e.stopPropagation();
 
     if (roomContextMenu.toggled) return resetContextMenu();
-    const contextData = getContextData(e);
+    const contextData = getContextData(e, roomContextMenuRef);
     resetContextMenu();
     setRoomContextMenu(contextData);
   };
@@ -74,9 +80,8 @@ const AppNavbar: FC = () => {
 
   useEffect(() => {
     const handler: EventListener = (e) => {
-      if (!contextMenuRef.current?.contains(e.target as HTMLDivElement)) {
-        resetContextMenu();
-      }
+      if (!userContextMenuRef.current?.contains(e.target as HTMLDivElement) && userContextMenu.toggled) resetContextMenu(); 
+      if (!roomContextMenuRef.current?.contains(e.target as HTMLDivElement) && roomContextMenu.toggled) resetContextMenu();
     };
 
     document.addEventListener("click", handler);
@@ -84,22 +89,28 @@ const AppNavbar: FC = () => {
     return () => {
       document.removeEventListener("click", handler);
     };
-  }, []);
+  }, [roomContextMenu, userContextMenu]);
 
   return (
     <div className={classes}>
-      <Logo className="size-50px" onlyLogo /> {/*// !TEMP */}
+      <Logo onlyLogo />
       <div className={linkWrapperStyle}>
         {navLinks.map((navLink) => (
           <NavbarNavlink key={navLink.path} to={navLink.path} Icon={navLink.Icon} />
         ))}
       </div>
       <div className={linkWrapperStyle}>
-        <NavbarItem className="hover:[&>svg]:fill-text-white" onClick={showRoomContextMenu} Icon={RoomIcon} isActive={isRoomPage} />
+        <NavbarItem
+          className="hover:[&>svg]:fill-text-white"
+          onClick={showRoomContextMenu}
+          Icon={RoomIcon}
+          isActive={isRoomPage}
+          notificationCounter={roomInvites ? { type: NotificationCounterType.ACTION, amount: roomInvites?.length } : undefined}
+        />
         <NavbarItem onClick={showUserContextMenu} Icon={ProfileIcon} isActive={isSettingsProfilePage} />
       </div>
-      <UserContextMenu contextMenuRef={contextMenuRef} contextMenuConfig={userContextMenu} />
-      <RoomContextMenu contextMenuRef={contextMenuRef} contextMenuConfig={roomContextMenu} />
+      <UserContextMenu contextMenuRef={userContextMenuRef} contextMenuConfig={userContextMenu} />
+      <RoomContextMenu contextMenuRef={roomContextMenuRef} contextMenuConfig={roomContextMenu} />
     </div>
   );
 };
