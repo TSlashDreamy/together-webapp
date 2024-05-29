@@ -84,22 +84,25 @@ const useRoom = () => {
     }
   };
 
-  const closeRoom = async (doNavigate: boolean = true) => {
-    try {
-      dispatch(setIsLoading());
+  const closeRoom = useCallback(
+    async (doNavigate: boolean = true) => {
+      try {
+        dispatch(setIsLoading());
 
-      await removeData(DBCollections.Players, room.playerId as string);
-      await removeData(DBCollections.Rooms, roomId as string);
-      room?.users.forEach(async (user) => {
-        await updateData(DBCollections.Users, null, user.id, getKey<IUser, "roomId">("roomId"));
-      });
-      doNavigate && navigate(routes.app.home);
-    } catch (error) {
-      _handleRoomError(error);
-    } finally {
-      dispatch(resetIsLoading());
-    }
-  };
+        await removeData(DBCollections.Players, room.playerId as string);
+        await removeData(DBCollections.Rooms, roomId as string);
+        room?.users.forEach(async (user) => {
+          await updateData(DBCollections.Users, null, user.id, getKey<IUser, "roomId">("roomId"));
+        });
+        doNavigate && navigate(routes.app.home);
+      } catch (error) {
+        _handleRoomError(error);
+      } finally {
+        dispatch(resetIsLoading());
+      }
+    },
+    [_handleRoomError, dispatch, navigate, removeData, room.playerId, room?.users, roomId, updateData]
+  );
 
   const leaveRoom = async () => {
     await _outRoomAction();
@@ -112,6 +115,7 @@ const useRoom = () => {
 
         const room = await getData<IRoom>(DBCollections.Rooms, roomId);
         if (!room) throw new FirebaseError("", "This room doesn't exist");
+        if (room.roomId) await closeRoom(false);
 
         await updateData(DBCollections.Users, roomId, uid as string, getKey<IUser, "roomId">("roomId"));
         await updateData(
@@ -128,7 +132,7 @@ const useRoom = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_handleRoomError, dispatch, getData, navigate, removeData, roomRoot, uid, updateData, userName]
+    [_handleRoomError, closeRoom, dispatch, getData, navigate, removeData, roomRoot, uid, updateData, userName]
   );
 
   const kickFromRoom = async (userId: string) => {

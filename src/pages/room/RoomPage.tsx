@@ -2,6 +2,7 @@ import { FC, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MdOutlineChair as RoomIcon } from "react-icons/md";
 
+import InviteToRoomModal from "~/containers/invite-to-room-modal";
 import RoomSidebar from "~/containers/room-sidebar";
 import MusicPlayer from "~/containers/music-player";
 import IconButton from "~/components/icon-button";
@@ -28,6 +29,7 @@ const RoomPage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isOpen, hideModal, showModal } = useModal();
+  const { isOpen: isInviteOpen, hideModal: hideInviteModal, showModal: showInviteModal } = useModal();
   const { closeRoom, leaveRoom, isCreatingRoom, roomName, isIAmTheHost, isMeInTheRoom } = useRoom();
 
   useEffect(() => {
@@ -52,6 +54,7 @@ const RoomPage: FC = () => {
 
   return (
     <PageWrapper className={S.pageWrapper}>
+      <InviteToRoomModal isOpen={isInviteOpen} onCancel={hideInviteModal} />
       <Modal
         isOpen={isOpen}
         modalType={ModalType.CONFIRM}
@@ -81,7 +84,7 @@ const RoomPage: FC = () => {
             }
           >
             {isIAmTheHost && <IconButton Icon={LinkIcon} onClick={copyToClipboard} />}
-            {isIAmTheHost && <IconButton Icon={AddPersonIcon} onClick={() => null} />}
+            {isIAmTheHost && <IconButton Icon={AddPersonIcon} onClick={showInviteModal} />}
           </SectionHeading>
           <MusicPlayer />
         </div>

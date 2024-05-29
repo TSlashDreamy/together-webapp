@@ -15,7 +15,7 @@ import { NotificationType, IPlayer, ISpotifyTrack } from "~/types";
 
 export const usePlayer = () => {
   const player = useAppSelector((state) => state.player);
-  const { id, isPlaying, next, queue, nowPlaying, isAutoplay, volume } = player;
+  const { id, isPlaying, queue, nowPlaying, isAutoplay, volume } = player;
   const { updateData } = useDatabase();
   const dispatch = useAppDispatch();
   const spotifyPlayer = useSpotifyPlayer();
@@ -73,7 +73,7 @@ export const usePlayer = () => {
     try {
       dispatch(setIsLoading());
 
-      const nextItem = next || null;
+      const nextItem = queue[to] || null;
       const newQueue = queue?.filter((_, index) => index > to) || [];
 
       spotifyPlayer?.pause();
@@ -89,7 +89,7 @@ export const usePlayer = () => {
       dispatch(resetCurrentDuration());
       dispatch(resetIsLoading());
     }
-  }, [_handlePlayerError, _updatePlayerInfo, dispatch, next, queue, spotifyPlayer, togglePlay]);
+  }, [_handlePlayerError, _updatePlayerInfo, dispatch, queue, spotifyPlayer, togglePlay]);
 
   const seek = async (position_ms: number) => {
     try {
