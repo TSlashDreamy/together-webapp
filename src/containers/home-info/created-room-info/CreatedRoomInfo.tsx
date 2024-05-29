@@ -17,7 +17,7 @@ import * as S from "../styles";
 const CreatedRoomInfo: FC = () => {
   const navigate = useNavigate();
   const { isIAmTheHost, roomRoute, roomName, users } = useRoom();
-  const { nowPlaying, next, queue } = usePlayer();
+  const { nowPlaying, next, queue, skip } = usePlayer();
 
   const cards = useMemo(
     () => [
@@ -25,7 +25,7 @@ const CreatedRoomInfo: FC = () => {
         Icon: PlayIcon,
         name: "Now Playing",
         description: nowPlaying?.name || "Nothing",
-        actionBtn: nowPlaying ? { action: () => null, name: "Skip" } : undefined,
+        actionBtn: nowPlaying ? { action: () => skip(), name: "Skip" } : undefined,
       },
       {
         Icon: NextIcon,
@@ -43,7 +43,7 @@ const CreatedRoomInfo: FC = () => {
         description: users && users.length > 1 ? `${users!.length} people` : `Only you are here`,
       },
     ],
-    [next, nowPlaying, queue, users]
+    [next?.name, nowPlaying, queue, skip, users]
   );
 
   return (

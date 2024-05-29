@@ -16,9 +16,10 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
   borderStyle: string;
   bgStyle: string;
   disabled?: boolean;
+  onClick: () => void;
 }
 
-const CategoryCard: FC<IProps> = ({ Icon, cardNum, description, borderStyle, bgStyle, disabled, ...other }) => {
+const CategoryCard: FC<IProps> = ({ Icon, cardNum, description, borderStyle, bgStyle, disabled, onClick, ...other }) => {
   const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(null);
   const classes = twMerge(
     classNames(S.cardStyles, borderStyle, bgStyle, other.className, {
@@ -51,7 +52,7 @@ const CategoryCard: FC<IProps> = ({ Icon, cardNum, description, borderStyle, bgS
         <Typography.SPAN className={S.numberStyle}>{formatNumber(cardNum)}.</Typography.SPAN>
         <div className={S.descriptionWrapperStyle}>
           <Typography.H3 className={S.headingStyle}>{description}</Typography.H3>
-          <IconButton className={S.iconButtonStyle} disabled={disabled} Icon={ArrowIcon} />
+          <IconButton className={S.iconButtonStyle} disabled={disabled} Icon={ArrowIcon} onClick={onClick} />
         </div>
       </div>
     </div>

@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 
 import Logo from "~/components/logo";
 
-import { loaderTransitionContainerStyle } from "./styles";
+import * as S from "./styles";
 
 const TransitionLoader: FC = () => {
   return (
     <motion.div
-      className={`${loaderTransitionContainerStyle}`}
+      className={S.loaderTransitionContainerStyle}
       initial={{
         width: "105%",
         height: "105%",
@@ -24,8 +24,8 @@ const TransitionLoader: FC = () => {
         transition: { duration: 1, ease: "circInOut" },
       }}
     >
-      <div className="flex items-center justify-center size-[100px] border-2 border-primary overflow-hidden animate-loading">
-        <Logo onlyLogo svgStyles="size-[100px] stroke-primary stroke-[9px] animate-logoLoading" />
+      <div className={S.loaderWrapper}>
+        <Logo onlyLogo svgStyles={S.loaderLogo} />
       </div>
     </motion.div>
   );
