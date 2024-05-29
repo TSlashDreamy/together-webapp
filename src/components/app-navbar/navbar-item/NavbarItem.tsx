@@ -2,6 +2,8 @@ import { FC, HTMLAttributes, MouseEvent } from "react";
 import { twMerge } from "tailwind-merge";
 import classNames from "classnames";
 
+import IndicatorCounter from "~/components/indicator-counter";
+
 import { NotificationCounterType } from "~/constants";
 import * as S from "./styles";
 
@@ -18,18 +20,11 @@ const NavbarItem: FC<IProps> = ({ onClick, Icon, isActive, notificationCounter, 
       [S.activeStyle]: isActive,
     })
   );
-  const notificationClasses = twMerge(
-    classNames(S.notification, {
-      [S.notificationAction]: notificationCounter?.type === NotificationCounterType.ACTION,
-      [S.notificationAttention]: notificationCounter?.type === NotificationCounterType.ATTENTION,
-      [S.notificationNeutral]: notificationCounter?.type === NotificationCounterType.NEUTRAL,
-    })
-  );
 
   return (
     <div className={classes} onClick={onClick}>
       <Icon />
-      {notificationCounter && <div className={notificationClasses}>{notificationCounter.amount}</div>}
+      {notificationCounter && <IndicatorCounter amount={notificationCounter.amount} type={notificationCounter.type} />}
     </div>
   );
 };
