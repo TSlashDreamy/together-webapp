@@ -46,7 +46,7 @@ export const initialChatState: IChat = {
   messages: null,
 };
 
-export const initialAppState: AppState = {
+export const initialAppState: Omit<AppState, "servicesHealth"> = {
   appearance: { floatingObjects: true },
   services: initialSevicesState,
 };

@@ -45,7 +45,7 @@ const ServiceRedirect: FC = () => {
         setStatus(statuses.Fail);
         updateAppConfig(spotifyErrorState);
         setTimerId(startTimeout());
-      })
+      });
 
     if (status === statuses.Fail) setTimerId(startTimeout());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,9 +57,7 @@ const ServiceRedirect: FC = () => {
     };
   }, [timerId]);
 
-  return (
-    <MessageCard iconStyle={status.style} Icon={status.Icon} title={status.title} description={status.desription} />
-  );
+  return <MessageCard iconStyle={status.style} Icon={status.Icon} title={status.title} description={status.desription} />;
 };
 
 export default ServiceRedirect;

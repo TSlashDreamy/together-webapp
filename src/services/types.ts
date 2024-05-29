@@ -1,5 +1,10 @@
 import { Services, ServiceStatus } from "./constants";
 
+export interface IServicesHealth {
+  healthy: boolean;
+  message: string;
+}
+
 export interface IServiceState {
   token: string | null;
   status: ServiceStatus;

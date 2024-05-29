@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Outlet, useNavigate } from "react-router-dom";
 
+import ServiceHealthModal from "~/containers/service-health-modal";
 import AppNavbar from "~/components/app-navbar";
 import Cubes from "~/components/cubes";
 import OverlayMessage from "~/components/overlay-message";
@@ -14,6 +15,7 @@ import { routes } from "~/router/constants";
 
 const PrivateLayout = () => {
   const { restoringSession } = useAppSelector(state => state.authentication);
+  const { servicesHealth } = useAppSelector(state => state.app);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
@@ -28,6 +30,7 @@ const PrivateLayout = () => {
       <AppNavbar />
       {createPortal(<Cubes randomize />, document.getElementById("portal") as HTMLElement)}
       <Outlet />
+      <ServiceHealthModal isOpen={!servicesHealth.healthy} message={servicesHealth.message} />
     </main>
   );
 };

@@ -5,23 +5,43 @@ import { FirebaseError } from "firebase/app";
 import { useAuth } from "~/hooks/useAuth";
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
 import useDatabase from "~/hooks/useDatabase";
+import { useConfig } from "~/hooks/useConfig";
 
 import { generateId, getKey } from "~/utils";
 import { resetIsLoading, resetRoom, setIsLoading } from "~/redux/slices/roomSlice";
 import { showNotification } from "~/redux/slices/notificationSlice";
+import { setServiceHealth } from "~/redux/slices/appSlice";
 import { routes } from "~/router/constants";
 import { initialRoomState } from "~/containers/home-info/no-room-info/constants";
 import { DBCollections, initalFirebasePlayerState } from "~/constants";
 import { IChat, IMessage, NotificationType, IPerson, IRoom, IUser, IFirebasePlayer, IRoomInvite } from "~/types";
+import { IServicesHealth, IServiceState } from "~/services/types";
+import { ServiceStatus } from "~/services/constants";
 
 const useRoom = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { uid, userName } = useAuth();
   const { pushData, updateData, removeData, getData } = useDatabase();
+  const { services } = useConfig();
   const room = useAppSelector((state) => state.room);
   const { roomId } = useAppSelector((state) => state.user);
   const roomRoot = routes.app.room;
+
+  const _getServiceCount = useCallback((services: IServiceState[], statusToCheck: ServiceStatus) => {
+    return services.reduce((acc, service) => acc + Number(service.status === statusToCheck), 0);
+  }, []);
+
+  const _checkServices = useCallback((): IServicesHealth => {
+    const availableServices = Object.values(services) as IServiceState[];
+    const unactiveServicesCount = _getServiceCount(availableServices, ServiceStatus.Unactive);
+    const errorServicesCount = _getServiceCount(availableServices, ServiceStatus.Error);
+
+    if (errorServicesCount > 0) return { healthy: false, message: "You have problem with your services! Fix it to continue!" };
+    if (unactiveServicesCount === availableServices.length)
+      return { healthy: false, message: "You didn't connect any service! Connect at least one to continue!" };
+    return { healthy: true, message: "" };
+  }, [_getServiceCount, services]);
 
   const _handleRoomError = useCallback(
     (e: unknown) => {
@@ -56,6 +76,12 @@ const useRoom = () => {
 
   const createRoom = async (doNavigate: boolean = true) => {
     try {
+      const status = _checkServices();
+      if (!status.healthy) {
+        dispatch(setServiceHealth(status));
+        return;
+      }
+
       dispatch(setIsLoading());
       const room: IRoom = {
         ...initialRoomState,
@@ -76,11 +102,11 @@ const useRoom = () => {
       await updateData(DBCollections.Users, room.roomId, uid as string, getKey<IUser, "roomId">("roomId"));
       setTimeout(async () => await removeData(DBCollections.Users, uid as string, getKey<IUser, "roomInvites">("roomInvites")), 900);
       doNavigate && navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${room.roomId}`);
+      dispatch(showNotification({ type: NotificationType.Success, content: "Your room was successfully created!" }));
     } catch (error) {
       _handleRoomError(error);
     } finally {
       dispatch(resetIsLoading());
-      dispatch(showNotification({ type: NotificationType.Success, content: "Your room was successfully created!" }));
     }
   };
 
@@ -111,8 +137,13 @@ const useRoom = () => {
   const joinRoom = useCallback(
     async (roomId: string) => {
       try {
-        dispatch(setIsLoading());
+        const status = _checkServices();
+        if (!status.healthy) {
+          dispatch(setServiceHealth(status));
+          return;
+        }
 
+        dispatch(setIsLoading());
         const room = await getData<IRoom>(DBCollections.Rooms, roomId);
         if (!room) throw new FirebaseError("", "This room doesn't exist");
         if (room.roomId) await closeRoom(false);
@@ -132,7 +163,7 @@ const useRoom = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_handleRoomError, closeRoom, dispatch, getData, navigate, removeData, roomRoot, uid, updateData, userName]
+    [_checkServices, _handleRoomError, closeRoom, dispatch, getData, navigate, removeData, roomRoot, uid, updateData, userName]
   );
 
   const kickFromRoom = async (userId: string) => {
