@@ -18,7 +18,7 @@ import * as S from "./styles";
 
 interface IProps {
   track: ISpotifyTrack;
-  showAlert: () => void;
+  showAlert?: () => void;
 }
 
 const ContentItem: FC<IProps> = ({ track, showAlert }) => {
@@ -27,7 +27,7 @@ const ContentItem: FC<IProps> = ({ track, showAlert }) => {
   const { addToQueue, isLoading } = usePlayer();
 
   const handleAddToQueue = (track: ISpotifyTrack) => {
-    if (!roomId) showAlert();
+    if (!roomId && showAlert) showAlert();
     else addToQueue(track);
   };
 

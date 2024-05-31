@@ -39,6 +39,7 @@ export const useAuth = () => {
             friendsRequest: userData.friendsRequest,
             friends: userData.friendsRequest,
             roomInvites: userData.roomInvites,
+            likedContent: userData.likedContent,
           })
         );
       }

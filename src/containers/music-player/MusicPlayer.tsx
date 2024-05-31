@@ -11,8 +11,7 @@ import { usePlayer } from "~/hooks/usePlayer";
 import * as S from "./styles";
 
 const MusicPlayer: FC = () => {
-  const { isPlaying, isLoading, nowPlaying, next, currentDuration, volume, togglePlay, skip, seek, changeVolume } =
-    usePlayer();
+  const { isPlaying, isLoading, nowPlaying, next, currentDuration, volume, togglePlay, skip, seek, changeVolume, like } = usePlayer();
 
   const classes = twMerge(
     classNames(S.player, {
@@ -39,6 +38,7 @@ const MusicPlayer: FC = () => {
           togglePlay={togglePlay}
           skip={skip}
           seek={seek}
+          like={like}
           changeVolume={changeVolume}
         />
         <PlayerRightSide currentTrack={nowPlaying} nextTrack={next} currentDuration={currentDuration} />

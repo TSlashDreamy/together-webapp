@@ -13,12 +13,12 @@ import { useConfig } from "~/hooks/useConfig";
 import { useModal } from "~/hooks/useModal";
 
 import { codeVerifier, spotifyAuthURL } from "~/services/spotify";
-import * as S from "./styles";
-import { spotifyInitialState } from "~/services/constants";
+import { ServiceStatus, spotifyInitialState } from "~/services/constants";
 import { IAppServices } from "~/services/types";
 import { resetApp } from "./utils";
 import { routes } from "~/router/constants";
 import { ModalType } from "~/constants";
+import * as S from "./styles";
 
 const SettingsPage: FC = () => {
   const { isOpen, showModal, hideModal } = useModal();
@@ -70,13 +70,10 @@ const SettingsPage: FC = () => {
             </Button>
           </div>
         </SectionWrapper>
-        <SectionWrapper name="SoundCloud" unactive>
+        {/* //TODO: Connect SOUNDCLOUD */}
+        <SectionWrapper name="SoundCloud">
           <div className={S.option}>
-            <StatusChip status={services.soundCloud.status} />
-          </div>
-          <div className={S.option}>
-            <Typography.SPAN>Service action</Typography.SPAN>
-            <Button secondary>{services.soundCloud.token ? "Disconnect" : "Connect"}</Button>
+            <StatusChip status={ServiceStatus.Active} />
           </div>
         </SectionWrapper>
         <SectionWrapper name="YouTube" unactive>

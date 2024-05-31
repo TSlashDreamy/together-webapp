@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { FirebaseError } from "firebase/app";
 import { usePlayerDevice, useSpotifyPlayer } from "react-spotify-web-playback-sdk";
 
+import { useUser } from "~/hooks/useUser";
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
 import useDatabase from "~/hooks/useDatabase";
 import { useSpotify } from "~/hooks/useSpotify";
@@ -11,12 +12,13 @@ import { setIsLoading, resetIsLoading, setCurrentDuration, resetCurrentDuration,
 
 import { getKey } from "~/utils";
 import { DBCollections } from "~/constants";
-import { NotificationType, IPlayer, ISpotifyTrack } from "~/types";
+import { NotificationType, IPlayer, ISpotifyTrack, IUser } from "~/types";
 
 export const usePlayer = () => {
+  const { uid } = useUser();
   const player = useAppSelector((state) => state.player);
   const { id, isPlaying, queue, nowPlaying, isAutoplay, volume } = player;
-  const { updateData } = useDatabase();
+  const { updateData, getData } = useDatabase();
   const dispatch = useAppDispatch();
   const spotifyPlayer = useSpotifyPlayer();
   const { play: spotifyPlay } = useSpotify();
@@ -69,27 +71,30 @@ export const usePlayer = () => {
     [_handlePlayerError, _updatePlayerInfo, dispatch, isPlaying]
   );
 
-  const skip = useCallback(async (to: number = 0) => {
-    try {
-      dispatch(setIsLoading());
+  const skip = useCallback(
+    async (to: number = 0) => {
+      try {
+        dispatch(setIsLoading());
 
-      const nextItem = queue[to] || null;
-      const newQueue = queue?.filter((_, index) => index > to) || [];
+        const nextItem = queue[to] || null;
+        const newQueue = queue?.filter((_, index) => index > to) || [];
 
-      spotifyPlayer?.pause();
-      await _updatePlayerInfo(0, getKey<IPlayer, "lastSeekTimestamp">("lastSeekTimestamp"));
-      await _updatePlayerInfo(nextItem, getKey<IPlayer, "nowPlaying">("nowPlaying"));
-      await _updatePlayerInfo(newQueue, getKey<IPlayer, "queue">("queue"));
-      await _updatePlayerInfo(newQueue[0] || null, getKey<IPlayer, "next">("next"));
+        spotifyPlayer?.pause();
+        await _updatePlayerInfo(0, getKey<IPlayer, "lastSeekTimestamp">("lastSeekTimestamp"));
+        await _updatePlayerInfo(nextItem, getKey<IPlayer, "nowPlaying">("nowPlaying"));
+        await _updatePlayerInfo(newQueue, getKey<IPlayer, "queue">("queue"));
+        await _updatePlayerInfo(newQueue[0] || null, getKey<IPlayer, "next">("next"));
 
-      nextItem ? togglePlay(true) : togglePlay(false);
-    } catch (error) {
-      _handlePlayerError(error);
-    } finally {
-      dispatch(resetCurrentDuration());
-      dispatch(resetIsLoading());
-    }
-  }, [_handlePlayerError, _updatePlayerInfo, dispatch, queue, spotifyPlayer, togglePlay]);
+        nextItem ? togglePlay(true) : togglePlay(false);
+      } catch (error) {
+        _handlePlayerError(error);
+      } finally {
+        dispatch(resetCurrentDuration());
+        dispatch(resetIsLoading());
+      }
+    },
+    [_handlePlayerError, _updatePlayerInfo, dispatch, queue, spotifyPlayer, togglePlay]
+  );
 
   const seek = async (position_ms: number) => {
     try {
@@ -156,6 +161,31 @@ export const usePlayer = () => {
     }
   };
 
+  const like = async (track: ISpotifyTrack) => {
+    try {
+      dispatch(setIsLoading());
+
+      const likedContent = await getData<ISpotifyTrack[] | null>(
+        DBCollections.Users,
+        uid as string,
+        getKey<IUser, "likedContent">("likedContent")
+      );
+      const newTracks = [...(likedContent || []), track];
+
+      await updateData(DBCollections.Users, newTracks, uid as string, getKey<IUser, "likedContent">("likedContent"));
+    } catch (error) {
+      _handlePlayerError(error);
+    } finally {
+      dispatch(resetIsLoading());
+      dispatch(
+        showNotification({
+          type: NotificationType.Success,
+          content: `${track.name} was added to your library`,
+        })
+      );
+    }
+  };
+
   return {
     switchAutoplay,
     togglePlay,
@@ -164,6 +194,7 @@ export const usePlayer = () => {
     changeVolume,
     play,
     addToQueue,
+    like,
     ...player,
   };
 };

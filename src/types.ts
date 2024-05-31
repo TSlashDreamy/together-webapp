@@ -47,6 +47,7 @@ export interface IUser {
   outFriendsRequest: IPerson[] | null; 
   friendsRequest: IPerson[] | null;
   friends: IPerson[] | null;
+  likedContent: ISpotifyTrack[] | null;
 }
 
 export interface IPlayer {

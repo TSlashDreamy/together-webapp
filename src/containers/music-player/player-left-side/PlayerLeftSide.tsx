@@ -26,6 +26,7 @@ interface IProps {
   skip: () => Promise<void>;
   seek: (position_ms: number) => Promise<void>;
   changeVolume: (volume: number) => Promise<void>;
+  like: (track: ISpotifyTrack) => Promise<void>;
 }
 
 const PlayerLeftSide: FC<IProps> = ({
@@ -39,18 +40,20 @@ const PlayerLeftSide: FC<IProps> = ({
   skip,
   seek,
   changeVolume,
+  like,
 }) => {
   const [volumeShown, setVolumeShown] = useState(false);
   const iconClasses = twMerge(S.musicCoverStyle, "text-text-white");
 
+  const handleLike = async () => {
+    if (!currentTrack) return;
+    await like(currentTrack);
+  };
+
   return (
     <>
       <div className={S.leftSideStyle}>
-        {currentTrack?.image ? (
-          <img className={S.musicCoverStyle} src={currentTrack?.image} />
-        ) : (
-          <NoContentIcon className={iconClasses} />
-        )}
+        {currentTrack?.image ? <img className={S.musicCoverStyle} src={currentTrack?.image} /> : <NoContentIcon className={iconClasses} />}
         <div className={S.buttonsContainerStyle}>
           <div className={S.buttonsWrapperStyle}>
             <IconButton Icon={isPlaying ? PauseIcon : PlayIcon} isLoading={isLoading} onClick={() => togglePlay()} />
@@ -62,15 +65,10 @@ const PlayerLeftSide: FC<IProps> = ({
           </div>
           <div className={S.buttonsWrapperStyle}>
             <IconButton Icon={AddCollectionIcon} disabled />
-            <IconButton Icon={LikeIcon} disabled />
+            <IconButton Icon={LikeIcon} onClick={handleLike} />
           </div>
         </div>
-        <RangeSlider
-          onChange={seek}
-          min={0}
-          max={(currentTrack?.duration as number) || 100}
-          value={currentDuration as number}
-        />
+        <RangeSlider onChange={seek} min={0} max={(currentTrack?.duration as number) || 100} value={currentDuration as number} />
       </div>
     </>
   );

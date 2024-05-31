@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { IPerson, IRoomInvite, IUser } from "~/types";
+import { IPerson, IRoomInvite, ISpotifyTrack, IUser } from "~/types";
 
 const initialState: IUser = {
   email: null,
@@ -13,6 +13,7 @@ const initialState: IUser = {
   friendsRequest: null,
   friends: null,
   roomInvites: null,
+  likedContent: null,
 };
 
 export const userSlice = createSlice({
@@ -29,6 +30,7 @@ export const userSlice = createSlice({
       state.friendsRequest = action.payload.friendsRequest;
       state.friends = action.payload.friends;
       state.roomInvites = action.payload.roomInvites;
+      state.likedContent = action.payload.likedContent;
     },
     updateUser: (state, action: PayloadAction<IUser>) => {
       state.email = action.payload.email;
@@ -62,6 +64,9 @@ export const userSlice = createSlice({
     setUserName: (state, action: PayloadAction<string | null>) => {
       state.userName = action.payload;
     },
+    setLikedContent: (state, action: PayloadAction<ISpotifyTrack[] | null>) => {
+      state.likedContent = action.payload;
+    },
     setLastLogin: (state, action: PayloadAction<number | null>) => {
       state.lastLogin = action.payload;
     },
@@ -80,6 +85,7 @@ export const {
   setEmail,
   setUid,
   setLastLogin,
+  setLikedContent,
   setUserName,
 } = userSlice.actions;
 export default userSlice.reducer;

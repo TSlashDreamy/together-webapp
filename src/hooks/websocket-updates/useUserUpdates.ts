@@ -6,12 +6,22 @@ import useWebsocket from "~/hooks/useWebsocket";
 import { useUser } from "~/hooks/useUser";
 import { useAppDispatch } from "~/hooks/useRedux";
 
-import { setEmail, setFriends, setFriendsRequest, setLastLogin, setOutFriendsRequest, setRoomId, setRoomInvites, setUserName } from "~/redux/slices/userSlice";
+import {
+  setEmail,
+  setFriends,
+  setFriendsRequest,
+  setLastLogin,
+  setLikedContent,
+  setOutFriendsRequest,
+  setRoomId,
+  setRoomInvites,
+  setUserName,
+} from "~/redux/slices/userSlice";
 import { resetRestoringSession } from "~/redux/slices/authSlice";
 
 import { auth } from "~/firebase";
 import { getKey } from "~/utils";
-import { IPerson, IRoomInvite, IUser } from "~/types";
+import { IPerson, IRoomInvite, ISpotifyTrack, IUser } from "~/types";
 import { DBCollections } from "~/constants";
 
 export const useUserUpdates = () => {
@@ -25,10 +35,32 @@ export const useUserUpdates = () => {
   useWebsocket<string | null>(DBCollections.Users, uid, setEmail, getKey<IUser, "email">("email"), undefined, null);
   useWebsocket<string | null>(DBCollections.Users, uid, setUserName, getKey<IUser, "userName">("userName"), undefined, null);
   useWebsocket<number | null>(DBCollections.Users, uid, setLastLogin, getKey<IUser, "lastLogin">("lastLogin"), undefined, null);
-  useWebsocket<IPerson[] | null>(DBCollections.Users, uid, setOutFriendsRequest, getKey<IUser, "outFriendsRequest">("outFriendsRequest"), undefined, null);
-  useWebsocket<IPerson[] | null>(DBCollections.Users, uid, setFriendsRequest, getKey<IUser, "friendsRequest">("friendsRequest"), undefined, null);
+  useWebsocket<IPerson[] | null>(
+    DBCollections.Users,
+    uid,
+    setOutFriendsRequest,
+    getKey<IUser, "outFriendsRequest">("outFriendsRequest"),
+    undefined,
+    null
+  );
+  useWebsocket<IPerson[] | null>(
+    DBCollections.Users,
+    uid,
+    setFriendsRequest,
+    getKey<IUser, "friendsRequest">("friendsRequest"),
+    undefined,
+    null
+  );
   useWebsocket<IPerson[] | null>(DBCollections.Users, uid, setFriends, getKey<IUser, "friends">("friends"), undefined, null);
   useWebsocket<IRoomInvite[] | null>(DBCollections.Users, uid, setRoomInvites, getKey<IUser, "roomInvites">("roomInvites"), undefined, null);
+  useWebsocket<ISpotifyTrack[] | null>(
+    DBCollections.Users,
+    uid,
+    setLikedContent,
+    getKey<IUser, "likedContent">("likedContent"),
+    undefined,
+    null
+  );
   /* //? ~Questionable way~ */
 
   useEffect(() => {
