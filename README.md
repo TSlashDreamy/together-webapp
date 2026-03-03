@@ -264,5 +264,5 @@ Planned / potential improvements:
 
 ## License
 
-This project is currently **closed source / private** for personal or internal use.  
-If you intend to use parts of it publicly, please add an explicit license and update this section accordingly.
+This project is licensed under the [GNU General Public License v3.0 (GPL-3.0)](https://www.gnu.org/licenses/gpl-3.0.html).
+You are free to use, modify, and distribute this software under the terms of the GPL-3.0 license.
