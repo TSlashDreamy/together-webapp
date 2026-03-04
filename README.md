@@ -98,43 +98,16 @@ The goal of the project is to explore **real-time collaboration**, **Spotify int
 
 ![Static Badge](https://img.shields.io/badge/Figma_Mockup-black?style=for-the-badge&logo=figma&link=https%3A%2F%2Fwww.figma.com%2Fdesign%2FdSs0AkWOBl86yyWZWDyEDf%2FTogether-project%3Fnode-id%3D0-1%26t%3Dg8z0FzWeAq7ZBufX-1)
 
-- **Demo**
-
 <div align="center">
   <img width="49%" src="./preview/Demo.gif">
-</div>
-
-- **Landing / Auth**
-
-<div align="center">
   <img width="49%" src="./preview/Landing.jpeg">
   <img width="49%" src="./preview/SignUp.jpeg">
-  <img width="49%" src="./preview/LogIn.png">
-</div>
-
-- **Home & Player**
-
-<div align="center">
   <img width="49%" src="./preview/HomePage.jpeg">
+  <img width="49%" src="./preview/LogIn.png">
   <img width="49%" src="./preview/HomePagePlaying.png">
-</div>
-
-- **Room & Queue**
-
-<div align="center">
   <img width="49%" src="./preview/RoomPlaying.png">
-</div>
-
-- **Search & Results**
-
-<div align="center">
   <img width="49%" src="./preview/Search.png">
   <img width="49%" src="./preview/SearchHistory.png">
-</div>
-
-- **Friends & Invites**
-
-<div align="center">
   <img width="49%" src="./preview/Friends.png">
 </div>
 
