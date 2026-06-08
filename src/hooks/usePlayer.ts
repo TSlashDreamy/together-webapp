@@ -31,17 +31,17 @@ export const usePlayer = () => {
         showNotification({
           type: NotificationType.Error,
           content: e instanceof FirebaseError ? e.message : "Something went wrong (Player)",
-        })
+        }),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   const _updatePlayerInfo = useCallback(
     async <T>(data: T, path: string) => {
       await updateData(DBCollections.Players, data, id as string, path);
     },
-    [id, updateData]
+    [id, updateData],
   );
 
   const switchAutoplay = async (state: boolean) => {
@@ -68,7 +68,7 @@ export const usePlayer = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_handlePlayerError, _updatePlayerInfo, dispatch, isPlaying]
+    [_handlePlayerError, _updatePlayerInfo, dispatch, isPlaying],
   );
 
   const skip = useCallback(
@@ -79,13 +79,14 @@ export const usePlayer = () => {
         const nextItem = queue[to] || null;
         const newQueue = queue?.filter((_, index) => index > to) || [];
 
-        spotifyPlayer?.pause();
+        // spotifyPlayer?.pause();
         await _updatePlayerInfo(0, getKey<IPlayer, "lastSeekTimestamp">("lastSeekTimestamp"));
         await _updatePlayerInfo(nextItem, getKey<IPlayer, "nowPlaying">("nowPlaying"));
         await _updatePlayerInfo(newQueue, getKey<IPlayer, "queue">("queue"));
         await _updatePlayerInfo(newQueue[0] || null, getKey<IPlayer, "next">("next"));
 
         nextItem ? togglePlay(true) : togglePlay(false);
+        setTimeout(() => {}, 1000);
       } catch (error) {
         _handlePlayerError(error);
       } finally {
@@ -93,7 +94,7 @@ export const usePlayer = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_handlePlayerError, _updatePlayerInfo, dispatch, queue, spotifyPlayer, togglePlay]
+    [_handlePlayerError, _updatePlayerInfo, dispatch, queue, spotifyPlayer, togglePlay],
   );
 
   const seek = async (position_ms: number) => {
@@ -112,9 +113,10 @@ export const usePlayer = () => {
   const changeVolume = async (desiredVolume: number) => {
     try {
       dispatch(setIsLoading());
-      await spotifyPlayer?.setVolume(desiredVolume / 100);
+      // await spotifyPlayer?.setVolume(desiredVolume / 100);
       const newVolume = await spotifyPlayer?.getVolume();
       dispatch(setVolume(newVolume ? newVolume * 100 : (volume as number)));
+      setTimeout(() => {}, 1000);
     } catch (error) {
       _handlePlayerError(error);
     } finally {
@@ -126,14 +128,15 @@ export const usePlayer = () => {
     async (trackUri: string) => {
       try {
         dispatch(setIsLoading());
-        await spotifyPlay(spotifyDevice?.device_id as string, trackUri);
+        // await spotifyPlay(spotifyDevice?.device_id as string, trackUri);
+        setTimeout(() => {}, 1000);
       } catch (error) {
         _handlePlayerError(error);
       } finally {
         dispatch(resetIsLoading());
       }
     },
-    [_handlePlayerError, dispatch, spotifyDevice?.device_id, spotifyPlay]
+    [_handlePlayerError, dispatch, spotifyDevice?.device_id, spotifyPlay],
   );
 
   const addToQueue = async (track: ISpotifyTrack) => {
@@ -156,7 +159,7 @@ export const usePlayer = () => {
         showNotification({
           type: NotificationType.Success,
           content: `${track.name} was successfully added to room queue`,
-        })
+        }),
       );
     }
   };
@@ -168,7 +171,7 @@ export const usePlayer = () => {
       const likedContent = await getData<ISpotifyTrack[] | null>(
         DBCollections.Users,
         uid as string,
-        getKey<IUser, "likedContent">("likedContent")
+        getKey<IUser, "likedContent">("likedContent"),
       );
       const newTracks = [...(likedContent || []), track];
 
@@ -181,7 +184,7 @@ export const usePlayer = () => {
         showNotification({
           type: NotificationType.Success,
           content: `${track.name} was added to your library`,
-        })
+        }),
       );
     }
   };

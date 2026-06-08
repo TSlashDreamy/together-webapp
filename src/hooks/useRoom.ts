@@ -50,10 +50,10 @@ const useRoom = () => {
         showNotification({
           type: NotificationType.Error,
           content: e instanceof FirebaseError ? e.message : "Something went wrong (Room)",
-        })
+        }),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   const _outRoomAction = async (userId?: string) => {
@@ -76,11 +76,11 @@ const useRoom = () => {
 
   const createRoom = async (doNavigate: boolean = true) => {
     try {
-      const status = _checkServices();
-      if (!status.healthy) {
-        dispatch(setServiceHealth(status));
-        return;
-      }
+      // const status = _checkServices();
+      // if (!status.healthy) {
+      //   dispatch(setServiceHealth(status));
+      //   return;
+      // }
 
       dispatch(setIsLoading());
       const room: IRoom = {
@@ -127,7 +127,7 @@ const useRoom = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_handleRoomError, dispatch, navigate, removeData, room.playerId, room?.users, roomId, updateData]
+    [_handleRoomError, dispatch, navigate, removeData, room.playerId, room?.users, roomId, updateData],
   );
 
   const leaveRoom = async () => {
@@ -153,7 +153,7 @@ const useRoom = () => {
           DBCollections.Rooms,
           { id: uid as string, name: userName as string } as IPerson,
           roomId,
-          getKey<IRoom, "users">("users").concat(`/${room.users.length}`)
+          getKey<IRoom, "users">("users").concat(`/${room.users.length}`),
         );
         navigate(`${roomRoot.slice(0, roomRoot.indexOf("/:"))}/${roomId}`);
         setTimeout(async () => await removeData(DBCollections.Users, uid as string, getKey<IUser, "roomInvites">("roomInvites")), 900);
@@ -163,7 +163,7 @@ const useRoom = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_checkServices, _handleRoomError, closeRoom, dispatch, getData, navigate, removeData, roomRoot, uid, updateData, userName]
+    [_checkServices, _handleRoomError, closeRoom, dispatch, getData, navigate, removeData, roomRoot, uid, updateData, userName],
   );
 
   const kickFromRoom = async (userId: string) => {
@@ -186,7 +186,7 @@ const useRoom = () => {
         DBCollections.Rooms,
         message,
         room.roomId as string,
-        getKey<IRoom, "chat">("chat").concat(`/${getKey<IChat, "messages">("messages")}/${msgIndex}`)
+        getKey<IRoom, "chat">("chat").concat(`/${getKey<IChat, "messages">("messages")}/${msgIndex}`),
       );
     } catch (error) {
       _handleRoomError(error);
@@ -219,7 +219,7 @@ const useRoom = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_handleRoomError, dispatch, getData, updateData]
+    [_handleRoomError, dispatch, getData, updateData],
   );
 
   const acceptRoomInvite = useCallback(
@@ -234,7 +234,7 @@ const useRoom = () => {
         dispatch(resetIsLoading());
       }
     },
-    [_handleRoomError, dispatch, joinRoom]
+    [_handleRoomError, dispatch, joinRoom],
   );
 
   return {

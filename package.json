@@ -1,5 +1,6 @@
 {
   "name": "together-webapp",
+  "homepage": "https://tslashdreamy.github.io/together-webapp",
   "private": true,
   "version": "0.0.0",
   "type": "module",

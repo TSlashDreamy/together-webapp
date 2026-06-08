@@ -59,9 +59,9 @@ const SettingsPage: FC = () => {
             <Switch onChange={() => updateAppConfig({ floatingObjects: !appearance.floatingObjects })} checked={appearance.floatingObjects} />
           </div>
         </SectionWrapper>
-        <SectionWrapper name="Spotify" message="requires Spotify premium">
+        <SectionWrapper name="Spotify" message="requires Spotify premium" unactive>
           <div className={S.option}>
-            <StatusChip status={services.spotify.status} />
+            <StatusChip status={ServiceStatus.Unactive} />
           </div>
           <div className={S.option}>
             <Typography.SPAN>Service action</Typography.SPAN>
@@ -71,14 +71,14 @@ const SettingsPage: FC = () => {
           </div>
         </SectionWrapper>
         {/* //TODO: Connect SOUNDCLOUD */}
-        <SectionWrapper name="SoundCloud">
+        <SectionWrapper name="SoundCloud" unactive>
           <div className={S.option}>
-            <StatusChip status={ServiceStatus.Active} />
+            <StatusChip status={ServiceStatus.Unactive} />
           </div>
         </SectionWrapper>
         <SectionWrapper name="YouTube" unactive>
           <div className={S.option}>
-            <StatusChip status={services.youTube.status} />
+            <StatusChip status={ServiceStatus.Unactive} />
           </div>
           <div className={S.option}>
             <Typography.SPAN>Service action</Typography.SPAN>

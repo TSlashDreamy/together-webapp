@@ -14,8 +14,8 @@ import { useAppSelector } from "~/hooks/useRedux";
 import { routes } from "~/router/constants";
 
 const PrivateLayout = () => {
-  const { restoringSession } = useAppSelector(state => state.authentication);
-  const { servicesHealth } = useAppSelector(state => state.app);
+  const { restoringSession } = useAppSelector((state) => state.authentication);
+  const { servicesHealth } = useAppSelector((state) => state.app);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
