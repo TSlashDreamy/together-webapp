@@ -10,7 +10,7 @@ import { useConfig } from "~/hooks/useConfig";
 import { generateId, getKey } from "~/utils";
 import { resetIsLoading, resetRoom, setIsLoading } from "~/redux/slices/roomSlice";
 import { showNotification } from "~/redux/slices/notificationSlice";
-import { setServiceHealth } from "~/redux/slices/appSlice";
+// import { setServiceHealth } from "~/redux/slices/appSlice";
 import { routes } from "~/router/constants";
 import { initialRoomState } from "~/containers/home-info/no-room-info/constants";
 import { DBCollections, initalFirebasePlayerState } from "~/constants";
@@ -137,11 +137,11 @@ const useRoom = () => {
   const joinRoom = useCallback(
     async (roomId: string) => {
       try {
-        const status = _checkServices();
-        if (!status.healthy) {
-          dispatch(setServiceHealth(status));
-          return;
-        }
+        // const status = _checkServices();
+        // if (!status.healthy) {
+        //   dispatch(setServiceHealth(status));
+        //   return;
+        // }
 
         dispatch(setIsLoading());
         const room = await getData<IRoom>(DBCollections.Rooms, roomId);
