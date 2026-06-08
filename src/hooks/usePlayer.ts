@@ -113,6 +113,7 @@ export const usePlayer = () => {
   const changeVolume = async (desiredVolume: number) => {
     try {
       dispatch(setIsLoading());
+      console.log(desiredVolume);
       // await spotifyPlayer?.setVolume(desiredVolume / 100);
       const newVolume = await spotifyPlayer?.getVolume();
       dispatch(setVolume(newVolume ? newVolume * 100 : (volume as number)));
@@ -126,6 +127,7 @@ export const usePlayer = () => {
 
   const play = useCallback(
     async (trackUri: string) => {
+      console.log(trackUri);
       try {
         dispatch(setIsLoading());
         // await spotifyPlay(spotifyDevice?.device_id as string, trackUri);

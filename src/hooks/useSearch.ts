@@ -1,10 +1,10 @@
 import { FirebaseError } from "firebase/app";
 
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { useSpotify } from "~/hooks/useSpotify";
+// import { useSpotify } from "~/hooks/useSpotify";
 
 import { showNotification } from "~/redux/slices/notificationSlice";
-import { addToHistory, resetHistory, setHistory, setIsLoading, setSearchQuery, setSearchResults, setViewMode } from "~/redux/slices/searchSlice";
+import { addToHistory, resetHistory, resetIsLoading, setHistory, setIsLoading, setSearchResults, setViewMode } from "~/redux/slices/searchSlice";
 
 import { historyKey } from "~/pages/search/top-bar/constants";
 import { ISearchResult, NotificationType } from "~/types";
@@ -14,7 +14,7 @@ import { useState } from "react";
 export const useSearch = () => {
   const [searchResults, setSearchResultss] = useState<ISearchResult>();
   const dispatch = useAppDispatch();
-  const { search: trackSearch, searchNext } = useSpotify();
+  // const { search: trackSearch, searchNext } = useSpotify();
   const { history, viewMode, searchQuery } = useAppSelector((state) => state.search);
 
   const addHistory = (query: string) => {
@@ -71,7 +71,7 @@ export const useSearch = () => {
         }),
       );
     } finally {
-      dispatch(setIsLoading(false));
+      dispatch(resetIsLoading());
     }
   };
 

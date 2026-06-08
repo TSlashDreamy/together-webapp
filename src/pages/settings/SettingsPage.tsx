@@ -12,7 +12,7 @@ import Modal from "~/components/modal";
 import { useConfig } from "~/hooks/useConfig";
 import { useModal } from "~/hooks/useModal";
 
-import { codeVerifier, spotifyAuthURL } from "~/services/spotify";
+import { getSpotifyAuthUrl } from "~/services/spotify";
 import { ServiceStatus, spotifyInitialState } from "~/services/constants";
 import { IAppServices } from "~/services/types";
 import { resetApp } from "./utils";
@@ -24,10 +24,11 @@ const SettingsPage: FC = () => {
   const { isOpen, showModal, hideModal } = useModal();
   const navigate = useNavigate();
   const { appearance, services, updateAppConfig } = useConfig();
-  const handleSpotify = useCallback(() => {
+  const handleSpotify = useCallback(async () => {
     if (services.spotify.access_token) {
       updateAppConfig({ spotify: spotifyInitialState } as IAppServices);
     } else {
+      const { codeVerifier, spotifyAuthURL } = await getSpotifyAuthUrl();
       window.localStorage.setItem("spotify_code_verifier", codeVerifier);
       window.location.href = spotifyAuthURL.toString();
     }
